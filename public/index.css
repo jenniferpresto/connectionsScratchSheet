@@ -1,0 +1,26 @@
+body {
+    background-color: dimgray;
+}
+
+.box {
+    position: absolute;
+    text-align: center;
+    font-family: arial;
+    font-size: 1.5rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: solid;
+    border-radius: 10px;
+}
+
+.static {
+    color: black;
+    background-color: cornsilk;
+}
+
+.moving {
+    color: seashell;
+    background-color: saddlebrown;
+}
