@@ -2,11 +2,15 @@ body {
     background-color: dimgray;
 }
 
+#main-container {
+    font-family: arial;
+    font-size: 1.5rem;
+    color: white;
+}
+
 .box {
     position: absolute;
     text-align: center;
-    font-family: arial;
-    font-size: 1.5rem;
     cursor: pointer;
     display: flex;
     justify-content: center;

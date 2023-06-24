@@ -1,16 +1,32 @@
 const fetchAndRender = async () => {
-  await fetch('/data')
-  .then (res => res.json())
-  .then(data => renderPage(data))
-  .catch(err => console.log(err));
+  await fetch("/data")
+    .then((res) => res.json())
+    .then((data) => renderPage(data))
+    .catch((err) => console.log(err));
 };
 
-const renderPage = data => {
-  console.log("Rendering page with data: ", data);
+const renderPage = (words) => {
+  const container = document.getElementById("main-container");
+
+  if (words.length !== 16) {
+    container.innerHTML = "Unable to get today&rsquo;s words";
+    return;
+  }
+
   const WIDTH = 150;
   const HEIGHT = 60;
   let xOffset, yOffset;
   let activeDiv;
+
+  for (i in words) {
+    const wordDiv = document.createElement("div");
+    const textNode = document.createTextNode(words[i]);
+    wordDiv.classList.add("box");
+    wordDiv.classList.add("static");
+    wordDiv.setAttribute("id", "box" + i);
+    wordDiv.appendChild(textNode);
+    container.appendChild(wordDiv);
+  }
 
   for (let i = 0; i < 4; i++) {
     for (let j = 0; j < 4; j++) {
@@ -18,7 +34,7 @@ const renderPage = data => {
 
       const xPos = i * 200 + 20;
       const yPos = j * 80 + 20;
-      const divId = "box" + (boxId + 1);
+      const divId = "box" + boxId;
       const div = document.getElementById(divId);
       div.style.left = xPos + "px";
       div.style.top = yPos + "px";
@@ -80,4 +96,5 @@ const renderPage = data => {
     }
   });
 };
-setTimeout(fetchAndRender, 200);
+
+fetchAndRender();

@@ -7,7 +7,7 @@ const app = express();
 
 const getWords = async () => {
   const browser = await puppeteer.launch({
-    headless: false,
+    headless: "new",
     defaultViewport: null,
   });
 
@@ -16,7 +16,7 @@ const getWords = async () => {
     waitUntil: "domcontentloaded",
   });
 
-  const links = await page.$$("a.read-more.content-read-more");
+  const links = await page.$$("h2.entry-title a");
   //  grab the first link and go to the page
   let firstLink;
   for (link of links) {
