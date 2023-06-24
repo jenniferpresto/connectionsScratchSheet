@@ -89,7 +89,8 @@ const renderPage = (words) => {
     }
   });
 
-  document.addEventListener("keydown", function (e) {
+  //  listen for space bar or escape button
+  document.addEventListener("keydown", function(e) {
     if ((e.keyCode === 27 || e.keyCode === 32) && activeDiv) {
       deactivateDiv(activeDiv);
       activeDiv = null;

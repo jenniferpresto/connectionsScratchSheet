@@ -1,7 +1,7 @@
 const express = require("express");
 const puppeteer = require("puppeteer");
 
-const PORT = 5500;
+const PORT = process.env.port || 5500;
 const URL = "https://nytcrossword.org/category/connections-game/";
 const app = express();
 
