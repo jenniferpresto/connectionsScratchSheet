@@ -165,6 +165,10 @@ const renderPage = (words) => {
         inputForm.classList.remove("hidden");
       }
     }
+    
+    if (existingDivs.size > 0) {
+      deleteAllButton.disabled = false;
+    }
   };
 
   const removeAllWords = () => {
