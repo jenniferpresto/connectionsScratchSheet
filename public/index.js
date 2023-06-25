@@ -14,6 +14,8 @@ const renderPage = (words) => {
   const instructions = document.getElementById("instructions");
   const inputForm = document.getElementById("add-word");
   const inputField = document.getElementById("new-word");
+  const deleteActiveButton = document.getElementById("delete-active");
+  const deleteAllButton = document.getElementById("delete-all");
 
   const initialPositions = [];
   const existingDivs = new Map();
@@ -41,16 +43,19 @@ const renderPage = (words) => {
         initialPositions.push({ left: xPos + "px", top: yPos + "px" });
       }
     }
-  }
+    deleteActiveButton.disabled = true;
+    deleteAllButton.disabled = true;
+    deleteActiveButton.disabled = true;
+  };
 
   const updateInstructions = () => {
     instructions.innerHTML =
-    "If the words aren&rsquo;t correct, select any you want and hit delete, and then you can add more.";
+      "If the words aren&rsquo;t correct, select any you want and hit delete, and then you can add more.";
     instructionsDidUpdate = true;
-  }
+  };
 
   const setInitialWords = () => {
-    if (words.length !== 16) {
+    if (words.length !== 20) {
       console.log("Here's what we got instead of what's expected: ", words);
       instructions.innerHTML =
         "Unable to get today&rsquo;s words. You can add below.";
@@ -75,8 +80,9 @@ const renderPage = (words) => {
         div.style.left = xPos + "px";
         div.style.top = yPos + "px";
 
-        initialPositions.push({ x: xPos + "px", y: yPos + "px" });
+        // initialPositions.push({ x: xPos + "px", y: yPos + "px" });
         existingDivs.set(divId, { left: div.style.left, top: div.style.top });
+        deleteAllButton.disabled = false;
       }
     }
   };
@@ -96,17 +102,24 @@ const renderPage = (words) => {
     existingDivs.set(div.id, { left: div.style.left, top: div.style.top });
   };
 
-  const activateDiv = (div) => {
+  const activateWord = (div) => {
     activeDiv.classList.remove("static");
     activeDiv.classList.add("moving");
+    deleteActiveButton.disabled = false;
+    deleteAllButton.disabled = true;
   };
 
-  const deactivateDiv = (div) => {
+  const deactivateWord = (div) => {
     activeDiv.classList.remove("moving");
     activeDiv.classList.add("static");
+    deleteActiveButton.disabled = true;
+
+    if (existingDivs.size) {
+      deleteAllButton.disabled = false;
+    }
   };
 
-  const addWord = word => {
+  const addWord = (word) => {
     if (!instructionsDidUpdate) {
       updateInstructions();
     }
@@ -133,6 +146,9 @@ const renderPage = (words) => {
     container.appendChild(newDiv);
     existingDivs.set(newId, pos);
     inputField.value = "";
+    if (deleteAllButton.disabled) {
+      deleteAllButton.disabled = false;
+    }
   };
 
   const removeWord = (div) => {
@@ -151,6 +167,23 @@ const renderPage = (words) => {
     }
   };
 
+  const removeAllWords = () => {
+    existingDivs.forEach((pos, boxId) => {
+      const word = document.getElementById(boxId);
+      word.remove();
+    });
+    activeDiv = null;
+    existingDivs.clear();
+    while (deletedDivs.length) {
+      deletedDivs.pop();
+    }
+
+    if (inputForm.classList.contains("hidden")) {
+      inputForm.classList.remove("hidden");
+    }
+    deleteAllButton.disabled = true;
+  }
+
   inputForm.addEventListener("submit", (e) => {
     e.preventDefault();
     addWord(inputField.value);
@@ -159,17 +192,29 @@ const renderPage = (words) => {
     }
   });
 
+  deleteActiveButton.addEventListener("click", (e) => {
+    e.preventDefault();
+    if (activeDiv) {
+      removeWord(activeDiv);
+    }
+  });
+
+  deleteAllButton.addEventListener("click", e => {
+    e.preventDefault();
+    removeAllWords();
+  });
+
   document.addEventListener(
     "mousedown",
     function (e) {
       if (activeDiv) {
         setDivPos(activeDiv, e.clientX, e.clientY);
-        deactivateDiv(activeDiv);
+        deactivateWord(activeDiv);
         activeDiv = null;
       } else if (e.target.id?.startsWith("box")) {
         activeDiv = e.target;
         setOffsets(activeDiv, e.clientX, e.clientY);
-        activateDiv(activeDiv);
+        activateWord(activeDiv);
       }
     },
     true
@@ -187,7 +232,7 @@ const renderPage = (words) => {
       return;
     }
     if (e.keyCode === 27 || e.keyCode === 32) {
-      deactivateDiv(activeDiv);
+      deactivateWord(activeDiv);
       activeDiv = null;
     } else if (e.keyCode === 8) {
       removeWord(activeDiv);

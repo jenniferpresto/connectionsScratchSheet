@@ -20,6 +20,31 @@ form {
 
 input {
     font-size: 1.5rem;
+    height: 60px
+}
+
+.delete-button {
+    width: 250px;
+    height: 150px;
+    font-size: 1.5rem;
+    position: absolute;
+    left: 20px;
+    border: solid;
+    border-radius: 10px;
+}
+
+#delete-active {
+    bottom: 280px;
+}
+
+@media (min-width: 769px) {
+    #delete-active {
+        display: none;
+    }
+}
+
+#delete-all {
+    bottom: 120px;
 }
 
 .hidden {
