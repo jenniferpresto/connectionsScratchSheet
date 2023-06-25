@@ -13,6 +13,7 @@ const renderPage = (words) => {
   const container = document.getElementById("main-container");
 
   if (words.length !== 16) {
+    console.log("Here's what we got: ", words);
     container.innerHTML = "Unable to get today&rsquo;s words";
     return;
   }
