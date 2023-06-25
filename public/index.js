@@ -2,7 +2,11 @@ const fetchAndRender = async () => {
   await fetch("/data")
     .then((res) => res.json())
     .then((data) => renderPage(data))
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      console.log(err);
+      const container = document.getElementById("main-container");
+      container.innerHTML = "Unable to get today&rsquo;s words";
+    });
 };
 
 const renderPage = (words) => {
@@ -90,7 +94,7 @@ const renderPage = (words) => {
   });
 
   //  listen for space bar or escape button
-  document.addEventListener("keydown", function(e) {
+  document.addEventListener("keydown", function (e) {
     if ((e.keyCode === 27 || e.keyCode === 32) && activeDiv) {
       deactivateDiv(activeDiv);
       activeDiv = null;
