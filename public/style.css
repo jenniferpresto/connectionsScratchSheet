@@ -37,12 +37,6 @@ input {
     bottom: 280px;
 }
 
-@media (min-width: 769px) {
-    #delete-active {
-        display: none;
-    }
-}
-
 #delete-all {
     bottom: 120px;
 }

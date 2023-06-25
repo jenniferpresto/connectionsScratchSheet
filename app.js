@@ -4,7 +4,22 @@ const cheerio = require("cheerio");
 
 const PORT = process.env.port || 5500;
 const URL = "https://nytcrossword.org/category/connections-game/";
+const CONNECTIONS_URL = "https://nytimes.com/games/connections";
 const app = express();
+
+// const getConnectionsPage = async () => {
+//   const page = await axios
+//   .get(CONNECTIONS_URL)
+//   .then (res => {
+//     console.log(res.data);
+//     const $ = cheerio.load(res.data);
+//     $(".item .item-row-0 .item-col-0").each((idx, element) => {
+//       console.log(`Element: ${element}`);
+//     })
+//   })
+//   console.log("Done iwth async");
+//   return ["a", "b", "c"];
+// }
 
 const getFirstLink = async () => {
   const firstLink = await axios
@@ -85,5 +100,10 @@ app.get("/data", async (req, res) => {
   const words = await getWords(link);
   res.json(words);
 });
+
+// app.get("/connectionsData", async (req, res) => {
+//   const page = await getConnectionsPage();
+//   res.send(page);
+// })
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

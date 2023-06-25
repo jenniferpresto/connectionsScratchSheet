@@ -9,6 +9,14 @@ const fetchAndRender = async () => {
     });
 };
 
+// const getRealData = async () => {
+//   console.log("Navigator touch points: ", navigator.maxTouchPoints);
+//   // await fetch("/connectionsData")
+//   // .then(res => res.json())
+//   // .then(data => console.log(data))
+//   // .catch(e => console.log(e));
+// }
+
 const renderPage = (words) => {
   const container = document.getElementById("main-container");
   const instructions = document.getElementById("instructions");
@@ -16,6 +24,8 @@ const renderPage = (words) => {
   const inputField = document.getElementById("new-word");
   const deleteActiveButton = document.getElementById("delete-active");
   const deleteAllButton = document.getElementById("delete-all");
+  // const IS_MOBILE = true;
+  const IS_MOBILE = navigator.maxTouchPoints > 0;
 
   const initialPositions = [];
   const existingDivs = new Map();
@@ -43,9 +53,15 @@ const renderPage = (words) => {
         initialPositions.push({ left: xPos + "px", top: yPos + "px" });
       }
     }
+    console.log("Disabling both buttons");
     deleteActiveButton.disabled = true;
     deleteAllButton.disabled = true;
-    deleteActiveButton.disabled = true;
+    if (IS_MOBILE) {
+      console.log("Removing hidden");
+      deleteActiveButton.classList.remove("hidden");
+      console.log("Button itself: ", deleteActiveButton);
+    }
+    deleteAllButton.classList.remove("hidden");
   };
 
   const updateInstructions = () => {
@@ -80,11 +96,10 @@ const renderPage = (words) => {
         div.style.left = xPos + "px";
         div.style.top = yPos + "px";
 
-        // initialPositions.push({ x: xPos + "px", y: yPos + "px" });
         existingDivs.set(divId, { left: div.style.left, top: div.style.top });
-        deleteAllButton.disabled = false;
       }
     }
+    deleteAllButton.disabled = false;
   };
 
   const getValue = (style) => {
@@ -105,14 +120,19 @@ const renderPage = (words) => {
   const activateWord = (div) => {
     activeDiv.classList.remove("static");
     activeDiv.classList.add("moving");
-    deleteActiveButton.disabled = false;
+    if (IS_MOBILE) {
+      deleteActiveButton.disabled = false;
+    }
     deleteAllButton.disabled = true;
   };
 
   const deactivateWord = (div) => {
     activeDiv.classList.remove("moving");
     activeDiv.classList.add("static");
-    deleteActiveButton.disabled = true;
+    activeDiv = null;
+    if (IS_MOBILE) {
+      deleteActiveButton.disabled = true;
+    }
 
     if (existingDivs.size) {
       deleteAllButton.disabled = false;
@@ -165,9 +185,13 @@ const renderPage = (words) => {
         inputForm.classList.remove("hidden");
       }
     }
-    
+
     if (existingDivs.size > 0) {
       deleteAllButton.disabled = false;
+    }
+    if (IS_MOBILE) {
+      console.log("Disabling");
+      deleteActiveButton.disabled = true;
     }
   };
 
@@ -186,7 +210,7 @@ const renderPage = (words) => {
       inputForm.classList.remove("hidden");
     }
     deleteAllButton.disabled = true;
-  }
+  };
 
   inputForm.addEventListener("submit", (e) => {
     e.preventDefault();
@@ -203,7 +227,7 @@ const renderPage = (words) => {
     }
   });
 
-  deleteAllButton.addEventListener("click", e => {
+  deleteAllButton.addEventListener("click", (e) => {
     e.preventDefault();
     removeAllWords();
   });
@@ -212,9 +236,12 @@ const renderPage = (words) => {
     "mousedown",
     function (e) {
       if (activeDiv) {
-        setDivPos(activeDiv, e.clientX, e.clientY);
-        deactivateWord(activeDiv);
-        activeDiv = null;
+        if (e.target.id?.startsWith("delete-active")) {
+          removeWord(activeDiv);
+        } else {
+          setDivPos(activeDiv, e.clientX, e.clientY);
+          deactivateWord(activeDiv);
+        }
       } else if (e.target.id?.startsWith("box")) {
         activeDiv = e.target;
         setOffsets(activeDiv, e.clientX, e.clientY);
@@ -247,4 +274,5 @@ const renderPage = (words) => {
   setInitialWords();
 };
 
+// getRealData();
 fetchAndRender();
