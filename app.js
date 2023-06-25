@@ -47,6 +47,7 @@ const getWords = async (link) => {
         return [];
     }
 
+
     //  strip out theme names
     const cleanedWords = [];
     for (i in allWords) {
@@ -54,6 +55,13 @@ const getWords = async (link) => {
             continue;
         }
         cleanedWords.push(allWords[i]);
+    }
+
+    if (cleanedWords.includes("GNAW")) {
+      while(cleanedWords.length > 0) {
+        cleanedWords.pop();
+      }
+      cleanedWords.push("JONAS", "MARX", "WARNER", "WRIGHT", "BUNK", "CANOPY", "MURPHY", "TRUNDLE", "ACCORD", "CIVIC", "PASSPORT", "PILOT", "CRASH", "LINK", "MARIO", "SONIC");
     }
 
     //  scramble the remaining words
