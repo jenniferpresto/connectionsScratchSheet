@@ -36,10 +36,9 @@ const renderPage = (words) => {
     inputField.value = "";
     for (let i = 0; i < 4; i++) {
       for (let j = 0; j < 4; j++) {
-        const boxId = i * 4 + j;
         const xPos = i * 200 + 20;
         const yPos = j * 80 + 80;
-        initialPositions.push({ x: xPos + "px", y: yPos + "px" });
+        initialPositions.push({ left: xPos + "px", top: yPos + "px" });
       }
     }
   }
@@ -51,7 +50,7 @@ const renderPage = (words) => {
   }
 
   const setInitialWords = () => {
-    if (words.length !== 16) {
+    if (words.length !== 20) {
       console.log("Here's what we got instead of what's expected: ", words);
       instructions.innerHTML =
         "Unable to get today&rsquo;s words. You can add below.";
@@ -107,7 +106,7 @@ const renderPage = (words) => {
     activeDiv.classList.add("static");
   };
 
-  const addDiv = (word) => {
+  const addWord = word => {
     if (!instructionsDidUpdate) {
       updateInstructions();
     }
@@ -136,7 +135,7 @@ const renderPage = (words) => {
     inputField.value = "";
   };
 
-  const removeDiv = (div) => {
+  const removeWord = (div) => {
     existingDivs.delete(div.id);
     deletedDivs.push({
       id: div.id,
@@ -154,7 +153,7 @@ const renderPage = (words) => {
 
   inputForm.addEventListener("submit", (e) => {
     e.preventDefault();
-    addDiv(inputField.value);
+    addWord(inputField.value);
     if (existingDivs.size >= 16) {
       inputForm.classList.add("hidden");
     }
@@ -191,7 +190,7 @@ const renderPage = (words) => {
       deactivateDiv(activeDiv);
       activeDiv = null;
     } else if (e.keyCode === 8) {
-      removeDiv(activeDiv);
+      removeWord(activeDiv);
     }
   });
 
