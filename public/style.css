@@ -2,10 +2,28 @@ body {
     background-color: dimgray;
 }
 
+#instructions {
+    padding: 0 20px;
+}
+
 #main-container {
     font-family: arial;
     font-size: 1.5rem;
     color: white;
+}
+
+form {
+    position: absolute;
+    bottom: 40px;
+    left: 20px;
+}
+
+input {
+    font-size: 1.5rem;
+}
+
+.hidden {
+    display: none;
 }
 
 .box {
@@ -17,6 +35,9 @@ body {
     align-items: center;
     border: solid;
     border-radius: 10px;
+    width: 150px;
+    height: 60px;
+    text-transform: uppercase;
 }
 
 .static {
