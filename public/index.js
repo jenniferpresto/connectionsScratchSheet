@@ -55,7 +55,7 @@ const renderPage = (words) => {
   };
 
   const setInitialWords = () => {
-    if (words.length !== 20) {
+    if (words.length !== 16) {
       console.log("Here's what we got instead of what's expected: ", words);
       instructions.innerHTML =
         "Unable to get today&rsquo;s words. You can add below.";
