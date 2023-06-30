@@ -1,3 +1,8 @@
+// import interactionHelpers from "./interactionHelpers.js";
+import {createWord, activateWordClasses, deactivateWordClasses} from "./wordHelpers.js";
+import setMouseInteractions from "./interactionHelpers.js";
+import BoardController from "./BoardController.js";
+
 const fetchAndRender = async () => {
   await fetch("/data")
     .then((res) => res.json())
@@ -9,13 +14,13 @@ const fetchAndRender = async () => {
     });
 };
 
-// const getRealData = async () => {
-//   console.log("Navigator touch points: ", navigator.maxTouchPoints);
-//   // await fetch("/connectionsData")
-//   // .then(res => res.json())
-//   // .then(data => console.log(data))
-//   // .catch(e => console.log(e));
-// }
+const getRealData = async () => {
+  console.log("Navigator touch points: ", navigator.maxTouchPoints);
+  await fetch("/connectionsData")
+  .then(res => res.json())
+  .then(data => console.log(data))
+  .catch(e => console.log(e));
+}
 
 const renderPage = (words) => {
   const container = document.getElementById("main-container");
@@ -24,7 +29,6 @@ const renderPage = (words) => {
   const inputField = document.getElementById("new-word");
   const deleteActiveButton = document.getElementById("delete-active");
   const deleteAllButton = document.getElementById("delete-all");
-  // const IS_MOBILE = true;
   const IS_MOBILE = navigator.maxTouchPoints > 0;
 
   const initialPositions = [];
@@ -33,16 +37,17 @@ const renderPage = (words) => {
   let xOffset, yOffset;
   let activeDiv;
   let instructionsDidUpdate = false;
+  setMouseInteractions(activeDiv);
 
-  const createWordDiv = (id, word) => {
-    const wordDiv = document.createElement("div");
-    const textNode = document.createTextNode(word);
-    wordDiv.classList.add("box");
-    wordDiv.classList.add("static");
-    wordDiv.setAttribute("id", id);
-    wordDiv.appendChild(textNode);
-    return wordDiv;
-  };
+  // const createWordDiv = (id, word) => {
+  //   const wordDiv = document.createElement("div");
+  //   const textNode = document.createTextNode(word);
+  //   wordDiv.classList.add("box");
+  //   wordDiv.classList.add("static");
+  //   wordDiv.setAttribute("id", id);
+  //   wordDiv.appendChild(textNode);
+  //   return wordDiv;
+  // };
 
   const initialSetup = () => {
     inputField.value = "";
@@ -80,11 +85,12 @@ const renderPage = (words) => {
     }
     updateInstructions();
 
-    for (i in words) {
-      const wordDiv = createWordDiv("box" + i, words[i]);
+    for (const [idx, wordText] of words.entries()) {
+      const wordDiv = createWord(wordText, "box" + idx);
+      // const wordDiv = createWordDiv("box" + idx, word);
       container.appendChild(wordDiv);
     }
-
+    
     for (let i = 0; i < 4; i++) {
       for (let j = 0; j < 4; j++) {
         const boxId = i * 4 + j;
@@ -118,8 +124,7 @@ const renderPage = (words) => {
   };
 
   const activateWord = (div) => {
-    activeDiv.classList.remove("static");
-    activeDiv.classList.add("moving");
+    activateWordClasses(div);
     if (IS_MOBILE) {
       deleteActiveButton.disabled = false;
     }
@@ -127,8 +132,7 @@ const renderPage = (words) => {
   };
 
   const deactivateWord = (div) => {
-    activeDiv.classList.remove("moving");
-    activeDiv.classList.add("static");
+    deactivateWordClasses(div);
     activeDiv = null;
     if (IS_MOBILE) {
       deleteActiveButton.disabled = true;
@@ -139,7 +143,7 @@ const renderPage = (words) => {
     }
   };
 
-  const addWord = (word) => {
+  const addWord = (wordText) => {
     if (!instructionsDidUpdate) {
       updateInstructions();
     }
@@ -160,7 +164,7 @@ const renderPage = (words) => {
         top: initialPositions[existingDivs.size].top,
       };
     }
-    const newDiv = createWordDiv(newId, word);
+    const newDiv = createWord(wordText, newId);
     newDiv.style.left = pos.left;
     newDiv.style.top = pos.top;
     container.appendChild(newDiv);
@@ -212,6 +216,9 @@ const renderPage = (words) => {
     deleteAllButton.disabled = true;
   };
 
+  /**
+   * Listeners
+   */
   inputForm.addEventListener("submit", (e) => {
     e.preventDefault();
     addWord(inputField.value);
@@ -273,6 +280,7 @@ const renderPage = (words) => {
   initialSetup();
   setInitialWords();
 };
-
 // getRealData();
 fetchAndRender();
+
+const Board = new BoardController();
