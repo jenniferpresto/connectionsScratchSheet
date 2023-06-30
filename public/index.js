@@ -1,6 +1,4 @@
-// import interactionHelpers from "./interactionHelpers.js";
 import {createWord, activateWordClasses, deactivateWordClasses} from "./wordHelpers.js";
-import setMouseInteractions from "./interactionHelpers.js";
 import BoardController from "./BoardController.js";
 
 const fetchAndRender = async () => {
@@ -37,7 +35,6 @@ const renderPage = (words) => {
   let xOffset, yOffset;
   let activeDiv;
   let instructionsDidUpdate = false;
-  setMouseInteractions(activeDiv);
 
   // const createWordDiv = (id, word) => {
   //   const wordDiv = document.createElement("div");

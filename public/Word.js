@@ -12,7 +12,7 @@ export default class Word {
         this.div.setAttribute("id", this.id);
         this.div.appendChild(textNode);
 
-        this.div.addEventListener("mousedown", this.onclick.bind(this));
+        this.div.addEventListener("mousedown", e => this.onclick(e, this));
         console.log(this.board);
     }
 
@@ -25,10 +25,10 @@ export default class Word {
 
     }
 
-    onclick() {
-        console.log(this);
+    onclick(event, self) {
+        console.log("event", event);
+        console.log("this: ", self);
         console.log("That tickles!", this.board);
         this.board.onWordClicked(this);
     }
-
 }
