@@ -5,7 +5,7 @@ export default class BoardController {
   constructor(wordStrings) {
     this.initialPositions = [];
     this.existingWords = new Map();
-    this.deletedWords;
+    this.deletedWords = [];
     this.container = document.getElementById("main-container");
     this.activeWord = null;
     this.setup(wordStrings);
@@ -51,9 +51,14 @@ export default class BoardController {
   /**
    * General operation
    */
-  onAllWordsRemoved() {
-    for (const word of this.existingWords) {
-      word.div.removeEventListener
+  removeAllWords() {
+    this.activeWord = null;
+    this.existingWords.forEach((word, id) => {
+      word.div.remove();
+    });
+    this.existingWords.clear();
+    while(this.deletedWords.length) {
+      this.deletedWords.pop();
     }
   }
 
@@ -73,12 +78,10 @@ export default class BoardController {
 
   activateWordById(id, x, y) {
     const word = this.existingWords.get(id);
-    console.log("Word: ", word);
     this.onWordActivated(word, x, y);
   }
 
   onWordActivated(word, x, y) {
-    console.log("Word activated");
     if (this.activeWord) {
       console.log(
         "Error: Shouldn't have a new touch if there's already an active word"

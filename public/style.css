@@ -33,6 +33,10 @@ input {
     border-radius: 10px;
 }
 
+.pressed {
+    background-color: gray;
+}
+
 #delete-active {
     bottom: 280px;
 }

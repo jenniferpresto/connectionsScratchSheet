@@ -1,5 +1,6 @@
 import {createWord, activateWordClasses, deactivateWordClasses} from "./wordHelpers.js";
 import WordController from "./WordController.js";
+import Position from "./Position.js";
 
 const fetchAndRender = async () => {
   // await fetch("/data")
@@ -26,17 +27,18 @@ const fetchAndRender = async () => {
 // }
 
 const renderPage = (words) => {
+  let isTouchingDeleteAllButton = false;
+  let touchDeleteButtonPos = null;
   const Words = new WordController(words);
-  console.log(Words);
   const container = document.getElementById("main-container");
   const instructions = document.getElementById("instructions");
   const inputForm = document.getElementById("add-word");
   const inputField = document.getElementById("new-word");
   // const deleteActiveButton = document.getElementById("delete-active");
   const deleteAllButton = document.getElementById("delete-all");
-  const IS_MOBILE = navigator.maxTouchPoints > 0;
+  // const IS_MOBILE = navigator.maxTouchPoints > 0;
 
-  const initialPositions = [];
+  // const initialPositions = [];
   const existingDivs = new Map();
   const deletedDivs = [];
   let xOffset, yOffset;
@@ -55,13 +57,13 @@ const renderPage = (words) => {
   //   }
   //   console.log("Disabling both buttons");
   //   // deleteActiveButton.disabled = true;
-  //   deleteAllButton.disabled = true;
+    // deleteAllButton.disabled = true;
   //   if (IS_MOBILE) {
   //     console.log("Removing hidden");
   //     // deleteActiveButton.classList.remove("hidden");
   //     // console.log("Button itself: ", deleteActiveButton);
   //   }
-  //   deleteAllButton.classList.remove("hidden");
+    deleteAllButton.classList.remove("hidden");
   // };
 
   // const updateInstructions = () => {
@@ -229,9 +231,17 @@ const renderPage = (words) => {
   // });
 
   deleteAllButton.addEventListener("click", (e) => {
+    console.log("Click: ", e);
     e.preventDefault();
-    removeAllWords();
+    // removeAllWords();
   });
+
+  deleteAllButton.addEventListener("touch", (e) => {
+    console.log("Click: ", e);
+    e.preventDefault();
+    // removeAllWords();
+  });
+
 
   // document.addEventListener(
   //   "mousedown",
@@ -279,14 +289,18 @@ const renderPage = (words) => {
   });
 
   document.addEventListener("touchstart", e => {
+    console.log(e);
     e.preventDefault();
     if (!e.targetTouches) {
       return;
     }
-    console.log(e);
     if (e.target.id?.startsWith("box")) {
       e.preventDefault();
       Words.activateWordById(e.target.id, e.targetTouches[0].clientX, e.targetTouches[0].clientY);
+    } else if (e.target.id?.startsWith("delete-all")) {
+      isTouchingDeleteAllButton = true;
+      touchDeleteButtonPos = new Position(e.targetTouches[0].clientX, e.targetTouches[0].clientY);
+      deleteAllButton.classList.add("pressed");
     }
   }, {passive: false});
 
@@ -302,7 +316,6 @@ const renderPage = (words) => {
 
   document.addEventListener("touchmove", (e) => {
     e.preventDefault();
-    // console.log(e.targetTouches.length > 0 ? e.targetTouches[0] : "no touches");
     if (!e.targetTouches.length) {
       return;
     }
@@ -310,9 +323,25 @@ const renderPage = (words) => {
   }, {passive: false});
 
   document.addEventListener("touchend", e => {
+    console.log("e: ", e);
     e.preventDefault();
     Words.onPointerLifted();
-  });
+    if (e.target.id?.startsWith("delete-all") && isTouchingDeleteAllButton) {
+      if (!e.changedTouches.length) {
+        return;
+      }
+      //  make sure you didn't drag too much
+      if ((Math.abs(e.changedTouches[0].clientX - touchDeleteButtonPos.x) < 10)
+      && (Math.abs(e.changedTouches[0].clientY - touchDeleteButtonPos.y)) < 10) {
+        Words.removeAllWords();
+      }
+    }
+    isTouchingDeleteAllButton = false;
+    touchDeleteButtonPos = null;
+    if (deleteAllButton.classList.contains("pressed")) {
+      deleteAllButton.classList.remove("pressed");
+    }
+});
 
   document.addEventListener("touchcancel", e => {
     e.preventDefault();
