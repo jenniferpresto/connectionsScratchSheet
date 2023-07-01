@@ -4,13 +4,16 @@ import Word from "./Word.js";
 export default class BoardController {
   constructor(wordStrings) {
     this.initialPositions = [];
-    this.existingWords = [];
+    this.existingWords = new Map();
     this.deletedWords;
     this.container = document.getElementById("main-container");
     this.activeWord = null;
     this.setup(wordStrings);
   }
 
+  /**
+   * Setup
+  */
   setup(wordStrings) {
     const isTouchScreen = navigator.maxTouchPoints > 0;
     //  assumes word spacing of 10px if touchscreen
@@ -31,7 +34,7 @@ export default class BoardController {
         newWord.div.style.fontSize = "1.0rem";
       }
       this.container.appendChild(newWord.div);
-      this.existingWords.push(newWord);
+      this.existingWords.set("box" + idx, newWord);
     }
   }
 
@@ -45,20 +48,37 @@ export default class BoardController {
     }
   }
 
-  onWordClicked = (event, word) => {
-    // console.log(`Got clicked! ${word.id}, ${word.wordText}`);
-    // console.log(event);
+  /**
+   * General operation
+   */
+  onAllWordsRemoved() {
+    for (const word of this.existingWords) {
+      word.div.removeEventListener
+    }
+  }
+
+  /**
+   * Interactions
+  */
+  onWordClicked(event, word) {
     this.onWordActivated(word, event.clientX, event.clientY);
   };
 
-  onWordTouched = (event, word) => {
+  onWordTouched(event, word) {
     if (!event.targetTouches) {
       return;
     }
     this.onWordActivated(word, event.targetTouches[0].clientX, event.targetTouches[0].clientY);
   };
 
+  activateWordById(id, x, y) {
+    const word = this.existingWords.get(id);
+    console.log("Word: ", word);
+    this.onWordActivated(word, x, y);
+  }
+
   onWordActivated(word, x, y) {
+    console.log("Word activated");
     if (this.activeWord) {
       console.log(
         "Error: Shouldn't have a new touch if there's already an active word"

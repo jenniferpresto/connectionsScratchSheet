@@ -16,10 +16,10 @@ export default class Word {
         this.div.setAttribute("id", this.id);
         this.div.appendChild(textNode);
 
-        this.div.addEventListener("mousedown", e => this.onMouseDown(e, this));
-        if (isTouchscreen) {
-            this.div.addEventListener("touchstart", e => this.onTouch(e, this));
-        }
+        // this.div.addEventListener("mousedown", e => this.onMouseDown(e, this));
+        // if (isTouchscreen) {
+        //     this.div.addEventListener("touchstart", e => this.onTouch(e, this));
+        // }
     }
 
     setPositionFromTouch(touchX, touchY) {
@@ -43,13 +43,15 @@ export default class Word {
         this.isActive = false;
     }
 
-    onMouseDown(event, self) {
-        event.preventDefault();
-        this.board.onWordClicked(event, this);
-    }
+    // onMouseDown(event, self) {
+    //     event.preventDefault();
+    //     this.board.onWordClicked(event, this);
+    // }
 
-    onTouch(event, self) {
-        event.preventDefault();
-        this.board.onWordTouched(event, this);
-    }
+    // onTouch(event, self) {
+    //     console.log("touch event: ", event);
+
+    //     event.preventDefault();
+    //     this.board.onWordTouched(event, this);
+    // }
 }

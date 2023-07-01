@@ -27,6 +27,7 @@ const fetchAndRender = async () => {
 
 const renderPage = (words) => {
   const Words = new WordController(words);
+  console.log(Words);
   const container = document.getElementById("main-container");
   const instructions = document.getElementById("instructions");
   const inputForm = document.getElementById("add-word");
@@ -269,6 +270,26 @@ const renderPage = (words) => {
   //     removeWord(activeDiv);
   //   }
   // });
+
+  document.addEventListener("mousedown", e => {
+    if (e.target.id?.startsWith("box")) {
+      Words.activateWordById(e.target.id, e.clientX, e.clientY);
+      e.preventDefault();
+    }
+  });
+
+  document.addEventListener("touchstart", e => {
+    e.preventDefault();
+    if (!e.targetTouches) {
+      return;
+    }
+    console.log(e);
+    if (e.target.id?.startsWith("box")) {
+      e.preventDefault();
+      Words.activateWordById(e.target.id, e.targetTouches[0].clientX, e.targetTouches[0].clientY);
+    }
+  }, {passive: false});
+
   document.addEventListener("mousemove", (e) => {
     e.preventDefault();
     Words.onPointerMoved(e.clientX, e.clientY);
@@ -286,7 +307,7 @@ const renderPage = (words) => {
       return;
     }
     Words.onPointerMoved(e.targetTouches[0].clientX, e.targetTouches[0].clientY);
-  });
+  }, {passive: false});
 
   document.addEventListener("touchend", e => {
     e.preventDefault();
