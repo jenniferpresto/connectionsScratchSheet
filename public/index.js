@@ -269,24 +269,33 @@ const renderPage = (words) => {
   //     removeWord(activeDiv);
   //   }
   // });
+  document.addEventListener("mousemove", (e) => {
+    e.preventDefault();
+    Words.onPointerMoved(e.clientX, e.clientY);
+  });
+
+  document.addEventListener("mouseup", (e) => {
+    e.preventDefault();
+    Words.onPointerLifted();
+  });
 
   document.addEventListener("touchmove", (e) => {
     e.preventDefault();
-    console.log(e.targetTouches.length > 0 ? e.targetTouches[0] : "no touches");
+    // console.log(e.targetTouches.length > 0 ? e.targetTouches[0] : "no touches");
     if (!e.targetTouches.length) {
       return;
     }
-    Words.onTouchMoved(e.targetTouches[0]);
+    Words.onPointerMoved(e.targetTouches[0].clientX, e.targetTouches[0].clientY);
   });
 
   document.addEventListener("touchend", e => {
     e.preventDefault();
-    Words.onTouchEnded();
+    Words.onPointerLifted();
   });
 
   document.addEventListener("touchcancel", e => {
     e.preventDefault();
-    Words.onTouchEnded();
+    Words.onPointerLifted();
   })
 
   // initialSetup();

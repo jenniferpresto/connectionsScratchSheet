@@ -16,7 +16,7 @@ export default class Word {
         this.div.setAttribute("id", this.id);
         this.div.appendChild(textNode);
 
-        this.div.addEventListener("mousedown", e => this.onClick(e, this));
+        this.div.addEventListener("mousedown", e => this.onMouseDown(e, this));
         if (isTouchscreen) {
             this.div.addEventListener("touchstart", e => this.onTouch(e, this));
         }
@@ -43,7 +43,7 @@ export default class Word {
         this.isActive = false;
     }
 
-    onClick(event, self) {
+    onMouseDown(event, self) {
         event.preventDefault();
         this.board.onWordClicked(event, this);
     }

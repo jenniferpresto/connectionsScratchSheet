@@ -18,8 +18,6 @@ export default class BoardController {
       ? Math.min((screen.width - 40) / 4, 150)
       : 150;
       const wordHeight = wordWidth * 0.4;
-    console.log("WOrd width: ", wordWidth);
-    console.log("Screen width: ", screen.width);
     this.setUpInitialPositions(wordWidth, wordHeight);
     for (const [idx, wordString] of wordStrings.entries()) {
       const newWord = new Word(this, wordString, "box" + idx, isTouchScreen);
@@ -48,12 +46,19 @@ export default class BoardController {
   }
 
   onWordClicked = (event, word) => {
-    console.log(`Got clicked! ${word.id}, ${word.wordText}`);
+    // console.log(`Got clicked! ${word.id}, ${word.wordText}`);
+    // console.log(event);
+    this.onWordActivated(word, event.clientX, event.clientY);
   };
 
   onWordTouched = (event, word) => {
-    console.log(`Got touch! ${word.id}, ${word.wordText}`);
-    console.log("Event: ", event);
+    if (!event.targetTouches) {
+      return;
+    }
+    this.onWordActivated(word, event.targetTouches[0].clientX, event.targetTouches[0].clientY);
+  };
+
+  onWordActivated(word, x, y) {
     if (this.activeWord) {
       console.log(
         "Error: Shouldn't have a new touch if there's already an active word"
@@ -61,23 +66,17 @@ export default class BoardController {
       this.activeWord.deactivate();
     }
     this.activeWord = word;
-    if (!event.targetTouches.length) {
-      return;
-    }
-    word.activate(
-      event.targetTouches[0].clientX,
-      event.targetTouches[0].clientY
-    );
-  };
+    word.activate(x, y);
+  }
 
-  onTouchMoved(touch) {
+  onPointerMoved(x, y) {
     if (!this.activeWord) {
       return;
     }
-    this.activeWord.setPositionFromTouch(touch.clientX, touch.clientY);
+    this.activeWord.setPositionFromTouch(x, y);
   }
 
-  onTouchEnded() {
+  onPointerLifted() {
     if (this.activeWord) {
       this.activeWord.deactivate();
       this.activeWord = null;
