@@ -1,7 +1,7 @@
 import Position from "./Position.js";
 
 export default class Word {
-    constructor(_board, _wordtText, _id, isTouchscreen) {
+    constructor(_board, _wordtText, _id) {
         this.board = _board;
         this.isActive = false;
         this.wordText = _wordtText;
@@ -15,11 +15,6 @@ export default class Word {
         this.div.classList.add("static");
         this.div.setAttribute("id", this.id);
         this.div.appendChild(textNode);
-
-        // this.div.addEventListener("mousedown", e => this.onMouseDown(e, this));
-        // if (isTouchscreen) {
-        //     this.div.addEventListener("touchstart", e => this.onTouch(e, this));
-        // }
     }
 
     setPositionFromTouch(touchX, touchY) {
@@ -42,16 +37,4 @@ export default class Word {
         this.div.classList.add("static");
         this.isActive = false;
     }
-
-    // onMouseDown(event, self) {
-    //     event.preventDefault();
-    //     this.board.onWordClicked(event, this);
-    // }
-
-    // onTouch(event, self) {
-    //     console.log("touch event: ", event);
-
-    //     event.preventDefault();
-    //     this.board.onWordTouched(event, this);
-    // }
 }

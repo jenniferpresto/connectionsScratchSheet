@@ -3,19 +3,19 @@ import WordController from "./WordController.js";
 import Position from "./Position.js";
 
 const fetchAndRender = async () => {
-  // await fetch("/data")
-  //   .then((res) => res.json())
-  //   .then((data) => renderPage(data))
-  //   .catch((err) => {
-  //     console.log(err);
-  //     const container = document.getElementById("main-container");
-  //     container.innerHTML = "Unable to get today&rsquo;s words";
-  //     renderPage([]);
-  //   });
-  renderPage(["hello", "goodbye", "up", "down", "plenty",
-"math", "science", "aggressive", "link",
-"one", "two", "three", "how",
-"pigeon", "fowl", "foul"]);
+  await fetch("/data")
+    .then((res) => res.json())
+    .then((data) => renderPage(data))
+    .catch((err) => {
+      console.log(err);
+      // const container = document.getElementById("main-container");
+      // container.innerHTML = "Unable to get today&rsquo;s words";
+      renderPage([]);
+    });
+//   renderPage(["hello", "goodbye", "up", "down", "plenty",
+// "math", "science", "aggressive", "link",
+// "one", "two", "three", "how",
+// "pigeon", "fowl", "foul"]);
 };
 
 // const getRealData = async () => {
@@ -27,44 +27,39 @@ const fetchAndRender = async () => {
 // }
 
 const renderPage = (words) => {
-  let isTouchingDeleteAllButton = false;
-  let touchDeleteButtonPos = null;
-  const Words = new WordController(words);
-  const container = document.getElementById("main-container");
+
   const instructions = document.getElementById("instructions");
   const inputForm = document.getElementById("add-word");
   const inputField = document.getElementById("new-word");
+  const submitNewWordButton = document.getElementById("submit-new-word");
   // const deleteActiveButton = document.getElementById("delete-active");
   const deleteAllButton = document.getElementById("delete-all");
-  // const IS_MOBILE = navigator.maxTouchPoints > 0;
 
-  // const initialPositions = [];
-  const existingDivs = new Map();
-  const deletedDivs = [];
-  let xOffset, yOffset;
-  let activeDiv;
+  // const IS_MOBILE = navigator.maxTouchPoints > 0;
+  let isTouchingDeleteAllButton = false;
+  let touchDeleteButtonPos = null;
+  const Words = new WordController(words);
+
+  const activateInput = () => {
+    if (inputForm.classList.contains("hidden")) {
+      inputForm.classList.remove("hidden");
+    }
+  }
+
+  if (Words.existingWords.size === 0) {
+    activateInput();
+  }
+
+  instructions.classList.add("hidden");
+
+  // const deletedDivs = [];
   let instructionsDidUpdate = false;
 
-  //  set up initial positions and button states
-  // const initialSetup = () => {
-  //   inputField.value = "";
-  //   for (let i = 0; i < 4; i++) {
-  //     for (let j = 0; j < 4; j++) {
-  //       const xPos = i * 200 + 20;
-  //       const yPos = j * 80 + 80;
-  //       initialPositions.push({ left: xPos + "px", top: yPos + "px" });
-  //     }
-  //   }
-  //   console.log("Disabling both buttons");
-  //   // deleteActiveButton.disabled = true;
-    // deleteAllButton.disabled = true;
-  //   if (IS_MOBILE) {
-  //     console.log("Removing hidden");
-  //     // deleteActiveButton.classList.remove("hidden");
-  //     // console.log("Button itself: ", deleteActiveButton);
-  //   }
     deleteAllButton.classList.remove("hidden");
-  // };
+    deleteAllButton.style.top = (Words.wordSpacing / 2)+ "px";
+    deleteAllButton.style.left = (Words.wordSpacing / 2) + "px";
+
+    inputField.value = "";
 
   // const updateInstructions = () => {
   //   instructions.innerHTML =
@@ -72,72 +67,6 @@ const renderPage = (words) => {
   //   instructionsDidUpdate = true;
   // };
 
-  // const setInitialWords = () => {
-  //   if (words.length !== 16) {
-  //     console.log("Here's what we got instead of what's expected: ", words);
-  //     instructions.innerHTML =
-  //       "Unable to get today&rsquo;s words. You can add below.";
-  //     inputForm.classList.remove("hidden");
-  //     return;
-  //   }
-  //   updateInstructions();
-
-  //   for (const [idx, wordText] of words.entries()) {
-  //     const wordDiv = createWord(wordText, "box" + idx);
-  //     container.appendChild(wordDiv);
-  //   }
-    
-  //   for (let i = 0; i < 4; i++) {
-  //     for (let j = 0; j < 4; j++) {
-  //       const boxId = i * 4 + j;
-
-  //       const xPos = i * 200 + 20;
-  //       const yPos = j * 80 + 80;
-  //       const divId = "box" + boxId;
-  //       const div = document.getElementById(divId);
-  //       div.style.left = xPos + "px";
-  //       div.style.top = yPos + "px";
-
-  //       existingDivs.set(divId, { left: div.style.left, top: div.style.top });
-  //     }
-  //   }
-  //   deleteAllButton.disabled = false;
-  // };
-
-  // const getValue = (style) => {
-  //   return parseInt(style.substring(0, style.length - 2));
-  // };
-
-  // const setOffsets = (div, mouseX, mouseY) => {
-  //   xOffset = mouseX - getValue(div.style.left);
-  //   yOffset = mouseY - getValue(div.style.top);
-  // };
-
-  // const setDivPos = (div, mouseX, mouseY) => {
-  //   div.style.left = mouseX - xOffset + "px";
-  //   div.style.top = mouseY - yOffset + "px";
-  //   existingDivs.set(div.id, { left: div.style.left, top: div.style.top });
-  // };
-
-  // const activateWord = (div) => {
-  //   activateWordClasses(div);
-  //   // if (IS_MOBILE) {
-  //   //   deleteActiveButton.disabled = false;
-  //   // }
-  //   deleteAllButton.disabled = true;
-  // };
-
-  // const deactivateWord = (div) => {
-  //   deactivateWordClasses(div);
-  //   activeDiv = null;
-  //   // if (IS_MOBILE) {
-  //   //   deleteActiveButton.disabled = true;
-  //   // }
-
-  //   if (existingDivs.size) {
-  //     deleteAllButton.disabled = false;
-  //   }
-  // };
 
   // const addWord = (wordText) => {
   //   if (!instructionsDidUpdate) {
@@ -195,53 +124,21 @@ const renderPage = (words) => {
   //   // }
   // };
 
-  // const removeAllWords = () => {
-  //   existingDivs.forEach((pos, boxId) => {
-  //     const word = document.getElementById(boxId);
-  //     word.remove();
-  //   });
-  //   activeDiv = null;
-  //   existingDivs.clear();
-  //   while (deletedDivs.length) {
-  //     deletedDivs.pop();
-  //   }
-
-  //   if (inputForm.classList.contains("hidden")) {
-  //     inputForm.classList.remove("hidden");
-  //   }
-  //   deleteAllButton.disabled = true;
-  // };
-
   /**
    * Listeners
    */
   inputForm.addEventListener("submit", (e) => {
     e.preventDefault();
-    addWord(inputField.value);
-    if (existingDivs.size >= 16) {
-      inputForm.classList.add("hidden");
-    }
+    Words.addWord(inputField.value);
+    inputField.value = "";
   });
 
-  // deleteActiveButton.addEventListener("click", (e) => {
-  //   e.preventDefault();
-  //   if (activeDiv) {
-  //     removeWord(activeDiv);
-  //   }
-  // });
 
   deleteAllButton.addEventListener("click", (e) => {
-    console.log("Click: ", e);
     e.preventDefault();
-    // removeAllWords();
+    Words.removeAllWords();
+    activateInput();
   });
-
-  deleteAllButton.addEventListener("touch", (e) => {
-    console.log("Click: ", e);
-    e.preventDefault();
-    // removeAllWords();
-  });
-
 
   // document.addEventListener(
   //   "mousedown",
@@ -261,12 +158,6 @@ const renderPage = (words) => {
   //   },
   //   true
   // );
-
-  // document.addEventListener("mousemove", (e) => {
-  //   if (activeDiv) {
-  //     setDivPos(activeDiv, e.clientX, e.clientY);
-  //   }
-  // });
 
   // //  listen for space bar or escape button
   // document.addEventListener("keydown", function (e) {
@@ -289,8 +180,6 @@ const renderPage = (words) => {
   });
 
   document.addEventListener("touchstart", e => {
-    console.log(e);
-    e.preventDefault();
     if (!e.targetTouches) {
       return;
     }
@@ -298,9 +187,19 @@ const renderPage = (words) => {
       e.preventDefault();
       Words.activateWordById(e.target.id, e.targetTouches[0].clientX, e.targetTouches[0].clientY);
     } else if (e.target.id?.startsWith("delete-all")) {
+      e.preventDefault();
       isTouchingDeleteAllButton = true;
       touchDeleteButtonPos = new Position(e.targetTouches[0].clientX, e.targetTouches[0].clientY);
       deleteAllButton.classList.add("pressed");
+    } else if (e.target === inputField) {
+      console.log("new word, ", e.target);
+      e.target.focus();
+    } else if (e.target === submitNewWordButton) {
+      inputField.blur();
+      if (inputField.value != "") {
+        Words.addWord(inputField.value);
+        inputField.value = "";
+      }
     }
   }, {passive: false});
 
@@ -330,10 +229,11 @@ const renderPage = (words) => {
       if (!e.changedTouches.length) {
         return;
       }
-      //  make sure you didn't drag too much
+      //  make sure you didn't drag too much before you delete all the words
       if ((Math.abs(e.changedTouches[0].clientX - touchDeleteButtonPos.x) < 10)
       && (Math.abs(e.changedTouches[0].clientY - touchDeleteButtonPos.y)) < 10) {
         Words.removeAllWords();
+        activateInput();
       }
     }
     isTouchingDeleteAllButton = false;
@@ -348,8 +248,6 @@ const renderPage = (words) => {
     Words.onPointerLifted();
   })
 
-  // initialSetup();
-  // setInitialWords();
 };
 // getRealData();
 fetchAndRender();

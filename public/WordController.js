@@ -8,41 +8,38 @@ export default class BoardController {
     this.deletedWords = [];
     this.container = document.getElementById("main-container");
     this.activeWord = null;
+    this.wordWidth = 0;
+    this.wordHeight = 0;
+    this.wordSpacing = 0;
     this.setup(wordStrings);
   }
 
   /**
    * Setup
-  */
+   */
   setup(wordStrings) {
     const isTouchScreen = navigator.maxTouchPoints > 0;
     //  assumes word spacing of 10px if touchscreen
-    const wordWidth = isTouchScreen
+    //  20px if not
+    this.wordWidth = isTouchScreen
       ? Math.min((screen.width - 40) / 4, 150)
       : 150;
-      const wordHeight = wordWidth * 0.4;
-    this.setUpInitialPositions(wordWidth, wordHeight);
+    this.wordHeight = this.wordWidth * 0.4;
+    this.setUpInitialPositions(this.wordWidth, this.wordHeight);
     for (const [idx, wordString] of wordStrings.entries()) {
-      const newWord = new Word(this, wordString, "box" + idx, isTouchScreen);
-      newWord.setPositionFromTouch(
-        this.initialPositions[idx].x,
-        this.initialPositions[idx].y
-      );
-      newWord.div.style.width = wordWidth + "px";
-      newWord.div.style.height = wordHeight + "px";
-      if (wordWidth < 150) {
-        newWord.div.style.fontSize = "1.0rem";
-      }
-      this.container.appendChild(newWord.div);
-      this.existingWords.set("box" + idx, newWord);
+      this.addWord(wordString);
     }
   }
 
   setUpInitialPositions(wordWidth, wordHeight) {
     const wordSpacing = wordWidth < 150 ? 10 : 20;
+    this.wordSpacing = wordSpacing;
     for (let i = 0; i < 4; i++) {
       for (let j = 0; j < 4; j++) {
-        const pos = new Position((i * (wordWidth + wordSpacing)) + (wordSpacing / 2), (j * (wordHeight + wordSpacing)) + (wordSpacing / 2) + 60);
+        const pos = new Position(
+          i * (wordWidth + wordSpacing) + wordSpacing / 2,
+          j * (wordHeight + wordSpacing) + wordSpacing / 2 + 150
+        );
         this.initialPositions.push(pos);
       }
     }
@@ -51,30 +48,53 @@ export default class BoardController {
   /**
    * General operation
    */
+  addWord(wordText) {
+    if (this.existingWords.size >= 16) {
+      return;
+    }
+    const idx = this.existingWords.size;
+    const newWord = new Word(this, wordText, "box" + idx);
+    newWord.setPositionFromTouch(
+      this.initialPositions[idx].x,
+      this.initialPositions[idx].y
+    );
+    newWord.div.style.width = this.wordWidth + "px";
+    newWord.div.style.height = this.wordHeight + "px";
+    if (this.wordWidth < 150) {
+      newWord.div.style.fontSize = "1.0rem";
+    }
+    this.container.appendChild(newWord.div);
+    this.existingWords.set("box" + idx, newWord);
+  }
+
   removeAllWords() {
     this.activeWord = null;
     this.existingWords.forEach((word, id) => {
       word.div.remove();
     });
     this.existingWords.clear();
-    while(this.deletedWords.length) {
+    while (this.deletedWords.length) {
       this.deletedWords.pop();
     }
   }
 
   /**
    * Interactions
-  */
+   */
   onWordClicked(event, word) {
     this.onWordActivated(word, event.clientX, event.clientY);
-  };
+  }
 
   onWordTouched(event, word) {
     if (!event.targetTouches) {
       return;
     }
-    this.onWordActivated(word, event.targetTouches[0].clientX, event.targetTouches[0].clientY);
-  };
+    this.onWordActivated(
+      word,
+      event.targetTouches[0].clientX,
+      event.targetTouches[0].clientY
+    );
+  }
 
   activateWordById(id, x, y) {
     const word = this.existingWords.get(id);
