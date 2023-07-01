@@ -18,6 +18,8 @@ export default class BoardController {
       ? Math.min((screen.width - 40) / 4, 150)
       : 150;
       const wordHeight = wordWidth * 0.4;
+    console.log("WOrd width: ", wordWidth);
+    console.log("Screen width: ", screen.width);
     this.setUpInitialPositions(wordWidth, wordHeight);
     for (const [idx, wordString] of wordStrings.entries()) {
       const newWord = new Word(this, wordString, "box" + idx, isTouchScreen);
@@ -39,7 +41,7 @@ export default class BoardController {
     const wordSpacing = wordWidth < 150 ? 10 : 20;
     for (let i = 0; i < 4; i++) {
       for (let j = 0; j < 4; j++) {
-        const pos = new Position((i * (wordWidth + wordSpacing)) + (wordSpacing / 2), (j * (wordHeight + wordSpacing)) + wordSpacing + 60);
+        const pos = new Position((i * (wordWidth + wordSpacing)) + (wordSpacing / 2), (j * (wordHeight + wordSpacing)) + (wordSpacing / 2) + 60);
         this.initialPositions.push(pos);
       }
     }

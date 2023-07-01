@@ -46,6 +46,7 @@ input {
 }
 
 .box {
+    box-sizing: border-box;
     font-weight: 600;
     position: absolute;
     text-align: center;
