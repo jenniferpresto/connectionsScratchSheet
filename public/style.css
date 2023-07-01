@@ -46,6 +46,7 @@ input {
 }
 
 .box {
+    font-weight: 600;
     position: absolute;
     text-align: center;
     cursor: pointer;
@@ -54,8 +55,6 @@ input {
     align-items: center;
     border: solid;
     border-radius: 10px;
-    width: 150px;
-    height: 60px;
     text-transform: uppercase;
 }
 
