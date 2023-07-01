@@ -1,24 +1,26 @@
 import {createWord, activateWordClasses, deactivateWordClasses} from "./wordHelpers.js";
-import BoardController from "./BoardController.js";
+import WordController from "./WordController.js";
 
 const fetchAndRender = async () => {
-  await fetch("/data")
-    .then((res) => res.json())
-    .then((data) => renderPage(data))
-    .catch((err) => {
-      console.log(err);
-      const container = document.getElementById("main-container");
-      container.innerHTML = "Unable to get today&rsquo;s words";
-    });
+  // await fetch("/data")
+  //   .then((res) => res.json())
+  //   .then((data) => renderPage(data))
+  //   .catch((err) => {
+  //     console.log(err);
+  //     const container = document.getElementById("main-container");
+  //     container.innerHTML = "Unable to get today&rsquo;s words";
+  //     renderPage([]);
+  //   });
+  renderPage([]);
 };
 
-const getRealData = async () => {
-  console.log("Navigator touch points: ", navigator.maxTouchPoints);
-  await fetch("/connectionsData")
-  .then(res => res.json())
-  .then(data => console.log(data))
-  .catch(e => console.log(e));
-}
+// const getRealData = async () => {
+//   console.log("Navigator touch points: ", navigator.maxTouchPoints);
+//   await fetch("/connectionsData")
+//   .then(res => res.json())
+//   .then(data => console.log(data))
+//   .catch(e => console.log(e));
+// }
 
 const renderPage = (words) => {
   const container = document.getElementById("main-container");
@@ -36,16 +38,7 @@ const renderPage = (words) => {
   let activeDiv;
   let instructionsDidUpdate = false;
 
-  // const createWordDiv = (id, word) => {
-  //   const wordDiv = document.createElement("div");
-  //   const textNode = document.createTextNode(word);
-  //   wordDiv.classList.add("box");
-  //   wordDiv.classList.add("static");
-  //   wordDiv.setAttribute("id", id);
-  //   wordDiv.appendChild(textNode);
-  //   return wordDiv;
-  // };
-
+  //  set up initial positions and button states
   const initialSetup = () => {
     inputField.value = "";
     for (let i = 0; i < 4; i++) {
@@ -84,7 +77,6 @@ const renderPage = (words) => {
 
     for (const [idx, wordText] of words.entries()) {
       const wordDiv = createWord(wordText, "box" + idx);
-      // const wordDiv = createWordDiv("box" + idx, word);
       container.appendChild(wordDiv);
     }
     
@@ -274,10 +266,24 @@ const renderPage = (words) => {
     }
   });
 
+  document.addEventListener("touchmove", (e) => {
+    e.preventDefault();
+    console.log(e.targetTouches.length > 0 ? e.targetTouches[0] : "no touches");
+    if (!e.targetTouches.length) {
+      return;
+    }
+    Words.onTouchMoved(e.targetTouches[0]);
+  });
+
+  document.addEventListener("touchend", e => {
+    e.preventDefault();
+    Words.onTouchEnded();
+  });
+
   initialSetup();
   setInitialWords();
 };
 // getRealData();
 fetchAndRender();
 
-const Board = new BoardController();
+const Words = new WordController();
