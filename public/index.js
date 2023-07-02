@@ -2,14 +2,14 @@ import WordController from "./WordController.js";
 import Position from "./Position.js";
 
 const fetchAndRender = async () => {
-  // await fetch("/data")
-  //   .then((res) => res.json())
-  //   .then((data) => renderPage(data))
-  //   .catch((err) => {
-  //     console.log(err);
-  //     renderPage([]);
-  //   });
-  renderPage(["one", "two", "three"]);
+  await fetch("/data")
+    .then((res) => res.json())
+    .then((data) => renderPage(data))
+    .catch((err) => {
+      console.log(err);
+      renderPage([]);
+    });
+  // renderPage(["one", "two", "three"]);
 };
 
 // const getRealData = async () => {
@@ -188,7 +188,6 @@ const renderPage = (words) => {
   document.addEventListener(
     "touchstart",
     (e) => {
-      console.log("starting touch: ", e);
       if (!e.targetTouches) {
         return;
       }
