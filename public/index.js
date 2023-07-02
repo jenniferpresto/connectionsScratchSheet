@@ -188,6 +188,7 @@ const renderPage = (words) => {
   document.addEventListener(
     "touchstart",
     (e) => {
+      console.log("starting touch: ", e);
       if (!e.targetTouches) {
         return;
       }

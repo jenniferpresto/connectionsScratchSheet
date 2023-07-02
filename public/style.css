@@ -69,6 +69,10 @@ input {
     text-transform: uppercase;
 }
 
+.box span {
+    pointer-events: none;
+}
+
 .static {
     color: black;
     background-color: cornsilk;
