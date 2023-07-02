@@ -65,6 +65,7 @@ export default class BoardController {
     }
     this.container.appendChild(newWord.div);
     this.existingWords.set("box" + idx, newWord);
+    this.adjustTextWidth(newWord.div);
   }
 
   removeAllWords() {
@@ -75,6 +76,23 @@ export default class BoardController {
     this.existingWords.clear();
     while (this.deletedWords.length) {
       this.deletedWords.pop();
+    }
+  }
+
+  adjustTextWidth(div) {
+    const sizes = ["1.0rem", "0.825rem", "0.75rem", "0.625rem", "0.5rem"];
+    //  allow for inner border
+    const maxWordSize = this.wordWidth - 6;
+    if (div.childNodes[0].clientWidth <= maxWordSize) {
+      return;
+    }
+    for (let size of sizes) {
+      if (div.childNodes[0].clientWidth > maxWordSize) {
+        div.style.fontSize = size;
+      }
+      if (div.childNodes[0].clientWidth <= maxWordSize) {
+        break;
+      }
     }
   }
 

@@ -1,7 +1,3 @@
-// const express = require("express");
-// const axios = require("axios");
-// const cheerio = require("cheerio");
-
 import express from "express";
 import axios from "axios";
 import * as cheerio from "cheerio";
@@ -11,6 +7,10 @@ const URL = "https://nytcrossword.org/category/connections-game/";
 const CONNECTIONS_URL = "https://nytimes.com/games/connections";
 const app = express();
 
+//
+// Just a scratch method for now; not called by frontend
+// @returns words
+//
 const getConnectionsPage = async () => {
   const page = await axios
   .get(CONNECTIONS_URL, {
@@ -20,13 +20,6 @@ const getConnectionsPage = async () => {
   })
   .then (res => {
     // console.log(res.data);
-    console.log("*********************************************************************");
-    console.log("*********************************************************************");
-    console.log("*********************************************************************");
-    console.log("*********************************************************************");
-    console.log("*********************************************************************");
-    console.log("*********************************************************************");
-    console.log("Trying to load cheerio");
     const $ = cheerio.load(res.data);
     const board = $("#board")[0];
     const row0 = $(board).find("div#row-0")[0];
@@ -34,7 +27,6 @@ const getConnectionsPage = async () => {
     const row2 = $(board).find("div#row-2")[0];
     const row3 = $(board).find("div#row-3")[0];
     // const item0 = $(row0).find("div#item-0");
-    console.log("ROW 0::::");
     // console.log(row0);
     // console.log(row0);
 
@@ -42,7 +34,6 @@ const getConnectionsPage = async () => {
     const text1 = $(row1).find(".item");
     const text2 = $(row2).find(".item");
     const text3 = $(row3).find(".item");
-    console.log("TEXT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
     console.log(text0);
     const textList0 = $(text0).toArray().map(el => $(el).html());
     const textList1 = $(text1).toArray().map(el => $(el).html());
@@ -66,16 +57,13 @@ const getConnectionsPage = async () => {
     // .toArray()
     // .map(el => el.attr("text"));
 
-    // console.log("LIST: ", list);
-  //   $("#item-1").each((idx, element) => {
-  //     console.log(`Element: ${element}`);
-  //   })
   })
-  console.log("Done iwth async");
+  console.log("Done with async");
   return ["a", "b", "c"];
 }
 
 const getFirstLink = async () => {
+  console.log("Getting link");
   const firstLink = await axios
     .get(URL)
     .then((res) => {
@@ -106,7 +94,6 @@ const getWords = async (link) => {
       $(".connections tbody tr td").each((index, element) => {
         words.push($(element).text());
       });
-      // console.log("We're in the second async portion with words: ", words);
       return words;
     })
     .catch((e) => {
@@ -124,19 +111,6 @@ const getWords = async (link) => {
         continue;
       }
       cleanedWords.push(allWords[i]);
-    }
-    // for (i in allWords) {
-    //     if (i % 5 === 0) {
-    //         continue;
-    //     }
-    //     cleanedWords.push(allWords[i]);
-    // }
-
-    if (cleanedWords.includes("GNAW")) {
-      while(cleanedWords.length > 0) {
-        cleanedWords.pop();
-      }
-      cleanedWords.push("JONAS", "MARX", "WARNER", "WRIGHT", "BUNK", "CANOPY", "MURPHY", "TRUNDLE", "ACCORD", "CIVIC", "PASSPORT", "PILOT", "CRASH", "LINK", "MARIO", "SONIC");
     }
 
     //  scramble the remaining words
