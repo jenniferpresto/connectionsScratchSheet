@@ -129,7 +129,7 @@ app.get("/", async (req, res, next) => {});
 
 //  route to request data, called by frontend
 app.get("/data", async (req, res) => {
-  console.log("Received request from ", req.socket.remoteAddress);
+  console.log("Received request from ", req.ip);
   const link = await getFirstLink();
   const words = await getWords(link);
   console.log("Returning words");
