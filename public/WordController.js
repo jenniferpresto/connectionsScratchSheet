@@ -127,6 +127,9 @@ export default class BoardController {
       this.activeWord.deactivate();
     }
     this.activeWord = word;
+    //  move word to the top
+    this.container.removeChild(this.activeWord.div);
+    this.container.appendChild(this.activeWord.div);
     word.activate(x, y);
   }
 
