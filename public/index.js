@@ -73,29 +73,23 @@ const renderPage = (words) => {
     deleteOneButton.classList.remove("hidden");
   }
 
-  inputForm.style.left = wordBoard.wordSpacing / 2 + "px";
+  //  position elements based on screen
+  const edgeDist = wordBoard.wordSpacing / 2 + "px";
+  inputForm.style.left = edgeDist;
   if (isTouchScreen) {
-    buttonContainer.style.top = wordBoard.wordSpacing / 2 + "px";
+    buttonContainer.style.top = edgeDist;
     if (isHorizontal) {
-      buttonContainer.style.right = wordBoard.wordSpacing / 2 + "px";
+      buttonContainer.style.right = edgeDist;
       buttonContainer.style.width = "110px";
       buttonContainer.style.textAlign = "right";
       deleteOneButton.style.marginLeft = 0;
-      deleteOneButton.style.marginTop = "10px";
+      deleteOneButton.style.marginTop = edgeDist;
     } else {
-      buttonContainer.style.left = wordBoard.wordSpacing / 2 + "px";
+      buttonContainer.style.left = edgeDist;
     }
   }
   else {
-    buttonContainer.style.left = "10px";
-  }
-  if (isTouchScreen && isHorizontal) {
-    // buttonContainer.style.top = wordBoard.wordSpacing / 2 + "px";
-    // deleteAllButton.style.top = wordBoard.wordSpacing / 2 + "px";
-    // deleteAllButton.style.right = wordBoard.wordSpacing / 2 + "px";
-  } else {
-    // deleteAllButton.style.top = wordBoard.wordSpacing / 2 + "px";
-    // deleteAllButton.style.left = wordBoard.wordSpacing / 2 + "px";
+    buttonContainer.style.left = edgeDist;
   }
 
   inputField.value = "";

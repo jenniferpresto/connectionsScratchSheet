@@ -49,19 +49,31 @@ export default class WordController {
     if (this.existingWords.size >= 16) {
       return;
     }
-    const idx = this.existingWords.size;
-    const newWord = new Word(this, wordText, "box" + idx);
-    newWord.setPositionFromTouch(
-      this.initialPositions[idx].x,
-      this.initialPositions[idx].y
-    );
-    newWord.div.style.width = this.wordWidth + "px";
-    newWord.div.style.height = this.wordHeight + "px";
-    if (this.wordWidth < 150) {
-      newWord.div.style.fontSize = "1.0rem";
+    //  create or recycle existing word
+    let newWord;
+    //  create a brand new word
+    if (this.deletedWords.length == 0) {
+      const idx = this.existingWords.size;
+      newWord = new Word(this, wordText, "box" + idx);
+      newWord.setPositionFromTouch(
+        this.initialPositions[idx].x,
+        this.initialPositions[idx].y
+      );
+      newWord.div.style.width = this.wordWidth + "px";
+      newWord.div.style.height = this.wordHeight + "px";
+      if (this.wordWidth < 150) {
+        newWord.div.style.fontSize = "1.0rem";
+      }
+      this.existingWords.set("box" + idx, newWord);
+    }
+    //  recycle a previously deleted word
+    else {
+      newWord = this.deletedWords.pop();
+      console.log("recycling an old word", newWord.wordText);
+      newWord.setText(wordText);
+      this.existingWords.set(newWord.id, newWord);
     }
     this.container.appendChild(newWord.div);
-    this.existingWords.set("box" + idx, newWord);
     this.adjustTextWidth(newWord.div);
   }
 
@@ -69,14 +81,13 @@ export default class WordController {
     this.activeWord = null;
     this.existingWords.forEach((word, id) => {
       word.div.remove();
+      this.deletedWords.push(word);
     });
     this.existingWords.clear();
-    while (this.deletedWords.length) {
-      this.deletedWords.pop();
-    }
   }
 
   adjustTextWidth(div) {
+    div.style.fontSize = this.wordWidth < 150 ? "1.0rem" : "1.5rem";
     const sizes = ["1.0rem", "0.825rem", "0.75rem", "0.625rem", "0.5rem"];
     //  allow for inner border
     const maxWordSize = this.wordWidth - 6;
