@@ -110,11 +110,24 @@ export default class WordController {
       if (!word.div.classList.contains("pre-delete")) {
         word.div.classList.add("pre-delete");
       }
-    }); 
+    });
+  }
+
+  unsetPreDelete() {
+    this.isInDeleteMode = false;
+    this.existingWords.forEach((word, idx) => {
+      if (word.div.classList.contains("pre-delete")) {
+        word.div.classList.remove("pre-delete");
+      }
+    });
+    this.deletedWords.forEach((word, idx) => {
+      if (word.div.classList.contains("pre-delete")) {
+        word.div.classList.remove("pre-delete");
+      }
+    });
   }
 
   pressWordForDeletionById(id) {
-    console.log("Pre-delete by id", id);
     const word = this.existingWords.get(id);
     if (!word.div.classList.contains("pressed")) {
       word.div.classList.add("pressed");
@@ -123,8 +136,23 @@ export default class WordController {
 
   unpressWordById(id) {
     const word = this.existingWords.get(id);
-    if (word.div.classList.contains("pressed")) {
-      word.div.classList.remove("pressed");
+    if (word) {
+      if (word.div.classList.contains("pressed")) {
+        word.div.classList.remove("pressed");
+      }
+    }
+  }
+
+  removeWordById(id) {
+    const word = this.existingWords.get(id);
+    if (this.existingWords.delete(id)) {
+      if (word.div.classList.contains("pressed")) {
+        word.div.classList.remove("pressed");
+      }
+      word.div.remove();
+      this.deletedWords.push(word);
+    } else {
+      console.log("Error: Word to delete not in existing words set");
     }
   }
 

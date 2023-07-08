@@ -128,7 +128,7 @@ const renderPage = (words) => {
     }
   };
 
-  const unpressElement = () => {
+const unpressElement = () => {
     let deleteButton;
     if (!pressedElement) {
       return;
@@ -265,6 +265,9 @@ const renderPage = (words) => {
       }
       if (e.target.id?.startsWith("main-container")) {
         document.activeElement?.blur();
+        if (wordBoard.isInDeleteMode) {
+          wordBoard.unsetPreDelete();
+        }
       } else if (e.target.id?.startsWith("box")) {
         e.preventDefault();
         if (wordBoard.isInDeleteMode) {
@@ -323,6 +326,7 @@ const renderPage = (words) => {
         }
         return;
       }
+
       if (wordBoard.activeWord) {
         e.preventDefault();
         wordBoard.onPointerMoved(
@@ -337,24 +341,29 @@ const renderPage = (words) => {
   document.addEventListener("touchend", (e) => {
     e.preventDefault();
     wordBoard.onPointerLifted();
-    if (pressedElement.includes("delete")) {
-      if (
-        e.target.id?.startsWith("delete-all") &&
-        pressedElement === "delete-all"
-      ) {
-        if (!e.changedTouches.length) {
-          return;
+    if (pressedElement) {
+      if (pressedElement.includes("delete")) {
+        if (
+          e.target.id?.startsWith("delete-all") &&
+          pressedElement === "delete-all"
+        ) {
+          if (!e.changedTouches.length) {
+            return;
+          }
+          wordBoard.removeAllWords();
+          activateInput();
+        } else if (
+          e.target.id?.startsWith("delete-one") &&
+          pressedElement === "delete-one"
+        ) {
+          if (!e.changedTouches.length) {
+            return;
+          }
+          wordBoard.setPreDelete();
         }
-        wordBoard.removeAllWords();
-        activateInput();
-      } else if (
-        e.target.id?.startsWith("delete-one") &&
-        pressedElement === "delete-one"
-      ) {
-        if (!e.changedTouches.length) {
-          return;
-        }
-        wordBoard.setPreDelete();
+      } else {
+        wordBoard.removeWordById(pressedElement);
+        wordBoard.unsetPreDelete();
         activateInput();
       }
       unpressElement();
