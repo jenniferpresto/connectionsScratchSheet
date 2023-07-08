@@ -48,11 +48,8 @@ const renderPage = (words) => {
   const deleteAllButton = document.getElementById("delete-all");
 
   let instructionsDisplayingError = false;
-  // let isTouchingDeleteAllButton = false;
-  // let isTouchingDeleteOneButton = false;
   let pressedElement = "";
   let touchStartPos = new Position();
-  // let isDragging = false;
 
   const isTouchScreen = navigator.maxTouchPoints > 0;
   const isHorizontal = screen.width > screen.height;
@@ -118,7 +115,6 @@ const renderPage = (words) => {
 
   const pressElement = (elementId, x, y) => {
     pressedElement = elementId;
-    // isTouchingDeleteAllButton = true;
     touchStartPos.x = x;
     touchStartPos.y = y;
     if (elementId.includes("all")) {
@@ -126,24 +122,28 @@ const renderPage = (words) => {
     } else if (elementId.includes("one")) {
       deleteOneButton.classList.add("pressed");
     } else if (elementId.includes("box")) {
-      wordBoard.preDeleteWordById(elementId);
+      wordBoard.pressWordForDeletionById(elementId);
     } else {
       console.log("Error in selecting element");
     }
   };
 
-  const unpressDeleteButton = () => {
+  const unpressElement = () => {
     let deleteButton;
-    if (pressedElement.includes("all")) {
-      deleteButton = deleteAllButton;
-    } else if (pressedElement.includes("one")) {
-      deleteButton = deleteOneButton;
-    } else {
+    if (!pressedElement) {
       return;
     }
-    // isTouchingDeleteAllButton = false;
-    if (deleteButton.classList.contains("pressed")) {
-      deleteButton.classList.remove("pressed");
+    if (pressedElement.includes("delete")) {
+      if (pressedElement.includes("all")) {
+        deleteButton = deleteAllButton;
+      } else if (pressedElement.includes("one")) {
+        deleteButton = deleteOneButton;
+      }
+      if (deleteButton.classList.contains("pressed")) {
+        deleteButton.classList.remove("pressed");
+      }
+    } else if (pressedElement.includes("box")) {
+      wordBoard.unpressWordById(pressedElement);
     }
     pressedElement = "";
   };
@@ -313,23 +313,22 @@ const renderPage = (words) => {
       if (!e.targetTouches.length) {
         return;
       }
-      if (wordBoard.isInDeleteMode) {
-
-      } else if (wordBoard.activeWord) {
+      //  make sure you don't drag too much before you delete all the words
+      if (pressedElement) {
+        if (
+          Math.abs(e.changedTouches[0].clientX - touchStartPos.x) > 15 ||
+          Math.abs(e.changedTouches[0].clientY - touchStartPos.y) > 15
+        ) {
+          unpressElement();
+        }
+        return;
+      }
+      if (wordBoard.activeWord) {
         e.preventDefault();
         wordBoard.onPointerMoved(
           e.targetTouches[0].clientX,
           e.targetTouches[0].clientY
         );
-      }
-      //  make sure you don't drag too much before you delete all the words
-      if (pressedElement.startsWith("delete-")) {
-        if (
-          Math.abs(e.changedTouches[0].clientX - touchStartPos.x) > 15 ||
-          Math.abs(e.changedTouches[0].clientY - touchStartPos.y) > 15
-        ) {
-          unpressDeleteButton();
-        }
       }
     },
     { passive: false }
@@ -358,7 +357,7 @@ const renderPage = (words) => {
         wordBoard.setPreDelete();
         activateInput();
       }
-      unpressDeleteButton();
+      unpressElement();
     }
   });
 

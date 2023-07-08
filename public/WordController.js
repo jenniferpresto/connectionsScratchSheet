@@ -113,11 +113,18 @@ export default class WordController {
     }); 
   }
 
-  preDeleteWordById(id) {
+  pressWordForDeletionById(id) {
     console.log("Pre-delete by id", id);
     const word = this.existingWords.get(id);
     if (!word.div.classList.contains("pressed")) {
       word.div.classList.add("pressed");
+    }
+  }
+
+  unpressWordById(id) {
+    const word = this.existingWords.get(id);
+    if (word.div.classList.contains("pressed")) {
+      word.div.classList.remove("pressed");
     }
   }
 
