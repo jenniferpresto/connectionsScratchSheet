@@ -6,11 +6,12 @@ export default class WordController {
     this.initialPositions = [];
     this.existingWords = new Map();
     this.deletedWords = [];
-    this.container = document.getElementById("main-container");
+    this.container = document.getElementById("word-container");
     this.activeWord = null;
     this.wordWidth = 0;
     this.wordHeight = 0;
     this.wordSpacing = 0;
+    this.isInDeleteMode = false;
     this.setup(wordStrings, isTouchScreen, isHorizontal);
   }
 
@@ -69,7 +70,6 @@ export default class WordController {
     //  recycle a previously deleted word
     else {
       newWord = this.deletedWords.pop();
-      console.log("recycling an old word", newWord.wordText);
       newWord.setText(wordText);
       this.existingWords.set(newWord.id, newWord);
     }
@@ -79,7 +79,7 @@ export default class WordController {
 
   removeAllWords() {
     this.activeWord = null;
-    this.existingWords.forEach((word, id) => {
+    this.existingWords.forEach((word, idx) => {
       word.div.remove();
       this.deletedWords.push(word);
     });
@@ -104,22 +104,21 @@ export default class WordController {
     }
   }
 
-  /**
-   * Interactions
-   */
-  onWordClicked(event, word) {
-    this.onWordActivated(word, event.clientX, event.clientY);
+  setPreDelete() {
+    this.isInDeleteMode = true;
+    this.existingWords.forEach((word, idx) => {
+      if (!word.div.classList.contains("pre-delete")) {
+        word.div.classList.add("pre-delete");
+      }
+    }); 
   }
 
-  onWordTouched(event, word) {
-    if (!event.targetTouches) {
-      return;
+  preDeleteWordById(id) {
+    console.log("Pre-delete by id", id);
+    const word = this.existingWords.get(id);
+    if (!word.div.classList.contains("pressed")) {
+      word.div.classList.add("pressed");
     }
-    this.onWordActivated(
-      word,
-      event.targetTouches[0].clientX,
-      event.targetTouches[0].clientY
-    );
   }
 
   activateWordById(id, x, y) {

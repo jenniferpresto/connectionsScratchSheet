@@ -62,7 +62,7 @@ input {
     border-radius: 10px;
 }
 
-.pressed {
+button.pressed {
     color: white;
     background-color: darkgray;
 }
@@ -101,4 +101,12 @@ input {
 .moving {
     color: seashell;
     background-color: saddlebrown;
+}
+
+.pre-delete {
+    background-color: darksalmon;
+}
+
+.pre-delete.pressed {
+    background-color: tomato;
 }
