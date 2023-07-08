@@ -55,12 +55,38 @@ const renderPage = (words) => {
   const isHorizontal = screen.width > screen.height;
   const wordBoard = new WordController(words, isTouchScreen, isHorizontal);
 
-  const activateInput = () => {
+  const showInput = () => {
     if (inputForm.classList.contains("hidden")) {
       inputForm.classList.remove("hidden");
     }
+  }
+
+  const activateInput = () => {
+    showInput();
     inputField.focus();
   };
+
+  const setPreDelete = () => {
+    wordBoard.setPreDelete();
+    if (!buttonContainer.classList.contains("hidden")) {
+      buttonContainer.classList.add("hidden");
+    }
+    if (instructions.classList.contains("hidden")) {
+      instructions.classList.remove("hidden");
+      const verb = isTouchScreen ? "Tap" : "Click";
+      instructions.innerHTML = `${verb} a word to remove it`;
+    }
+  }
+
+  const unsetPreDelete = () => {
+    wordBoard.unsetPreDelete();
+    if (buttonContainer.classList.contains("hidden")) {
+      buttonContainer.classList.remove("hidden");
+    }
+    if (!instructions.classList.contains("hidden")) {
+      instructions.classList.add("hidden");
+    }
+  }
 
   if (wordBoard.existingWords.size === 0) {
     activateInput();
@@ -162,9 +188,23 @@ const unpressElement = () => {
     activateInput();
   });
 
+  deleteOneButton.addEventListener("click", e => {
+    e.preventDefault();
+    setPreDelete();
+  })
+
   document.addEventListener("mousedown", (e) => {
     if (e.target.id?.startsWith("box")) {
-      wordBoard.activateWordById(e.target.id, e.clientX, e.clientY);
+      if (wordBoard.isInDeleteMode) {
+        pressedElement = e.target.id;
+        pressElement(
+          e.target.id,
+          e.clientX,
+          e.clientY
+        );
+      } else {
+        wordBoard.activateWordById(e.target.id, e.clientX, e.clientY);
+      }
       e.preventDefault();
     }
   });
@@ -178,7 +218,7 @@ const unpressElement = () => {
       if (e.target.id?.startsWith("main-container")) {
         document.activeElement?.blur();
         if (wordBoard.isInDeleteMode) {
-          wordBoard.unsetPreDelete();
+          unsetPreDelete();
         }
       } else if (e.target.id?.startsWith("box")) {
         e.preventDefault();
@@ -214,12 +254,30 @@ const unpressElement = () => {
 
   document.addEventListener("mousemove", (e) => {
     e.preventDefault();
-    wordBoard.onPointerMoved(e.clientX, e.clientY);
+    if (wordBoard.isInDeleteMode) {
+      if (pressedElement && pressedElement.startsWith("box")) {
+        if (
+          Math.abs(e.clientX - touchStartPos.x) > 15 ||
+          Math.abs(e.clientY - touchStartPos.y) > 15
+        ) {
+          unpressElement();
+        }
+      }
+    } else {
+      wordBoard.onPointerMoved(e.clientX, e.clientY);
+    }
   });
 
   document.addEventListener("mouseup", (e) => {
     e.preventDefault();
-    wordBoard.onPointerLifted();
+    if (wordBoard.isInDeleteMode) {
+      wordBoard.removeWordById(pressedElement);
+      unsetPreDelete();
+      showInput();
+    } else {
+      wordBoard.onPointerLifted();
+    }
+    unpressElement();
   });
 
   document.addEventListener(
@@ -271,12 +329,12 @@ const unpressElement = () => {
           if (!e.changedTouches.length) {
             return;
           }
-          wordBoard.setPreDelete();
+          setPreDelete();
         }
       } else {
         wordBoard.removeWordById(pressedElement);
-        wordBoard.unsetPreDelete();
-        activateInput();
+        unsetPreDelete();
+        showInput();
       }
       unpressElement();
     }
