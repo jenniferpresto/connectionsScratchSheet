@@ -2,31 +2,31 @@ import WordController from "./WordController.js";
 import Position from "./Position.js";
 
 const fetchAndRender = async () => {
-  await fetch("/data")
-    .then((res) => res.json())
-    .then((data) => renderPage(data))
-    .catch((err) => {
-      console.log(err);
-      renderPage([]);
-    });
-  // renderPage([
-  //   "one",
-  //   "two",
-  //   "three",
-  //   "four",
-  //   "five",
-  //   "six",
-  //   "seven",
-  //   "eight",
-  //   "nine",
-  //   "ten",
-  //   "eleven",
-  //   "twelve",
-  //   "thirteen",
-  //   "fourteen",
-  //   "fifteen",
-  //   "sixteen",
-  // ]);
+  // await fetch("/data")
+  //   .then((res) => res.json())
+  //   .then((data) => renderPage(data))
+  //   .catch((err) => {
+  //     console.log(err);
+  //     renderPage([]);
+  //   });
+  renderPage([
+    "one",
+    "two",
+    "three",
+    "four",
+    "five",
+    "six",
+    "seven",
+    "eight",
+    "nine",
+    "ten",
+    "eleven",
+    "twelve",
+    "thirteen",
+    "fourteen",
+    "fifteen",
+    "sixteen",
+  ]);
   // renderPage([]);
 };
 
@@ -43,13 +43,15 @@ const renderPage = (words) => {
   const inputForm = document.getElementById("add-word");
   const inputField = document.getElementById("new-word");
   const submitNewWordButton = document.getElementById("submit-new-word");
-  // const deleteActiveButton = document.getElementById("delete-active");
+  const buttonContainer = document.getElementById("button-container");
+  const deleteOneButton = document.getElementById("delete-one");
   const deleteAllButton = document.getElementById("delete-all");
 
+  let instructionsDisplayingError = false;
   let isTouchingDeleteAllButton = false;
   let touchStartPos = new Position();
-  let instructionsDisplayingError = false;
   let isDragging = false;
+
   const isTouchScreen = navigator.maxTouchPoints > 0;
   const isHorizontal = screen.width > screen.height;
   const wordBoard = new WordController(words, isTouchScreen, isHorizontal);
@@ -68,15 +70,32 @@ const renderPage = (words) => {
   } else {
     instructions.classList.add("hidden");
     deleteAllButton.classList.remove("hidden");
+    deleteOneButton.classList.remove("hidden");
   }
 
   inputForm.style.left = wordBoard.wordSpacing / 2 + "px";
+  if (isTouchScreen) {
+    buttonContainer.style.top = wordBoard.wordSpacing / 2 + "px";
+    if (isHorizontal) {
+      buttonContainer.style.right = wordBoard.wordSpacing / 2 + "px";
+      buttonContainer.style.width = "110px";
+      buttonContainer.style.textAlign = "right";
+      deleteOneButton.style.marginLeft = 0;
+      deleteOneButton.style.marginTop = "10px";
+    } else {
+      buttonContainer.style.left = wordBoard.wordSpacing / 2 + "px";
+    }
+  }
+  else {
+    buttonContainer.style.left = "10px";
+  }
   if (isTouchScreen && isHorizontal) {
-    deleteAllButton.style.top = wordBoard.wordSpacing / 2 + "px";
-    deleteAllButton.style.right = wordBoard.wordSpacing / 2 + "px";
+    // buttonContainer.style.top = wordBoard.wordSpacing / 2 + "px";
+    // deleteAllButton.style.top = wordBoard.wordSpacing / 2 + "px";
+    // deleteAllButton.style.right = wordBoard.wordSpacing / 2 + "px";
   } else {
-    deleteAllButton.style.top = wordBoard.wordSpacing / 2 + "px";
-    deleteAllButton.style.left = wordBoard.wordSpacing / 2 + "px";
+    // deleteAllButton.style.top = wordBoard.wordSpacing / 2 + "px";
+    // deleteAllButton.style.left = wordBoard.wordSpacing / 2 + "px";
   }
 
   inputField.value = "";
