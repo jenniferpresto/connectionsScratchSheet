@@ -2,31 +2,31 @@ import WordController from "./WordController.js";
 import Position from "./Position.js";
 
 const fetchAndRender = async () => {
-  // await fetch("/data")
-  //   .then((res) => res.json())
-  //   .then((data) => renderPage(data))
-  //   .catch((err) => {
-  //     console.log(err);
-  //     renderPage([]);
-  //   });
-  renderPage([
-    "one",
-    "two",
-    "three",
-    "four",
-    "five",
-    "six",
-    "seven",
-    "eight",
-    "nine",
-    "ten",
-    "eleven",
-    "twelve",
-    "thirteen",
-    "fourteen",
-    "fifteen",
-    "sixteen",
-  ]);
+  await fetch("/data")
+    .then((res) => res.json())
+    .then((data) => renderPage(data))
+    .catch((err) => {
+      console.log(err);
+      renderPage([]);
+    });
+  // renderPage([
+  //   "one",
+  //   "two",
+  //   "three",
+  //   "four",
+  //   "five",
+  //   "six",
+  //   "seven",
+  //   "eight",
+  //   "nine",
+  //   "ten",
+  //   "eleven",
+  //   "twelve",
+  //   "thirteen",
+  //   "fourteen",
+  //   "fifteen",
+  //   "sixteen",
+  // ]);
   // renderPage([]);
 };
 
@@ -73,8 +73,8 @@ const renderPage = (words) => {
     }
     if (instructions.classList.contains("hidden")) {
       instructions.classList.remove("hidden");
-      const verb = isTouchScreen ? "Tap" : "Click";
-      instructions.innerHTML = `${verb} a word to remove it`;
+      const verb = isTouchScreen ? "tap" : "click";
+      instructions.innerHTML = `${verb[0].toUpperCase() + verb.substring(1)} a word to remove it; ${verb} the background to cancel`;
     }
   }
 
@@ -94,8 +94,7 @@ const renderPage = (words) => {
     instructionsDisplayingError = true;
   } else {
     instructions.classList.add("hidden");
-    deleteAllButton.classList.remove("hidden");
-    deleteOneButton.classList.remove("hidden");
+    buttonContainer.classList.remove("hidden");
   }
 
   //  position elements based on screen
@@ -109,6 +108,10 @@ const renderPage = (words) => {
       buttonContainer.style.textAlign = "right";
       deleteOneButton.style.marginLeft = 0;
       deleteOneButton.style.marginTop = edgeDist;
+      instructions.style.float = "right";
+      instructions.style.textAlign = "right";
+      instructions.style.width = "200px";
+      instructions.style.fontSize = "1.0rem";
     } else {
       buttonContainer.style.left = edgeDist;
     }
@@ -128,8 +131,8 @@ const renderPage = (words) => {
       instructions.innerHTML = "";
       instructions.classList.add("hidden");
     }
-    if (deleteAllButton.classList.contains("hidden")) {
-      deleteAllButton.classList.remove("hidden");
+    if (buttonContainer.classList.contains("hidden")) {
+      buttonContainer.classList.remove("hidden");
     }
     if (wordBoard.existingWords.size === 16) {
       inputField.blur();
