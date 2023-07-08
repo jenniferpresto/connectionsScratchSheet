@@ -27,6 +27,7 @@ const fetchAndRender = async () => {
   //   "fifteen",
   //   "sixteen",
   // ]);
+  // renderPage([]);
 };
 
 // const getRealData = async () => {
@@ -89,6 +90,9 @@ const renderPage = (words) => {
     if (instructionsDisplayingError) {
       instructions.innerHTML = "";
       instructions.classList.add("hidden");
+    }
+    if (deleteAllButton.classList.contains("hidden")) {
+      deleteAllButton.classList.remove("hidden");
     }
     if (wordBoard.existingWords.size === 16) {
       inputField.blur();
