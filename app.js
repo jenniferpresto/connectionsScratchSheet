@@ -130,7 +130,6 @@ app.get("/", async (req, res, next) => {});
 //  route to request data, called by frontend
 app.get("/data", async (req, res) => {
   console.log("Received request from ", req.header("x-forwarded-for"));
-  console.log("Received request from ", req.headers["x-forwarded-for"]);
   const link = await getFirstLink();
   const words = await getWords(link);
   console.log("Returning words");

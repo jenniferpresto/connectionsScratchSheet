@@ -9,7 +9,25 @@ const fetchAndRender = async () => {
       console.log(err);
       renderPage([]);
     });
-  // renderPage(["one", "two", "three"]);
+  // renderPage([
+  //   "one",
+  //   "two",
+  //   "three",
+  //   "four",
+  //   "five",
+  //   "six",
+  //   "seven",
+  //   "eight",
+  //   "nine",
+  //   "ten",
+  //   "eleven",
+  //   "twelve",
+  //   "thirteen",
+  //   "fourteen",
+  //   "fifteen",
+  //   "sixteen",
+  // ]);
+  // renderPage([]);
 };
 
 // const getRealData = async () => {
@@ -28,12 +46,13 @@ const renderPage = (words) => {
   // const deleteActiveButton = document.getElementById("delete-active");
   const deleteAllButton = document.getElementById("delete-all");
 
-  // const IS_MOBILE = navigator.maxTouchPoints > 0;
   let isTouchingDeleteAllButton = false;
   let touchStartPos = new Position();
   let instructionsDisplayingError = false;
   let isDragging = false;
-  const wordBoard = new WordController(words);
+  const isTouchScreen = navigator.maxTouchPoints > 0;
+  const isHorizontal = screen.width > screen.height;
+  const wordBoard = new WordController(words, isTouchScreen, isHorizontal);
 
   const activateInput = () => {
     if (inputForm.classList.contains("hidden")) {
@@ -51,8 +70,14 @@ const renderPage = (words) => {
     deleteAllButton.classList.remove("hidden");
   }
 
-  deleteAllButton.style.top = wordBoard.wordSpacing / 2 + "px";
-  deleteAllButton.style.left = wordBoard.wordSpacing / 2 + "px";
+  inputForm.style.left = wordBoard.wordSpacing / 2 + "px";
+  if (isTouchScreen && isHorizontal) {
+    deleteAllButton.style.top = wordBoard.wordSpacing / 2 + "px";
+    deleteAllButton.style.right = wordBoard.wordSpacing / 2 + "px";
+  } else {
+    deleteAllButton.style.top = wordBoard.wordSpacing / 2 + "px";
+    deleteAllButton.style.left = wordBoard.wordSpacing / 2 + "px";
+  }
 
   inputField.value = "";
 
@@ -65,6 +90,9 @@ const renderPage = (words) => {
     if (instructionsDisplayingError) {
       instructions.innerHTML = "";
       instructions.classList.add("hidden");
+    }
+    if (deleteAllButton.classList.contains("hidden")) {
+      deleteAllButton.classList.remove("hidden");
     }
     if (wordBoard.existingWords.size === 16) {
       inputField.blur();

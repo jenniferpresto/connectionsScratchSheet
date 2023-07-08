@@ -1,8 +1,8 @@
 import Position from "./Position.js";
 import Word from "./Word.js";
 
-export default class BoardController {
-  constructor(wordStrings) {
+export default class WordController {
+  constructor(wordStrings, isTouchScreen, isHorizontal) {
     this.initialPositions = [];
     this.existingWords = new Map();
     this.deletedWords = [];
@@ -11,34 +11,31 @@ export default class BoardController {
     this.wordWidth = 0;
     this.wordHeight = 0;
     this.wordSpacing = 0;
-    this.setup(wordStrings);
+    this.setup(wordStrings, isTouchScreen, isHorizontal);
   }
 
   /**
    * Setup
    */
-  setup(wordStrings) {
-    const isTouchScreen = navigator.maxTouchPoints > 0;
-    //  assumes word spacing of 10px if touchscreen
-    //  20px if not
-    this.wordWidth = isTouchScreen
-      ? Math.min((screen.width - 40) / 4, 150)
-      : 150;
+  setup(wordStrings, isTouchScreen, isHorizontal) {
+    const wordAreaWidth = isHorizontal ? screen.width * 0.6 : screen.width - 40;
+    this.wordWidth = isTouchScreen ? Math.min(wordAreaWidth / 4, 150) : 150;
     this.wordHeight = this.wordWidth * 0.4;
-    this.setUpInitialPositions(this.wordWidth, this.wordHeight);
+    this.wordSpacing = this.wordWidth < 150 ? 10 : 20;
+    const topPos = isTouchScreen && isHorizontal ? 0 : 75;
+
+    this.setUpInitialPositions(this.wordWidth, this.wordHeight, topPos);
     for (const [idx, wordString] of wordStrings.entries()) {
       this.addWord(wordString);
     }
   }
 
-  setUpInitialPositions(wordWidth, wordHeight) {
-    const wordSpacing = wordWidth < 150 ? 10 : 20;
-    this.wordSpacing = wordSpacing;
+  setUpInitialPositions(wordWidth, wordHeight, topPos) {
     for (let i = 0; i < 4; i++) {
       for (let j = 0; j < 4; j++) {
         const pos = new Position(
-          i * (wordWidth + wordSpacing) + wordSpacing / 2,
-          j * (wordHeight + wordSpacing) + wordSpacing / 2 + 150
+          i * (wordWidth + this.wordSpacing) + this.wordSpacing / 2,
+          j * (wordHeight + this.wordSpacing) + this.wordSpacing / 2 + topPos
         );
         this.initialPositions.push(pos);
       }
