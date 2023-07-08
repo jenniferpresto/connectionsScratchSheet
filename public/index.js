@@ -9,7 +9,24 @@ const fetchAndRender = async () => {
       console.log(err);
       renderPage([]);
     });
-  // renderPage(["one", "two", "three"]);
+  // renderPage([
+  //   "one",
+  //   "two",
+  //   "three",
+  //   "four",
+  //   "five",
+  //   "six",
+  //   "seven",
+  //   "eight",
+  //   "nine",
+  //   "ten",
+  //   "eleven",
+  //   "twelve",
+  //   "thirteen",
+  //   "fourteen",
+  //   "fifteen",
+  //   "sixteen",
+  // ]);
 };
 
 // const getRealData = async () => {
