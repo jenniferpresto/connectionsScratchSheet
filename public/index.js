@@ -148,62 +148,6 @@ const unpressElement = () => {
     pressedElement = "";
   };
 
-  // const addWord = (wordText) => {
-  //   if (!instructionsDidUpdate) {
-  //     updateInstructions();
-  //   }
-  //   if (existingDivs.size >= 16) {
-  //     console.log("Error keeping track of existing words");
-  //     return;
-  //   }
-
-  //   let newId, pos;
-  //   if (deletedDivs.length) {
-  //     const lastRemoved = deletedDivs.pop();
-  //     newId = lastRemoved.id;
-  //     pos = lastRemoved.pos;
-  //   } else {
-  //     newId = "box" + existingDivs.size;
-  //     pos = {
-  //       left: initialPositions[existingDivs.size].left,
-  //       top: initialPositions[existingDivs.size].top,
-  //     };
-  //   }
-  //   const newDiv = createWord(wordText, newId);
-  //   newDiv.style.left = pos.left;
-  //   newDiv.style.top = pos.top;
-  //   container.appendChild(newDiv);
-  //   existingDivs.set(newId, pos);
-  //   inputField.value = "";
-  //   if (deleteAllButton.disabled) {
-  //     deleteAllButton.disabled = false;
-  //   }
-  // };
-
-  // const removeWord = (div) => {
-  //   existingDivs.delete(div.id);
-  //   deletedDivs.push({
-  //     id: div.id,
-  //     pos: { left: div.style.left, top: div.style.top },
-  //   });
-  //   div.remove();
-  //   activeDiv = null;
-
-  //   if (existingDivs.size < 16) {
-  //     if (inputForm.classList.contains("hidden")) {
-  //       inputForm.classList.remove("hidden");
-  //     }
-  //   }
-
-  //   if (existingDivs.size > 0) {
-  //     deleteAllButton.disabled = false;
-  //   }
-  //   // if (IS_MOBILE) {
-  //   //   console.log("Disabling");
-  //   //   deleteActiveButton.disabled = true;
-  //   // }
-  // };
-
   /**
    * Listeners
    */
@@ -217,38 +161,6 @@ const unpressElement = () => {
     wordBoard.removeAllWords();
     activateInput();
   });
-
-  // document.addEventListener(
-  //   "mousedown",
-  //   function (e) {
-  //     if (activeDiv) {
-  //       if (e.target.id?.startsWith("delete-active")) {
-  //         removeWord(activeDiv);
-  //       } else {
-  //         setDivPos(activeDiv, e.clientX, e.clientY);
-  //         deactivateWord(activeDiv);
-  //       }
-  //     } else if (e.target.id?.startsWith("box")) {
-  //       activeDiv = e.target;
-  //       setOffsets(activeDiv, e.clientX, e.clientY);
-  //       activateWord(activeDiv);
-  //     }
-  //   },
-  //   true
-  // );
-
-  // //  listen for space bar or escape button
-  // document.addEventListener("keydown", function (e) {
-  //   if (!activeDiv) {
-  //     return;
-  //   }
-  //   if (e.keyCode === 27 || e.keyCode === 32) {
-  //     deactivateWord(activeDiv);
-  //     activeDiv = null;
-  //   } else if (e.keyCode === 8) {
-  //     removeWord(activeDiv);
-  //   }
-  // });
 
   document.addEventListener("mousedown", (e) => {
     if (e.target.id?.startsWith("box")) {
