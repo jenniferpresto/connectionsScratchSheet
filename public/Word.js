@@ -10,12 +10,17 @@ export default class Word {
         this.position = new Position(0, 0);
         this.offset = new Position(0, 0);
 
-        const span = document.createElement("span");
-        span.innerHTML = this.wordText;
+        this.span = document.createElement("span");
+        this.span.innerHTML = this.wordText;
         this.div.classList.add("box");
         this.div.classList.add("static");
         this.div.setAttribute("id", this.id);
-        this.div.appendChild(span);
+        this.div.appendChild(this.span);
+    }
+
+    setText(text) {
+        this.wordText = text;
+        this.span.innerHTML = text;
     }
 
     setPositionFromTouch(touchX, touchY) {

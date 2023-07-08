@@ -6,11 +6,12 @@ export default class WordController {
     this.initialPositions = [];
     this.existingWords = new Map();
     this.deletedWords = [];
-    this.container = document.getElementById("main-container");
+    this.container = document.getElementById("word-container");
     this.activeWord = null;
     this.wordWidth = 0;
     this.wordHeight = 0;
     this.wordSpacing = 0;
+    this.isInDeleteMode = false;
     this.setup(wordStrings, isTouchScreen, isHorizontal);
   }
 
@@ -49,34 +50,44 @@ export default class WordController {
     if (this.existingWords.size >= 16) {
       return;
     }
-    const idx = this.existingWords.size;
-    const newWord = new Word(this, wordText, "box" + idx);
-    newWord.setPositionFromTouch(
-      this.initialPositions[idx].x,
-      this.initialPositions[idx].y
-    );
-    newWord.div.style.width = this.wordWidth + "px";
-    newWord.div.style.height = this.wordHeight + "px";
-    if (this.wordWidth < 150) {
-      newWord.div.style.fontSize = "1.0rem";
+    //  create or recycle existing word
+    let newWord;
+    //  create a brand new word
+    if (this.deletedWords.length == 0) {
+      const idx = this.existingWords.size;
+      newWord = new Word(this, wordText, "box" + idx);
+      newWord.setPositionFromTouch(
+        this.initialPositions[idx].x,
+        this.initialPositions[idx].y
+      );
+      newWord.div.style.width = this.wordWidth + "px";
+      newWord.div.style.height = this.wordHeight + "px";
+      if (this.wordWidth < 150) {
+        newWord.div.style.fontSize = "1.0rem";
+      }
+      this.existingWords.set("box" + idx, newWord);
+    }
+    //  recycle a previously deleted word
+    else {
+      newWord = this.deletedWords.pop();
+      newWord.setText(wordText);
+      this.existingWords.set(newWord.id, newWord);
     }
     this.container.appendChild(newWord.div);
-    this.existingWords.set("box" + idx, newWord);
     this.adjustTextWidth(newWord.div);
   }
 
   removeAllWords() {
     this.activeWord = null;
-    this.existingWords.forEach((word, id) => {
+    this.existingWords.forEach((word, idx) => {
       word.div.remove();
+      this.deletedWords.push(word);
     });
     this.existingWords.clear();
-    while (this.deletedWords.length) {
-      this.deletedWords.pop();
-    }
   }
 
   adjustTextWidth(div) {
+    div.style.fontSize = this.wordWidth < 150 ? "1.0rem" : "1.5rem";
     const sizes = ["1.0rem", "0.825rem", "0.75rem", "0.625rem", "0.5rem"];
     //  allow for inner border
     const maxWordSize = this.wordWidth - 6;
@@ -93,22 +104,56 @@ export default class WordController {
     }
   }
 
-  /**
-   * Interactions
-   */
-  onWordClicked(event, word) {
-    this.onWordActivated(word, event.clientX, event.clientY);
+  setPreDelete() {
+    this.isInDeleteMode = true;
+    this.existingWords.forEach((word, idx) => {
+      if (!word.div.classList.contains("pre-delete")) {
+        word.div.classList.add("pre-delete");
+      }
+    });
   }
 
-  onWordTouched(event, word) {
-    if (!event.targetTouches) {
-      return;
+  unsetPreDelete() {
+    this.isInDeleteMode = false;
+    this.existingWords.forEach((word, idx) => {
+      if (word.div.classList.contains("pre-delete")) {
+        word.div.classList.remove("pre-delete");
+      }
+    });
+    this.deletedWords.forEach((word, idx) => {
+      if (word.div.classList.contains("pre-delete")) {
+        word.div.classList.remove("pre-delete");
+      }
+    });
+  }
+
+  pressWordForDeletionById(id) {
+    const word = this.existingWords.get(id);
+    if (!word.div.classList.contains("pressed")) {
+      word.div.classList.add("pressed");
     }
-    this.onWordActivated(
-      word,
-      event.targetTouches[0].clientX,
-      event.targetTouches[0].clientY
-    );
+  }
+
+  unpressWordById(id) {
+    const word = this.existingWords.get(id);
+    if (word) {
+      if (word.div.classList.contains("pressed")) {
+        word.div.classList.remove("pressed");
+      }
+    }
+  }
+
+  removeWordById(id) {
+    const word = this.existingWords.get(id);
+    if (this.existingWords.delete(id)) {
+      if (word.div.classList.contains("pressed")) {
+        word.div.classList.remove("pressed");
+      }
+      word.div.remove();
+      this.deletedWords.push(word);
+    } else {
+      console.log("Error: Word to delete not in existing words set");
+    }
   }
 
   activateWordById(id, x, y) {

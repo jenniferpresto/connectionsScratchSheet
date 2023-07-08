@@ -10,12 +10,15 @@
 
 <div id="main-container">
     <div id="instructions">Loading words...</div>
-    <button id="delete-all" class="delete-button hidden">Delete all</button>
+    <div id="word-container"></div>
+    <div id="button-container" class="hidden">
+        <button id="delete-all" class="delete-button">Delete all</button>
+        <button id="delete-one" class="delete-button">Delete one</button> 
+    </div>
     <form id="add-word" class="hidden">
         <input id="new-word" type="text" placeholder="Add a word here">
         <input id="submit-new-word" type="submit" value="Add word">
     </form>
-    <!-- <button id="delete-active" class="delete-button hidden">Delete active word</button>  -->
 </div>
 <script type="module" src="index.js"></script>
 </body>
