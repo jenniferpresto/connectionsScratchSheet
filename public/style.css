@@ -5,7 +5,8 @@ html {
 body {
     margin: 0;
     height: 100%;
-    background-color: dimgray;
+    background-color: #9E89A9;
+    color: white;
 }
 
 .hidden {
@@ -20,7 +21,7 @@ body {
     height: 100%;
     font-family: arial;
     font-size: 1.5rem;
-    color: white;
+    /* color: white; */
 }
 
 /**
@@ -38,10 +39,12 @@ input {
     height: 2rem;
     border-radius: 10px;
     border: solid;
+    border-color: #3D3522;
 }
 
 #submit-new-word {
     height: 2.5rem;
+    cursor: pointer;
 }
 
 /**
@@ -60,6 +63,7 @@ input {
     font-size: 1.0rem;
     border: solid;
     border-radius: 10px;
+    cursor: pointer;
 }
 
 button.pressed {
@@ -87,6 +91,7 @@ button.pressed {
     border: solid;
     border-radius: 10px;
     text-transform: uppercase;
+    border-color: #3D3522;
 }
 
 .box span {
@@ -94,19 +99,22 @@ button.pressed {
 }
 
 .static {
-    color: black;
-    background-color: cornsilk;
+    color: #000;
+    background-color: #CAF7E2;
 }
 
 .moving {
-    color: seashell;
-    background-color: saddlebrown;
+    color: #CAF7E2;
+    border-color: #CAF7E2;
+    background-color: #58B09C;
 }
 
 .pre-delete {
-    background-color: darksalmon;
+    background-color: #FFCAE9;
 }
 
 .pre-delete.pressed {
-    background-color: tomato;
+    color: #CAF7E2;
+    border-color: #CAF7E2;
+    background-color: #FF37A6;
 }

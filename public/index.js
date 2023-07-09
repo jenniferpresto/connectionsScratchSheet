@@ -2,31 +2,31 @@ import WordController from "./WordController.js";
 import Position from "./Position.js";
 
 const fetchAndRender = async () => {
-  await fetch("/data")
-    .then((res) => res.json())
-    .then((data) => renderPage(data))
-    .catch((err) => {
-      console.log(err);
-      renderPage([]);
-    });
-  // renderPage([
-  //   "one",
-  //   "two",
-  //   "three",
-  //   "four",
-  //   "five",
-  //   "six",
-  //   "seven",
-  //   "eight",
-  //   "nine",
-  //   "ten",
-  //   "eleven",
-  //   "twelve",
-  //   "thirteen",
-  //   "fourteen",
-  //   "fifteen",
-  //   "sixteen",
-  // ]);
+  // await fetch("/data")
+  //   .then((res) => res.json())
+  //   .then((data) => renderPage(data))
+  //   .catch((err) => {
+  //     console.log(err);
+  //     renderPage([]);
+  //   });
+  renderPage([
+    "one",
+    "two",
+    "three",
+    "four",
+    "five",
+    "six",
+    "seven",
+    "eight",
+    "nine",
+    "ten",
+    "eleven",
+    "twelve",
+    "thirteen",
+    "fourteen",
+    "fifteen",
+    "sixteen",
+  ]);
   // renderPage([]);
 };
 
@@ -340,6 +340,10 @@ const unpressElement = () => {
         showInput();
       }
       unpressElement();
+    } else {
+      if (wordBoard.isInDeleteMode) {
+        unsetPreDelete();
+      }
     }
   });
 
