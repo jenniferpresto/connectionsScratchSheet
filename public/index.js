@@ -340,6 +340,10 @@ const unpressElement = () => {
         showInput();
       }
       unpressElement();
+    } else {
+      if (wordBoard.isInDeleteMode) {
+        unsetPreDelete();
+      }
     }
   });
 
