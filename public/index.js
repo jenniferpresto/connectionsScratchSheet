@@ -274,9 +274,11 @@ const unpressElement = () => {
   document.addEventListener("mouseup", (e) => {
     e.preventDefault();
     if (wordBoard.isInDeleteMode) {
-      wordBoard.removeWordById(pressedElement);
+      if (pressedElement) {
+        wordBoard.removeWordById(pressedElement);
+        showInput();
+      }
       unsetPreDelete();
-      showInput();
     } else {
       wordBoard.onPointerLifted();
     }
