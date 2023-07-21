@@ -53,7 +53,7 @@ export default class WordController {
     //  create or recycle existing word
     let newWord;
     //  create a brand new word
-    if (this.deletedWords.length == 0) {
+    if (!this.deletedWords.length) {
       const idx = this.existingWords.size;
       newWord = new Word(this, wordText, "box" + idx);
       newWord.setPositionFromTouch(
