@@ -39,7 +39,6 @@ input {
     height: 2rem;
     border-radius: 10px;
     border: solid;
-    border-color: #3D3522;
 }
 
 #submit-new-word {
@@ -98,10 +97,7 @@ button.pressed {
 }
 
 .static {
-    /* color: #3D3522; */
-    /* border-color: #3D3522; */
     color: #000;
-    border-color: #000;
     background-color: #CAF7E2;
 }
 
