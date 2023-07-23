@@ -1,25 +1,34 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
-<head>
-    <title>Connections Scratch</title>
-    <link rel="shortcut icon" href="#">
-    <link rel="stylesheet" href="style.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
-<body>
-
-<div id="main-container">
-    <div id="instructions">Loading words...</div>
-    <div id="word-container"></div>
-    <div id="button-container" class="hidden">
-        <button id="delete-all" class="delete-button">Delete all</button>
-        <button id="delete-one" class="delete-button">Delete one</button> 
-    </div>
-    <form id="add-word" class="hidden">
-        <input id="new-word" type="text" placeholder="Add a word here">
-        <input id="submit-new-word" type="submit" value="Add word">
-    </form>
-</div>
-<script type="module" src="index.js"></script>
-</body>
-</html> 
+    <head>
+        <title>Connections Scratch</title>
+        <link rel="shortcut icon" href="#" />
+        <link rel="stylesheet" href="style.css" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    </head>
+    <body>
+        <div id="main-container">
+            <div id="instructions">Loading words...</div>
+            <div id="word-container"></div>
+            <div id="button-container" class="hidden">
+                <button id="delete-all" class="delete-button">
+                    Delete all
+                </button>
+                <button id="delete-one" class="delete-button">
+                    Delete one
+                </button>
+            </div>
+            <form id="add-word" class="hidden">
+                <input
+                    id="new-word"
+                    type="text"
+                    placeholder="Add a word here"
+                />
+                <input id="submit-new-word" type="submit" value="Add word" />
+            </form>
+        </div>
+        <script type="module" src="index.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/p5@1.7.0/lib/p5.min.js"></script>
+        <script src="sketch.js"></script>
+    </body>
+</html>
