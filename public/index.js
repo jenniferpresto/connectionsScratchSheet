@@ -30,13 +30,26 @@ const fetchAndRender = async () => {
   // renderPage([]);
 };
 
-// const getRealData = async () => {
-//   console.log("Navigator touch points: ", navigator.maxTouchPoints);
-//   await fetch("/connectionsData")
-//   .then(res => res.json())
-//   .then(data => console.log(data))
-//   .catch(e => console.log(e));
-// }
+const getRealData = async () => {
+  console.log("Navigator touch points: ", navigator.maxTouchPoints);
+  await fetch("/connectionsData")
+  .then(res => res.json())
+  .then(data => renderPage(data))
+  .catch(e => {
+    console.log(e);
+    renderPage([]);
+  });
+}
+
+const getDataFromJson = async () => {
+  await fetch("/connectionsJson")
+  .then(res => res.json())
+  .then(data => renderPage(data))
+  .catch(e => {
+    console.log(e);
+    renderPage([]);
+  });
+}
 
 const renderPage = (words) => {
   const instructions = document.getElementById("instructions");
@@ -355,4 +368,5 @@ const unpressElement = () => {
   });
 };
 // getRealData();
-fetchAndRender();
+// fetchAndRender();
+getDataFromJson();
