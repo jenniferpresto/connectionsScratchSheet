@@ -63,9 +63,15 @@ const getConnectionsPage = async () => {
 }
 
 const getFirstLink = async () => {
+  console.log(`Requesting link from ${URL}`);
   const firstLink = await axios
-    .get(URL)
+    .request({
+      timeout: 5000,
+      method: "GET",
+      url: URL,
+    })
     .then((res) => {
+      console.log(`Parsing response from ${URL}`);
       const $ = cheerio.load(res.data);
 
       let link = "";
@@ -79,16 +85,23 @@ const getFirstLink = async () => {
       return link;
     })
     .catch((e) => {
-      console.log("Error getting first link: ", e);
+      console.log("Error getting first link: ", e.code);
+      return "";
     });
     return firstLink;
 };
 
 const getWords = async (link) => {
+  console.log(`Requesting words from ${link}`);
   const words = [];
   const allWords = await axios
-    .get(link)
+    .request({
+      timeout: 5000,
+      method: "GET",
+      url: link,
+    })
     .then((res) => {
+      console.log(`Received word list from ${link}`);
       const $ = cheerio.load(res.data);
       $(".connections tbody tr td").each((index, element) => {
         words.push($(element).text());
@@ -97,11 +110,11 @@ const getWords = async (link) => {
     })
     .catch((e) => {
       console.log("Error getting words from link: ", e);
+      return [];
     });
     if (!allWords || !allWords.length) {
         return [];
     }
-
 
     //  strip out theme names
     const cleanedWords = [];
@@ -131,8 +144,12 @@ app.get("/", async (req, res, next) => {});
 app.get("/data", async (req, res) => {
   console.log("Received request from ", req.header("x-forwarded-for"));
   const link = await getFirstLink();
+  if (link === "") {
+    console.log("Error getting initial link");
+    return res.json([]);
+  }
   const words = await getWords(link);
-  console.log("Returning words");
+  console.log(`Returning words from ${link}`);
   res.json(words);
 });
 
