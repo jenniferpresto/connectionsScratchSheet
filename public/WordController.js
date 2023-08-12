@@ -21,7 +21,7 @@ export default class WordController {
   setup(wordStrings, isTouchScreen, isHorizontal) {
     const wordAreaWidth = isHorizontal ? screen.width * 0.6 : screen.width - 40;
     this.wordWidth = isTouchScreen ? Math.min(wordAreaWidth / 4, 150) : 150;
-    this.wordHeight = this.wordWidth * 0.4;
+    this.wordHeight = Math.max(this.wordWidth * 0.4, 42);
     this.wordSpacing = this.wordWidth < 150 ? 10 : 20;
     const topPos = isTouchScreen && isHorizontal ? 0 : 75;
 
