@@ -7,15 +7,14 @@ const PORT = process.env.port || 5500;
 const URL = "https://nytcrossword.org/category/connections-game/";
 const CONNECTIONS_URL = "https://nytimes.com/games/connections";
 const CONNECTIONS_JSON_URL = "https://www.nytimes.com/games-assets/connections/game-data-by-day.json";
-const CONNECTIONS_DAY_ZERO = new Date("2023/06/11");
+const CONNECTIONS_DAY_ZERO = new Date("2023/06/12");
 const app = express();
 
 
 const getConnectionsDay = () => {
   const today = new Date();
   const daysSinceDayZero = Math.floor((today - CONNECTIONS_DAY_ZERO) / (1000 * 60 * 60 * 24));
-  //  subtract one to account for index starting at zero
-  return daysSinceDayZero - 1;
+  return daysSinceDayZero;
 }
 
 const parseWords = (data, idx) => {
