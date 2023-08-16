@@ -10,6 +10,8 @@ const CONNECTIONS_JSON_URL = "https://www.nytimes.com/games-assets/connections/g
 const CONNECTIONS_DAY_ZERO = new Date("2023/06/12");
 const app = express();
 
+let jsonData = {};
+
 
 const getConnectionsDay = () => {
   const today = new Date();
@@ -48,6 +50,7 @@ const getConnectionsJson = async () => {
     url: CONNECTIONS_JSON_URL,
   })
   .then(res => {
+    jsonData = res.data;
     return parseWords(res.data, getConnectionsDay());
   })
   .catch(e => {
@@ -215,6 +218,17 @@ app.get("/connectionsJson", async (req, res) => {
   console.log("Received request from ", req.header("x-forwarded-for"));
   const data = await getConnectionsJson();
   res.send(data);
+});
+
+app.get("/resultDay/:gameNum", (req, res) => {
+  console.log("Getting results for day: ", req.params.gameNum);
+  const dayResult = jsonData.find(obj => obj.id === Number(req.params.gameNum));
+  console.log(jsonData);
+  if (dayResult) {
+    res.send(dayResult);
+  } else {
+    res.send({});
+  }
 });
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

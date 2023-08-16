@@ -1,6 +1,27 @@
 import WordController from "./WordController.js";
 import Position from "./Position.js";
 
+const renderDummyWords = () => {
+  renderPage([
+    "one",
+    "two",
+    "three",
+    "four",
+    "five",
+    "six",
+    "seven",
+    "eight",
+    "nine",
+    "ten",
+    "eleven",
+    "twelve",
+    "thirteen",
+    "fourteen",
+    "fifteen",
+    "sixteen",
+  ]);
+}
+
 const fetchAndRender = async () => {
   await fetch("/data")
     .then((res) => res.json())
@@ -32,13 +53,13 @@ const fetchAndRender = async () => {
 
 const getRealData = async () => {
   console.log("Navigator touch points: ", navigator.maxTouchPoints);
-  await fetch("/connectionsData")
-  .then(res => res.json())
-  .then(data => renderPage(data))
-  .catch(e => {
-    console.log(e);
-    renderPage([]);
-  });
+  // await fetch("/connectionsData")
+  // .then(res => res.json())
+  // .then(data => renderPage(data))
+  // .catch(e => {
+  //   console.log(e);
+  //   renderPage([]);
+  // });
 }
 
 const getDataFromJson = async () => {
@@ -49,6 +70,16 @@ const getDataFromJson = async () => {
     console.log(e);
     renderPage([]);
   });
+  // renderDummyWords();
+}
+
+const getResultForDay = async (dayNum) => {
+  await (fetch(`/resultDay/${dayNum}`)
+  .then(res => res.json())
+  .then(data => console.log(data))
+  .catch(e => {
+    console.log("Error: ", e);
+  }));
 }
 
 const renderPage = (words) => {
@@ -59,6 +90,7 @@ const renderPage = (words) => {
   const buttonContainer = document.getElementById("button-container");
   const deleteOneButton = document.getElementById("delete-one");
   const deleteAllButton = document.getElementById("delete-all");
+  const getHistoryButton = document.getElementById("get-history");
 
   let instructionsDisplayingError = false;
   let pressedElement = "";
@@ -184,6 +216,8 @@ const unpressElement = () => {
       if (deleteButton.classList.contains("pressed")) {
         deleteButton.classList.remove("pressed");
       }
+    } else if (pressedElement.includes("history")) {
+      //  todo
     } else if (pressedElement.includes("box")) {
       wordBoard.unpressWordById(pressedElement);
     }
@@ -208,6 +242,11 @@ const unpressElement = () => {
     e.preventDefault();
     setPreDelete();
   })
+
+  getHistoryButton.addEventListener("click", e => {
+    e.preventDefault();
+    getResultForDay(42);
+  });
 
   document.addEventListener("mousedown", (e) => {
     if (e.target.id?.startsWith("box")) {
@@ -349,6 +388,8 @@ const unpressElement = () => {
           }
           setPreDelete();
         }
+      } else if (pressedElement.includes("history")) {
+        getResultForDay(35);
       } else {
         wordBoard.removeWordById(pressedElement);
         unsetPreDelete();
