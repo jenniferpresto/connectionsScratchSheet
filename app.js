@@ -222,7 +222,6 @@ app.get("/connectionsJson", async (req, res) => {
 app.get("/resultDay/:gameNum", (req, res) => {
   console.log("Getting results for day: ", req.params.gameNum);
   const dayResult = jsonData.find(obj => obj.id === Number(req.params.gameNum));
-  console.log(jsonData);
   if (dayResult) {
     res.send(dayResult);
   } else {
