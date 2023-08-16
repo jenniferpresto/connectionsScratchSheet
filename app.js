@@ -10,8 +10,7 @@ const CONNECTIONS_JSON_URL = "https://www.nytimes.com/games-assets/connections/g
 const CONNECTIONS_DAY_ZERO = new Date("2023/06/12");
 const app = express();
 
-let jsonData = {};
-
+let jsonData = [];
 
 const getConnectionsDay = () => {
   const today = new Date();
