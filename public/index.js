@@ -1,4 +1,5 @@
 import WordController from "./WordController.js";
+import ResultsController from "./ResultsController.js";
 import Position from "./Position.js";
 
 const renderDummyWords = () => {
@@ -63,23 +64,28 @@ const getRealData = async () => {
 }
 
 const getDataFromJson = async () => {
-  await fetch("/connectionsJson")
-  .then(res => res.json())
-  .then(data => renderPage(data))
-  .catch(e => {
-    console.log(e);
-    renderPage([]);
-  });
-  // renderDummyWords();
+  // await fetch("/connectionsJson")
+  // .then(res => res.json())
+  // .then(data => renderPage(data))
+  // .catch(e => {
+  //   console.log(e);
+  //   renderPage([]);
+  // });
+  renderDummyWords();
 }
 
 const getResultForDay = async (dayNum) => {
-  await (fetch(`/resultDay/${dayNum}`)
+  const resultsData = await (fetch(`/resultDay/${dayNum}`)
   .then(res => res.json())
-  .then(data => console.log(data))
+  .then(data => {
+    console.log(data);
+    return data;
+  })
   .catch(e => {
     console.log("Error: ", e);
+    return {};
   }));
+  return resultsData;
 }
 
 const renderPage = (words) => {
@@ -99,6 +105,7 @@ const renderPage = (words) => {
   const isTouchScreen = navigator.maxTouchPoints > 0;
   const isHorizontal = screen.width > screen.height;
   const wordBoard = new WordController(words, isTouchScreen, isHorizontal);
+  const results = new ResultsController();
 
   const showInput = () => {
     if (inputForm.classList.contains("hidden")) {
@@ -245,7 +252,8 @@ const unpressElement = () => {
 
   getHistoryButton.addEventListener("click", e => {
     e.preventDefault();
-    getResultForDay(42);
+    getResultForDay(42)
+    .then(data => results.showResults(data));
   });
 
   document.addEventListener("mousedown", (e) => {
