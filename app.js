@@ -1,5 +1,6 @@
-import express from "express";
 import axios from "axios";
+import express from "express";
+import fs from "fs.promises";
 
 const PORT = process.env.port || 5500;
 const CONNECTIONS_JSON_URL =
@@ -38,26 +39,31 @@ const parseWords = (data, idx) => {
     return shuffledWords;
 };
 
+
 const getConnectionsJson = async () => {
     console.log(`Getting json data from ${CONNECTIONS_JSON_URL}`);
-    getConnectionsDay();
-    const data = await axios
-        .request({
-            timeout: 5000,
-            method: "GET",
-            url: CONNECTIONS_JSON_URL,
-        })
-        .then((res) => {
-            jsonData = res.data;
-            return parseWords(res.data, getConnectionsDay());
-        })
-        .catch((e) => {
-            console.log("Error fetching JSON data: ", e);
-            return [];
-        });
-    return data;
-};
+    const localData = await fs.readFile("./testData/testJson.json", "utf8")
+    .then(jsonString => JSON.parse(jsonString));
+    console.log("Json 7: ", localData[7]);
+    console.log("Just json 7 outside block: ", parseWords(localData, 7));
+    return parseWords(localData, 7);
 
+    // const data = await axios
+    //     .request({
+    //         timeout: 5000,
+    //         method: "GET",
+    //         url: CONNECTIONS_JSON_URL,
+    //     })
+    //     .then((res) => {
+    //         jsonData = res.data;
+    //         return parseWords(res.data, getConnectionsDay());
+    //     })
+    //     .catch((e) => {
+    //         console.log("Error fetching JSON data: ", e);
+    //         return [];
+    //     });
+    // return data;
+  };
 
 //  middleware to serve up specific path with static files
 app.use(express.static("public"));
@@ -85,6 +91,7 @@ app.get("/connectionsData", async (req, res) => {
 app.get("/connectionsJson", async (req, res) => {
     console.log("Received request from ", req.header("x-forwarded-for"));
     const data = await getConnectionsJson();
+    console.log("this data we have", data);
     res.send(data);
 });
 

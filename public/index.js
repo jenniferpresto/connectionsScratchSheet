@@ -23,16 +23,6 @@ const renderTestWords = () => {
   ]);
 }
 
-const fetchAndRender = async () => {
-  await fetch("/data")
-    .then((res) => res.json())
-    .then((data) => renderPage(data))
-    .catch((err) => {
-      console.log(err);
-      renderPage([]);
-    });
-};
-
 const getDataFromJson = async () => {
   await fetch("/connectionsJson")
   .then(res => res.json())
@@ -172,7 +162,10 @@ const renderPage = (words) => {
       deleteAllButton.classList.add("pressed");
     } else if (elementId.includes("one")) {
       deleteOneButton.classList.add("pressed");
-    } else if (elementId.includes("box")) {
+    } else if (elementId.includes("history")) {
+      getHistoryButton.classList.add("pressed");
+    }
+    else if (elementId.includes("box")) {
       wordBoard.pressWordForDeletionById(elementId);
     } else {
       console.log("Error in selecting element");
@@ -184,17 +177,17 @@ const unpressElement = () => {
     if (!pressedElement) {
       return;
     }
-    if (pressedElement.includes("delete")) {
+    if (pressedElement.includes("delete") || pressedElement.includes("history")) {
       if (pressedElement.includes("all")) {
         deleteButton = deleteAllButton;
       } else if (pressedElement.includes("one")) {
         deleteButton = deleteOneButton;
+      } else if (pressedElement.includes("history")) {
+        deleteButton = getHistoryButton;
       }
       if (deleteButton.classList.contains("pressed")) {
         deleteButton.classList.remove("pressed");
       }
-    } else if (pressedElement.includes("history")) {
-      //  todo
     } else if (pressedElement.includes("box")) {
       wordBoard.unpressWordById(pressedElement);
     }
@@ -229,7 +222,7 @@ const unpressElement = () => {
   document.addEventListener("mousedown", (e) => {
     if (e.target.id?.startsWith("box")) {
       if (wordBoard.isInDeleteMode) {
-        pressedElement = e.target.id;
+        // pressedElement = e.target.id;
         pressElement(
           e.target.id,
           e.clientX,
@@ -269,7 +262,8 @@ const unpressElement = () => {
             e.targetTouches[0].clientY
           );
         }
-      } else if (e.target.id?.startsWith("delete-")) {
+      } else if (e.target.id?.startsWith("delete-") ||
+      e.target.id?.startsWith("get-history")) {
         e.preventDefault();
         pressElement(
           e.target.id,
@@ -347,7 +341,9 @@ const unpressElement = () => {
     e.preventDefault();
     wordBoard.onPointerLifted();
     if (pressedElement) {
-      if (pressedElement.includes("delete")) {
+      console.log("Pressed eleent: ", pressedElement);
+      if (pressedElement.includes("delete") || pressedElement.includes("history")) {
+        console.log("if-statement");
         if (
           e.target.id?.startsWith("delete-all") &&
           pressedElement === "delete-all"
@@ -365,10 +361,22 @@ const unpressElement = () => {
             return;
           }
           setPreDelete();
+        } else if (
+          e.target.id?.startsWith("get-history") &&
+          pressedElement === "get-history"
+        ) {
+          console.log("History button touch ended");
+          if (!e.changedTouches.length) {
+            return;
+          }
+          getResultForDay(35)
+          .then(data => results.showResults(data));
         }
-      } else if (pressedElement.includes("history")) {
-        getResultForDay(35);
-      } else {
+      }
+      // else if (pressedElement.includes("history")) {
+      //   getResultForDay(35);
+      // }
+      else {
         wordBoard.removeWordById(pressedElement);
         unsetPreDelete();
         showInput();
@@ -387,5 +395,4 @@ const unpressElement = () => {
   });
 };
 
-// fetchAndRender();
 getDataFromJson();

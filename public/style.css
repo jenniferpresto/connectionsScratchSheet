@@ -50,7 +50,7 @@ input {
 */
 #button-container {
     font-size: 0;
-    width: 225px;
+    /* width: 225px; */
     position: absolute;
     top: 10px;
 }
@@ -69,7 +69,8 @@ button.pressed {
     background-color: darkgray;
 }
 
-#delete-one {
+#delete-one,
+#get-history {
     margin-left: 10px;
 }
 
