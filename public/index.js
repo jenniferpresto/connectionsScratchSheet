@@ -2,7 +2,7 @@ import WordController from "./WordController.js";
 import ResultsController from "./ResultsController.js";
 import Position from "./Position.js";
 
-const renderDummyWords = () => {
+const renderTestWords = () => {
   renderPage([
     "one",
     "two",
@@ -31,47 +31,17 @@ const fetchAndRender = async () => {
       console.log(err);
       renderPage([]);
     });
-  // renderPage([
-  //   "one",
-  //   "two",
-  //   "three",
-  //   "four",
-  //   "five",
-  //   "six",
-  //   "seven",
-  //   "eight",
-  //   "nine",
-  //   "ten",
-  //   "eleven",
-  //   "twelve",
-  //   "thirteen",
-  //   "fourteen",
-  //   "fifteen",
-  //   "sixteen",
-  // ]);
-  // renderPage([]);
 };
 
-const getRealData = async () => {
-  console.log("Navigator touch points: ", navigator.maxTouchPoints);
-  // await fetch("/connectionsData")
-  // .then(res => res.json())
-  // .then(data => renderPage(data))
-  // .catch(e => {
-  //   console.log(e);
-  //   renderPage([]);
-  // });
-}
-
 const getDataFromJson = async () => {
-  // await fetch("/connectionsJson")
-  // .then(res => res.json())
-  // .then(data => renderPage(data))
-  // .catch(e => {
-  //   console.log(e);
-  //   renderPage([]);
-  // });
-  renderDummyWords();
+  await fetch("/connectionsJson")
+  .then(res => res.json())
+  .then(data => renderPage(data))
+  .catch(e => {
+    console.log(e);
+    renderPage([]);
+  });
+  // renderTestWords();
 }
 
 const getResultForDay = async (dayNum) => {
@@ -416,6 +386,6 @@ const unpressElement = () => {
     wordBoard.onPointerLifted();
   });
 };
-// getRealData();
+
 // fetchAndRender();
 getDataFromJson();
