@@ -194,6 +194,10 @@ const unpressElement = () => {
     pressedElement = "";
   };
 
+  const closeResults = () => {
+    results.hideResults();
+  }
+
   /**
    * Listeners
    */
@@ -246,6 +250,9 @@ const unpressElement = () => {
         if (wordBoard.isInDeleteMode) {
           unsetPreDelete();
         }
+      } else if (e.target.id === "close-results") {
+        e.preventDefault();
+        results.hideResults();
       } else if (e.target.id?.startsWith("box")) {
         e.preventDefault();
         if (wordBoard.isInDeleteMode) {
@@ -263,7 +270,6 @@ const unpressElement = () => {
           );
         }
       } else if (e.target.classList?.contains("two-step-button")) {
-        console.log(e.target.classList);
         e.preventDefault();
         pressElement(
           e.target.id,

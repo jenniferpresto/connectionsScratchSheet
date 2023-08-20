@@ -53,6 +53,5 @@ export default class ResultsController {
         if (this.container.classList.contains("hidden")) {
             this.container.classList.remove("hidden");
         }
-
     }
 }
