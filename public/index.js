@@ -187,7 +187,7 @@ const renderPage = (data) => {
           return;
         }
 
-        console.log("Getting results for day idx: ", dayIdx);
+        selectDayInput.blur();
         getResultForDay(dayIdx).then(data => {
           results.showResults(data);
           resultsTitle.innerHTML = "Results for Connections # " + day.toString();
