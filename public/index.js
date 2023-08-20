@@ -58,9 +58,11 @@ const renderPage = (words) => {
   const deleteAllButton = document.getElementById("delete-all");
   const getHistoryButton = document.getElementById("get-history")
   const inputDay = document.getElementById("input-day");
+  const closeResultsButton = document.getElementById("close-results");
 
   let instructionsDisplayingError = false;
-  let pressedElement = "";
+  let pressedSpecialElement = "";
+  let pressedGenericElement = null;
   let touchStartPos = new Position();
 
   const isTouchScreen = navigator.maxTouchPoints > 0;
@@ -156,7 +158,7 @@ const renderPage = (words) => {
   };
 
   const pressElement = (elementId, x, y) => {
-    pressedElement = elementId;
+    pressedSpecialElement = elementId;
     touchStartPos.x = x;
     touchStartPos.y = y;
     if (elementId.includes("all")) {
@@ -175,24 +177,24 @@ const renderPage = (words) => {
 
 const unpressElement = () => {
     let deleteButton;
-    if (!pressedElement) {
+    if (!pressedSpecialElement) {
       return;
     }
-    if (pressedElement.includes("delete") || pressedElement.includes("history")) {
-      if (pressedElement.includes("all")) {
+    if (pressedSpecialElement.includes("delete") || pressedSpecialElement.includes("history")) {
+      if (pressedSpecialElement.includes("all")) {
         deleteButton = deleteAllButton;
-      } else if (pressedElement.includes("one")) {
+      } else if (pressedSpecialElement.includes("one")) {
         deleteButton = deleteOneButton;
-      } else if (pressedElement.includes("history")) {
+      } else if (pressedSpecialElement.includes("history")) {
         deleteButton = getHistoryButton;
       }
       if (deleteButton.classList.contains("pressed")) {
         deleteButton.classList.remove("pressed");
       }
-    } else if (pressedElement.includes("box")) {
-      wordBoard.unpressWordById(pressedElement);
+    } else if (pressedSpecialElement.includes("box")) {
+      wordBoard.unpressWordById(pressedSpecialElement);
     }
-    pressedElement = "";
+    pressedSpecialElement = "";
   };
 
   const closeResults = () => {
@@ -209,15 +211,22 @@ const unpressElement = () => {
     }
     const first = touches[0];
     let type = "";
+    let isClick = false;
     switch (event.type) {
       case "touchstart":
         type = "mousedown";
+        pressedGenericElement = first.target;
+        console.log("Pressed generic element: ", pressedGenericElement);
         break;
       case "touchmove":
         type = "mousemove";
         break;
       case "touchend":
         type = "mouseup";
+        if (first.target === pressedGenericElement) {
+          isClick = true;
+        }
+        pressedGenericElement = null;
         break;
       default:
         return;
@@ -234,13 +243,27 @@ const unpressElement = () => {
     console.log("To this target: ", first.target);
     const returnValue = first.target.dispatchEvent(mouseEvent);
     console.log(returnValue);
-    // event.preventDefault();
+    if (isClick) {
+      const clickEvent = new MouseEvent("click", {
+        screenX: first.screenX,
+        screenY: first.screenY,
+        clientX: first.clientX,
+        clientY: first.clientY
+      });
+      const secondClick = first.target.dispatchEvent(clickEvent);
+      console.log("Did click? ", secondClick);
+    }
+    event.preventDefault();
   }
 
   /**
    * Listeners
    */
+  /**
+   * Mouse listeners
+   */
   inputForm.addEventListener("submit", (e) => {
+    console.log("Reading submit");
     e.preventDefault();
     addNewWordFromInput();
   });
@@ -262,10 +285,25 @@ const unpressElement = () => {
     .then(data => results.showResults(data));
   });
 
+  document.addEventListener("mousedown", (e) => {
+    if (e.target.id?.startsWith("box")) {
+      if (wordBoard.isInDeleteMode) {
+        pressElement(
+          e.target.id,
+          e.clientX,
+          e.clientY
+        );
+      } else {
+        wordBoard.activateWordById(e.target.id, e.clientX, e.clientY);
+      }
+      e.preventDefault();
+    }
+  });
+
   document.addEventListener("mousemove", (e) => {
     e.preventDefault();
     if (wordBoard.isInDeleteMode) {
-      if (pressedElement && pressedElement.startsWith("box")) {
+      if (pressedSpecialElement && pressedSpecialElement.startsWith("box")) {
         if (
           Math.abs(e.clientX - touchStartPos.x) > 15 ||
           Math.abs(e.clientY - touchStartPos.y) > 15
@@ -281,8 +319,8 @@ const unpressElement = () => {
   document.addEventListener("mouseup", (e) => {
     e.preventDefault();
     if (wordBoard.isInDeleteMode) {
-      if (pressedElement) {
-        wordBoard.removeWordById(pressedElement);
+      if (pressedSpecialElement) {
+        wordBoard.removeWordById(pressedSpecialElement);
         showInput();
       }
       unsetPreDelete();
@@ -292,23 +330,9 @@ const unpressElement = () => {
     unpressElement();
   });
 
-  document.addEventListener("mousedown", (e) => {
-    console.log(e);
-    if (e.target.id?.startsWith("box")) {
-      if (wordBoard.isInDeleteMode) {
-        // pressedElement = e.target.id;
-        pressElement(
-          e.target.id,
-          e.clientX,
-          e.clientY
-        );
-      } else {
-        wordBoard.activateWordById(e.target.id, e.clientX, e.clientY);
-      }
-      e.preventDefault();
-    }
-  });
-
+  /**
+   * Touch listeners
+   */
   document.addEventListener(
     "touchstart",
     (e) => {
@@ -320,12 +344,10 @@ const unpressElement = () => {
         if (wordBoard.isInDeleteMode) {
           unsetPreDelete();
         }
-      } else if (e.target.id === "close-results") {
-        touchHandler(e);
       } else if (e.target.id?.startsWith("box")) {
         e.preventDefault();
         if (wordBoard.isInDeleteMode) {
-          pressedElement = e.target.id;
+          pressedSpecialElement = e.target.id;
           pressElement(
             e.target.id,
             e.targetTouches[0].clientX,
@@ -345,10 +367,11 @@ const unpressElement = () => {
           e.targetTouches[0].clientX,
           e.targetTouches[0].clientY
         );
-      } else if (e.target === inputField) {
+      } else if (e.target === inputField || e.target === inputDay) {
         e.target.focus();
-      } else if (e.target === submitNewWordButton) {
-        addNewWordFromInput();
+      } else {
+        console.log("catch-all touchstart target", e.target);
+        touchHandler(e);
       }
     },
     { passive: false }
@@ -361,7 +384,7 @@ const unpressElement = () => {
         return;
       }
       //  make sure you don't drag too much before you delete all the words
-      if (pressedElement) {
+      if (pressedSpecialElement) {
         if (
           Math.abs(e.changedTouches[0].clientX - touchStartPos.x) > 15 ||
           Math.abs(e.changedTouches[0].clientY - touchStartPos.y) > 15
@@ -387,11 +410,11 @@ const unpressElement = () => {
   document.addEventListener("touchend", (e) => {
     e.preventDefault();
     wordBoard.onPointerLifted();
-    if (pressedElement) {
-      if (pressedElement.includes("delete") || pressedElement.includes("history")) {
+    if (pressedSpecialElement) {
+      if (pressedSpecialElement.includes("delete") || pressedSpecialElement.includes("history")) {
         if (
-          e.target.id?.startsWith("delete-all") &&
-          pressedElement === "delete-all"
+          e.target.id === "delete-all" &&
+          pressedSpecialElement === "delete-all"
         ) {
           if (!e.changedTouches.length) {
             return;
@@ -399,25 +422,25 @@ const unpressElement = () => {
           wordBoard.removeAllWords();
           activateInput();
         } else if (
-          e.target.id?.startsWith("delete-one") &&
-          pressedElement === "delete-one"
+          e.target.id ==="delete-one" &&
+          pressedSpecialElement === "delete-one"
         ) {
           if (!e.changedTouches.length) {
             return;
           }
           setPreDelete();
         } else if (
-          e.target.id?.startsWith("get-history") &&
-          pressedElement === "get-history"
+          e.target.id === "get-history" &&
+          pressedSpecialElement === "get-history"
         ) {
           if (!e.changedTouches.length) {
             return;
           }
           getResultForDay(35)
-          .then(data => results.showResults(data));
+            .then(data => results.showResults(data));
         }
       } else {
-        wordBoard.removeWordById(pressedElement);
+        wordBoard.removeWordById(pressedSpecialElement);
         unsetPreDelete();
         showInput();
       }
@@ -425,6 +448,7 @@ const unpressElement = () => {
     } else if (wordBoard.isInDeleteMode) {
       unsetPreDelete();
     } else {
+      console.log("Generic touchend");
       touchHandler(e);
     }
   });
