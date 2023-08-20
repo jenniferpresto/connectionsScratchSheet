@@ -1,25 +1,72 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
-<head>
-    <title>Connections Scratch</title>
-    <link rel="shortcut icon" href="#">
-    <link rel="stylesheet" href="style.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
-<body>
-
-<div id="main-container">
-    <div id="instructions">Loading words...</div>
-    <div id="word-container"></div>
-    <div id="button-container" class="hidden">
-        <button id="delete-all" class="delete-button">Delete all</button>
-        <button id="delete-one" class="delete-button">Delete one</button> 
-    </div>
-    <form id="add-word" class="hidden">
-        <input id="new-word" type="text" placeholder="Add a word here">
-        <input id="submit-new-word" type="submit" value="Add word">
-    </form>
-</div>
-<script type="module" src="index.js"></script>
-</body>
-</html> 
+    <head>
+        <title>Connections Scratch</title>
+        <link rel="shortcut icon" href="#" />
+        <link rel="stylesheet" href="styles/main.css" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    </head>
+    <body>
+        <div id="main-container">
+            <div id="instructions">Loading words...</div>
+            <div id="word-container"></div>
+            <div id="button-container" class="hidden">
+                <button id="delete-all" class="two-step-button">
+                    Delete all
+                </button>
+                <button id="delete-one" class="two-step-button">
+                    Delete one
+                </button>
+                <button id="get-history" class="two-step-button">
+                    Past results
+                </button>
+            </div>
+            <form id="add-word" class="hidden">
+                <input
+                    id="new-word"
+                    type="text"
+                    placeholder="Add a word here"
+                />
+                <input id="submit-new-word" type="submit" value="Add word" />
+            </form>
+            <div class="results-container hidden" id="results-modal-container">
+                <div class="results-content">
+                    <div id="results-rows" class="hidden">
+                        <div id="results-title"></div>
+                        <div class="result-row" id="row-0">
+                            <div class="group" id="group-0"></div>
+                            <div class="members" id="members-0"></div>
+                        </div>
+                        <div class="result-row" id="row-1">
+                            <div class="group" id="group-1"></div>
+                            <div class="members" id="members-1"></div>
+                        </div>
+                        <div class="result-row" id="row-2">
+                            <div class="group" id="group-2"></div>
+                            <div class="members" id="members-2"></div>
+                        </div>
+                        <div class="result-row" id="row-3">
+                            <div class="group" id="group-3"></div>
+                            <div class="members" id="members-3"></div>
+                        </div>
+                    </div>
+                    <form id="select-day" class="">
+                        <div id="select-day-instructions">
+                            Enter the number of any past Connections results
+                            you&rsquo;d like to see. Today is # <span
+                                id="today-number"
+                            ></span>.
+                        </div>
+                        <input
+                            id="input-day"
+                            type="number"
+                        />
+                        <input id="submit-day" type="submit" value="Get day" />
+                    </form>
+                    <button id="close-results">Close</button>
+                </div>
+            </div>
+        </div>
+        <script type="module" src="index.js"></script>
+    </body>
+</html>
