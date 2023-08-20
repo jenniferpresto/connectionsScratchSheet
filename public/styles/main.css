@@ -144,6 +144,8 @@ input {
 }
 #main-container .results-container .results-content #results-rows #results-title {
   color: #000000;
+  margin-bottom: 20px;
+  font-weight: 600;
 }
 #main-container .results-container .results-content #results-rows .result-row {
   box-sizing: border-box;
@@ -178,7 +180,12 @@ input {
 }
 #main-container .results-container .results-content form #select-day-instructions {
   margin-top: 20px;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
+  font-size: 1.25rem;
+}
+#main-container .results-container .results-content form input[type=number] {
+  width: 70px;
+  font-size: 1.5rem;
 }
 #main-container .results-container .results-content #close-results {
   margin-top: 20px;

@@ -157,6 +157,8 @@ input {
 
                 #results-title {
                     color: #000000;
+                    margin-bottom: 20px;
+                    font-weight: 600;
                 }
 
                 .result-row {
@@ -200,7 +202,13 @@ input {
 
                 #select-day-instructions {
                     margin-top: 20px;
-                    margin-bottom: 10px;
+                    margin-bottom: 15px;
+                    font-size: 1.25rem;
+                }
+
+                input[type="number"] {
+                    width: 70px;
+                    font-size: 1.5rem;
                 }
             }
 

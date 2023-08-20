@@ -7,7 +7,7 @@ const CONNECTIONS_JSON_URL =
     "https://www.nytimes.com/games-assets/connections/game-data-by-day.json";
 const CONNECTIONS_DAY_ZERO = new Date("2023/06/12");
 const app = express();
-const IS_DEV = false;
+const IS_DEV = true;
 
 let jsonData = [];
 
@@ -46,7 +46,7 @@ const getConnectionsJson = async () => {
         console.log("Returning test data");
         const localData = await fs.readFile("./testData/testJson.json", "utf8")
             .then(jsonString => JSON.parse(jsonString));
-        return {id: 7, words: parseWords(localData, 7)};
+        return {id: 35, words: parseWords(localData, 35)};
     } else {
         console.log(`Getting json data from ${CONNECTIONS_JSON_URL}`);
         jsonData = await axios
