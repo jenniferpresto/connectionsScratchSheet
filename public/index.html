@@ -3,7 +3,7 @@
     <head>
         <title>Connections Scratch</title>
         <link rel="shortcut icon" href="#" />
-        <link rel="stylesheet" href="style.css" />
+        <link rel="stylesheet" href="styles/main.css" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     </head>
     <body>
@@ -11,13 +11,13 @@
             <div id="instructions">Loading words...</div>
             <div id="word-container"></div>
             <div id="button-container" class="hidden">
-                <button id="delete-all" class="delete-button">
+                <button id="delete-all" class="two-step-button">
                     Delete all
                 </button>
-                <button id="delete-one" class="delete-button">
+                <button id="delete-one" class="two-step-button">
                     Delete one
                 </button>
-                <button id="get-history" class="delete-button">
+                <button id="get-history" class="two-step-button">
                     Get history
                 </button>
             </div>
@@ -29,7 +29,7 @@
                 />
                 <input id="submit-new-word" type="submit" value="Add word" />
             </form>
-            <div class="container hidden" id="results-modal-container">
+            <div class="results-container hidden" id="results-modal-container">
                 <div class="results-content">
                     <div class="result-row" id="row-0">
                         <div class="group" id="group-0"></div>

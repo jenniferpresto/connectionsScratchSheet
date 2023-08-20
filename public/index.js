@@ -241,7 +241,7 @@ const unpressElement = () => {
       if (!e.targetTouches) {
         return;
       }
-      if (e.target.id?.startsWith("main-container")) {
+      if (e.target.id === "main-container") {
         document.activeElement?.blur();
         if (wordBoard.isInDeleteMode) {
           unsetPreDelete();
@@ -262,8 +262,8 @@ const unpressElement = () => {
             e.targetTouches[0].clientY
           );
         }
-      } else if (e.target.id?.startsWith("delete-") ||
-      e.target.id?.startsWith("get-history")) {
+      } else if (e.target.classList?.contains("two-step-button")) {
+        console.log(e.target.classList);
         e.preventDefault();
         pressElement(
           e.target.id,
@@ -341,9 +341,7 @@ const unpressElement = () => {
     e.preventDefault();
     wordBoard.onPointerLifted();
     if (pressedElement) {
-      console.log("Pressed eleent: ", pressedElement);
       if (pressedElement.includes("delete") || pressedElement.includes("history")) {
-        console.log("if-statement");
         if (
           e.target.id?.startsWith("delete-all") &&
           pressedElement === "delete-all"
@@ -365,27 +363,20 @@ const unpressElement = () => {
           e.target.id?.startsWith("get-history") &&
           pressedElement === "get-history"
         ) {
-          console.log("History button touch ended");
           if (!e.changedTouches.length) {
             return;
           }
           getResultForDay(35)
           .then(data => results.showResults(data));
         }
-      }
-      // else if (pressedElement.includes("history")) {
-      //   getResultForDay(35);
-      // }
-      else {
+      } else {
         wordBoard.removeWordById(pressedElement);
         unsetPreDelete();
         showInput();
       }
       unpressElement();
-    } else {
-      if (wordBoard.isInDeleteMode) {
-        unsetPreDelete();
-      }
+    } else if (wordBoard.isInDeleteMode) {
+      unsetPreDelete();
     }
   });
 
