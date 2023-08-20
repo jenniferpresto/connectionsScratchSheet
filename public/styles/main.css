@@ -95,16 +95,16 @@ input {
   border-color: #caf7e2;
   background-color: #ff37a6;
 }
-#main-container form {
-  position: absolute;
-  bottom: 40px;
-  left: 20px;
-}
 #main-container form input {
   height: 2rem;
   border-radius: 10px;
   border: solid;
   border-color: #3d3522;
+}
+#main-container form#add-word {
+  position: absolute;
+  bottom: 40px;
+  left: 20px;
 }
 #main-container form #submit-new-word {
   height: 2.5rem;
@@ -123,6 +123,7 @@ input {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  text-align: center;
   align-items: center;
   background-color: #ffffff;
   opacity: 1;
@@ -138,7 +139,48 @@ input {
     border-radius: 0;
   }
 }
-#main-container .results-container #close-results {
+#main-container .results-container .results-content #results-rows {
+  width: 100%;
+}
+#main-container .results-container .results-content #results-rows #results-title {
+  color: #000000;
+}
+#main-container .results-container .results-content #results-rows .result-row {
+  box-sizing: border-box;
+  color: #000000;
+  border-radius: 10px;
+  width: 100%;
+  margin: 10px 0;
+  padding: 15px;
+}
+#main-container .results-container .results-content #results-rows .result-row .group {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+#main-container .results-container .results-content #results-rows .result-row .members {
+  font-size: 1.25rem;
+}
+#main-container .results-container .results-content #results-rows .result-row#row-0 {
+  background-color: rgb(251, 212, 0);
+}
+#main-container .results-container .results-content #results-rows .result-row#row-1 {
+  background-color: rgb(181, 227, 82);
+}
+#main-container .results-container .results-content #results-rows .result-row#row-2 {
+  background-color: rgb(114, 158, 235);
+}
+#main-container .results-container .results-content #results-rows .result-row#row-3 {
+  background-color: rgb(188, 112, 196);
+}
+#main-container .results-container .results-content form {
+  color: #000000;
+}
+#main-container .results-container .results-content form #select-day-instructions {
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+#main-container .results-container .results-content #close-results {
   margin-top: 20px;
   width: 335px;
   max-width: 95%;
@@ -147,35 +189,6 @@ input {
   color: #ffffff;
   border-radius: 10px;
   cursor: pointer;
-}
-#main-container .results-container .result-row {
-  box-sizing: border-box;
-  color: #000000;
-  text-align: center;
-  border-radius: 10px;
-  width: 100%;
-  margin: 10px 0;
-  padding: 15px;
-}
-#main-container .results-container .result-row .group {
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin-bottom: 5px;
-}
-#main-container .results-container .result-row .members {
-  font-size: 1.25rem;
-}
-#main-container .results-container .result-row#row-0 {
-  background-color: rgb(251, 212, 0);
-}
-#main-container .results-container .result-row#row-1 {
-  background-color: rgb(181, 227, 82);
-}
-#main-container .results-container .result-row#row-2 {
-  background-color: rgb(114, 158, 235);
-}
-#main-container .results-container .result-row#row-3 {
-  background-color: rgb(188, 112, 196);
 }
 #main-container .hidden {
   display: none;

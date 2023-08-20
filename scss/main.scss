@@ -102,15 +102,17 @@ input {
     * Input form
     */
     form {
-        position: absolute;
-        bottom: 40px;
-        left: 20px;
-
         input {
             height: 2rem;
             border-radius: 10px;
             border: solid;
             border-color: #3d3522;
+        }
+
+        &#add-word {
+            position: absolute;
+            bottom: 40px;
+            left: 20px;
         }
 
         #submit-new-word {
@@ -135,6 +137,7 @@ input {
             display: flex;
             flex-direction: column;
             justify-content: center;
+            text-align: center;
             align-items: center;
             background-color: #ffffff;
             opacity: 1;
@@ -148,52 +151,68 @@ input {
                 height: 100%;
                 border-radius: 0;
             }
-        }
 
-        #close-results {
-            margin-top: 20px;
-            width: 335px;
-            max-width: 95%;
-            height: 50px;
-            background-color: #000000;
-            color: #ffffff;
-            border-radius: 10px;
-            cursor: pointer;
-        }
+            #results-rows {
+                width: 100%;
 
-        .result-row {
-            box-sizing: border-box;
-            color: #000000;
-            text-align: center;
-            border-radius: 10px;
-            width: 100%;
-            margin: 10px 0;
-            padding: 15px;
+                #results-title {
+                    color: #000000;
+                }
 
-            .group {
-                font-size: 1.5rem;
-                font-weight: 600;
-                margin-bottom: 5px;
+                .result-row {
+                    box-sizing: border-box;
+                    color: #000000;
+                    border-radius: 10px;
+                    width: 100%;
+                    margin: 10px 0;
+                    padding: 15px;
+
+                    .group {
+                        font-size: 1.5rem;
+                        font-weight: 600;
+                        margin-bottom: 5px;
+                    }
+
+                    .members {
+                        font-size: 1.25rem;
+                    }
+
+                    &#row-0 {
+                        background-color: rgb(251, 212, 0);
+                    }
+
+                    &#row-1 {
+                        background-color: rgb(181, 227, 82);
+                    }
+
+                    &#row-2 {
+                        background-color: rgb(114, 158, 235);
+                    }
+
+                    &#row-3 {
+                        background-color: rgb(188, 112, 196);
+                    }
+                }
             }
 
-            .members {
-                font-size: 1.25rem;
+            form {
+                color: #000000;
+
+                #select-day-instructions {
+                    margin-top: 20px;
+                    margin-bottom: 10px;
+                }
             }
 
-            &#row-0 {
-                background-color: rgb(251, 212, 0);
-            }
-
-            &#row-1 {
-                background-color: rgb(181, 227, 82);
-            }
-
-            &#row-2 {
-                background-color: rgb(114, 158, 235);
-            }
-
-            &#row-3 {
-                background-color: rgb(188, 112, 196);
+            #close-results {
+                margin-top: 20px;
+                width: 335px;
+                max-width: 95%;
+                height: 50px;
+                background-color: #000000;
+                color: #ffffff;
+                border-radius: 10px;
+                cursor: pointer;
             }
         }
     }

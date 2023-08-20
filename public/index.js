@@ -63,6 +63,10 @@ const renderPage = (data) => {
     const getHistoryButton = document.getElementById("get-history");
     const selectDayForm = document.getElementById("select-day");
     const selectDayInput = document.getElementById("input-day");
+    const resultsTitle = document.getElementById("results-title");
+
+    //  set the day's number in the results modal
+    document.getElementById("today-number").innerHTML = (todayId + 1).toString();
 
     let instructionsDisplayingError = false;
     let pressedSpecialElement = "";
@@ -168,8 +172,26 @@ const renderPage = (data) => {
             return;
         }
 
-        const num = Number(selectDayInput.value);
-        console.log(num);
+        let day = 0;
+        try  { day = Number(selectDayInput.value);
+        } catch (e) {
+          console.log("Must enter number", e);
+          selectDayInput.value = "";
+          return;
+        }
+
+        selectDayInput.value = "";
+        const dayIdx = day - 1;
+        if (dayIdx >= todayId || dayIdx < 0) {
+          //  TODO: show error message for out-of-range number
+          return;
+        }
+
+        console.log("Getting results for day idx: ", dayIdx);
+        getResultForDay(dayIdx).then(data => {
+          results.showResults(data);
+          resultsTitle.innerHTML = "Results for Connections #" + day.toString();
+        });
     };
 
     const pressElement = (elementId, x, y) => {
@@ -233,7 +255,6 @@ const renderPage = (data) => {
             case "touchstart":
                 type = "mousedown";
                 pressedGenericElement = first.target;
-                console.log("Pressed generic element: ", pressedGenericElement);
                 break;
             case "touchmove":
                 type = "mousemove";
@@ -256,8 +277,6 @@ const renderPage = (data) => {
             clientY: first.clientY,
         });
 
-        console.log("Dispatching event: ", mouseEvent);
-        console.log("To this target: ", first.target);
         first.target.dispatchEvent(mouseEvent);
         if (isClick) {
             const clickEvent = new MouseEvent("click", {
@@ -278,14 +297,13 @@ const renderPage = (data) => {
      * Mouse listeners
      */
     addWordForm.addEventListener("submit", (e) => {
-        console.log("Reading submit");
         e.preventDefault();
         addNewWordFromInput();
     });
 
     selectDayForm.addEventListener("submit", (e) => {
-        console.log("Reading submit for results");
         e.preventDefault();
+        console.log("Submitting!");
         requestResultsForDay();
     });
 
@@ -302,7 +320,7 @@ const renderPage = (data) => {
 
     getHistoryButton.addEventListener("click", (e) => {
         e.preventDefault();
-        getResultForDay(42).then((data) => results.showResults(data));
+        results.clearResultsAndShow();
     });
 
     document.addEventListener("mousedown", (e) => {
@@ -392,7 +410,6 @@ const renderPage = (data) => {
             ) {
                 e.target.focus();
             } else {
-                console.log("catch-all touchstart target", e.target);
                 touchHandler(e);
             }
         },
@@ -462,9 +479,7 @@ const renderPage = (data) => {
                     if (!e.changedTouches.length) {
                         return;
                     }
-                    getResultForDay(35).then((data) =>
-                        results.showResults(data)
-                    );
+                    results.clearResultsAndShow();
                 }
             } else {
                 wordBoard.removeWordById(pressedSpecialElement);
@@ -475,7 +490,6 @@ const renderPage = (data) => {
         } else if (wordBoard.isInDeleteMode) {
             unsetPreDelete();
         } else {
-            console.log("Generic touchend");
             touchHandler(e);
         }
     });

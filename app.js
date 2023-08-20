@@ -7,7 +7,7 @@ const CONNECTIONS_JSON_URL =
     "https://www.nytimes.com/games-assets/connections/game-data-by-day.json";
 const CONNECTIONS_DAY_ZERO = new Date("2023/06/12");
 const app = express();
-const IS_DEV = true;
+const IS_DEV = false;
 
 let jsonData = [];
 
@@ -49,7 +49,7 @@ const getConnectionsJson = async () => {
         return {id: 7, words: parseWords(localData, 7)};
     } else {
         console.log(`Getting json data from ${CONNECTIONS_JSON_URL}`);
-        const data = await axios
+        jsonData = await axios
             .request({
                 timeout: 5000,
                 method: "GET",
@@ -63,8 +63,7 @@ const getConnectionsJson = async () => {
                 return {id: -1, words: []};
             });
         const day = getConnectionsDay();
-        
-        return {id: day, words: parseWords(day)}
+        return {id: day, words: parseWords(jsonData, day)}
     }
   };
 

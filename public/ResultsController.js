@@ -1,6 +1,7 @@
 export default class ResultsController {
     constructor() {
         this.container = document.getElementById("results-modal-container");
+        this.resultRowContainer = document.getElementById("results-rows");
         this.resultRows = document.getElementsByClassName("result-row");
         this.closeButton = document.getElementById("close-results");
         this.setup();
@@ -25,7 +26,22 @@ export default class ResultsController {
         }
     }
 
+    clearResultsAndShow() {
+        if (!this.resultRowContainer.classList.contains("hidden")) {
+            this.resultRowContainer.classList.add("hidden");
+        }
+
+        if (this.container.classList.contains("hidden")) {
+            this.container.classList.remove("hidden");
+        }
+    }
+
     showResults(jsonResults) {
+        console.log("SHowing results: ", jsonResults);
+        if (this.resultRowContainer.classList.contains("hidden")) {
+            this.resultRowContainer.classList.remove("hidden");
+        }
+
         const resultsMap = new Map(Object.entries(jsonResults.groups));
         resultsMap.forEach((groupData, groupName) => {
             const level = groupData.level;
@@ -49,9 +65,5 @@ export default class ResultsController {
                 membersDiv.innerHTML = members;
             }
         });
-
-        if (this.container.classList.contains("hidden")) {
-            this.container.classList.remove("hidden");
-        }
     }
 }
