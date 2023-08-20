@@ -56,7 +56,8 @@ const renderPage = (words) => {
   const buttonContainer = document.getElementById("button-container");
   const deleteOneButton = document.getElementById("delete-one");
   const deleteAllButton = document.getElementById("delete-all");
-  const getHistoryButton = document.getElementById("get-history");
+  const getHistoryButton = document.getElementById("get-history")
+  const inputDay = document.getElementById("input-day");
 
   let instructionsDisplayingError = false;
   let pressedElement = "";
@@ -199,6 +200,44 @@ const unpressElement = () => {
   }
 
   /**
+   * General touch handler
+   */
+  const touchHandler = event => {
+    let touches = event.changedTouches;
+    if (!touches || !touches.length) {
+      return;
+    }
+    const first = touches[0];
+    let type = "";
+    switch (event.type) {
+      case "touchstart":
+        type = "mousedown";
+        break;
+      case "touchmove":
+        type = "mousemove";
+        break;
+      case "touchend":
+        type = "mouseup";
+        break;
+      default:
+        return;
+    }
+
+    const mouseEvent = new MouseEvent(type, {
+      screenX: first.screenX,
+      screenY: first.screenY,
+      clientX: first.clientX,
+      clientY: first.clientY
+    });
+
+    console.log("Dispatching event: ", mouseEvent);
+    console.log("To this target: ", first.target);
+    const returnValue = first.target.dispatchEvent(mouseEvent);
+    console.log(returnValue);
+    // event.preventDefault();
+  }
+
+  /**
    * Listeners
    */
   inputForm.addEventListener("submit", (e) => {
@@ -223,7 +262,38 @@ const unpressElement = () => {
     .then(data => results.showResults(data));
   });
 
+  document.addEventListener("mousemove", (e) => {
+    e.preventDefault();
+    if (wordBoard.isInDeleteMode) {
+      if (pressedElement && pressedElement.startsWith("box")) {
+        if (
+          Math.abs(e.clientX - touchStartPos.x) > 15 ||
+          Math.abs(e.clientY - touchStartPos.y) > 15
+        ) {
+          unpressElement();
+        }
+      }
+    } else {
+      wordBoard.onPointerMoved(e.clientX, e.clientY);
+    }
+  });
+
+  document.addEventListener("mouseup", (e) => {
+    e.preventDefault();
+    if (wordBoard.isInDeleteMode) {
+      if (pressedElement) {
+        wordBoard.removeWordById(pressedElement);
+        showInput();
+      }
+      unsetPreDelete();
+    } else {
+      wordBoard.onPointerLifted();
+    }
+    unpressElement();
+  });
+
   document.addEventListener("mousedown", (e) => {
+    console.log(e);
     if (e.target.id?.startsWith("box")) {
       if (wordBoard.isInDeleteMode) {
         // pressedElement = e.target.id;
@@ -251,8 +321,7 @@ const unpressElement = () => {
           unsetPreDelete();
         }
       } else if (e.target.id === "close-results") {
-        e.preventDefault();
-        results.hideResults();
+        touchHandler(e);
       } else if (e.target.id?.startsWith("box")) {
         e.preventDefault();
         if (wordBoard.isInDeleteMode) {
@@ -285,36 +354,6 @@ const unpressElement = () => {
     { passive: false }
   );
 
-  document.addEventListener("mousemove", (e) => {
-    e.preventDefault();
-    if (wordBoard.isInDeleteMode) {
-      if (pressedElement && pressedElement.startsWith("box")) {
-        if (
-          Math.abs(e.clientX - touchStartPos.x) > 15 ||
-          Math.abs(e.clientY - touchStartPos.y) > 15
-        ) {
-          unpressElement();
-        }
-      }
-    } else {
-      wordBoard.onPointerMoved(e.clientX, e.clientY);
-    }
-  });
-
-  document.addEventListener("mouseup", (e) => {
-    e.preventDefault();
-    if (wordBoard.isInDeleteMode) {
-      if (pressedElement) {
-        wordBoard.removeWordById(pressedElement);
-        showInput();
-      }
-      unsetPreDelete();
-    } else {
-      wordBoard.onPointerLifted();
-    }
-    unpressElement();
-  });
-
   document.addEventListener(
     "touchmove",
     (e) => {
@@ -338,7 +377,9 @@ const unpressElement = () => {
           e.targetTouches[0].clientX,
           e.targetTouches[0].clientY
         );
+        return;
       }
+      // touchHandler(e);
     },
     { passive: false }
   );
@@ -383,6 +424,8 @@ const unpressElement = () => {
       unpressElement();
     } else if (wordBoard.isInDeleteMode) {
       unsetPreDelete();
+    } else {
+      touchHandler(e);
     }
   });
 

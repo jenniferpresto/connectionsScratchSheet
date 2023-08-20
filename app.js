@@ -7,6 +7,7 @@ const CONNECTIONS_JSON_URL =
     "https://www.nytimes.com/games-assets/connections/game-data-by-day.json";
 const CONNECTIONS_DAY_ZERO = new Date("2023/06/12");
 const app = express();
+const IS_DEV = true;
 
 let jsonData = [];
 
@@ -41,28 +42,29 @@ const parseWords = (data, idx) => {
 
 
 const getConnectionsJson = async () => {
-    console.log(`Getting json data from ${CONNECTIONS_JSON_URL}`);
-    const localData = await fs.readFile("./testData/testJson.json", "utf8")
-    .then(jsonString => JSON.parse(jsonString));
-    console.log("Json 7: ", localData[7]);
-    console.log("Just json 7 outside block: ", parseWords(localData, 7));
-    return parseWords(localData, 7);
-
-    // const data = await axios
-    //     .request({
-    //         timeout: 5000,
-    //         method: "GET",
-    //         url: CONNECTIONS_JSON_URL,
-    //     })
-    //     .then((res) => {
-    //         jsonData = res.data;
-    //         return parseWords(res.data, getConnectionsDay());
-    //     })
-    //     .catch((e) => {
-    //         console.log("Error fetching JSON data: ", e);
-    //         return [];
-    //     });
-    // return data;
+    if (IS_DEV) {
+        console.log("Returning test data");
+        const localData = await fs.readFile("./testData/testJson.json", "utf8")
+            .then(jsonString => JSON.parse(jsonString));
+        return parseWords(localData, 7);
+    } else {
+        console.log(`Getting json data from ${CONNECTIONS_JSON_URL}`);
+        const data = await axios
+            .request({
+                timeout: 5000,
+                method: "GET",
+                url: CONNECTIONS_JSON_URL,
+            })
+            .then((res) => {
+                jsonData = res.data;
+                return parseWords(res.data, getConnectionsDay());
+            })
+            .catch((e) => {
+                console.log("Error fetching JSON data: ", e);
+                return [];
+            });
+        return data;
+    }
   };
 
 //  middleware to serve up specific path with static files
@@ -89,14 +91,11 @@ app.get("/connectionsData", async (req, res) => {
 });
 
 app.get("/connectionsJson", async (req, res) => {
-    console.log("Received request from ", req.header("x-forwarded-for"));
     const data = await getConnectionsJson();
-    console.log("this data we have", data);
     res.send(data);
 });
 
 app.get("/resultDay/:gameNum", (req, res) => {
-    console.log("Getting results for day: ", req.params.gameNum);
     const dayResult = jsonData.find(
         (obj) => obj.id === Number(req.params.gameNum)
     );
