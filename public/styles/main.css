@@ -12,6 +12,11 @@ body {
   color: white;
 }
 
+input {
+  font-size: 1rem;
+  appearance: textfield;
+}
+
 #main-container {
   height: 100%;
   font-family: arial;
@@ -96,7 +101,6 @@ body {
   left: 20px;
 }
 #main-container form input {
-  font-size: 1rem;
   height: 2rem;
   border-radius: 10px;
   border: solid;

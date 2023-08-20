@@ -46,7 +46,7 @@ const getConnectionsJson = async () => {
         console.log("Returning test data");
         const localData = await fs.readFile("./testData/testJson.json", "utf8")
             .then(jsonString => JSON.parse(jsonString));
-        return parseWords(localData, 7);
+        return {id: 7, words: parseWords(localData, 7)};
     } else {
         console.log(`Getting json data from ${CONNECTIONS_JSON_URL}`);
         const data = await axios
@@ -56,14 +56,15 @@ const getConnectionsJson = async () => {
                 url: CONNECTIONS_JSON_URL,
             })
             .then((res) => {
-                jsonData = res.data;
-                return parseWords(res.data, getConnectionsDay());
+                return res.data;
             })
             .catch((e) => {
                 console.log("Error fetching JSON data: ", e);
-                return [];
+                return {id: -1, words: []};
             });
-        return data;
+        const day = getConnectionsDay();
+        
+        return {id: day, words: parseWords(day)}
     }
   };
 
