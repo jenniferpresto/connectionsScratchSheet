@@ -19,7 +19,6 @@ export default class WordController {
      * Setup
      */
     setup(wordStrings, isTouchScreen, isHorizontal) {
-        console.log("Is touch?", isTouchScreen);
         let wordAreaWidth;
         if (isTouchScreen) {
             wordAreaWidth = isHorizontal
@@ -28,7 +27,6 @@ export default class WordController {
         } else {
             wordAreaWidth = window.innerWidth - 40;
         }
-        console.log("Width: ", wordAreaWidth);
         this.wordWidth = Math.min(wordAreaWidth / 4, 150);
         this.wordHeight = Math.max(this.wordWidth * 0.4, 42);
         this.wordSpacing = this.wordWidth < 150 ? 10 : 20;

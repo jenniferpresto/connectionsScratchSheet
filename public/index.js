@@ -303,7 +303,6 @@ const renderPage = (data) => {
 
     selectDayForm.addEventListener("submit", (e) => {
         e.preventDefault();
-        console.log("Submitting!");
         requestResultsForDay();
     });
 

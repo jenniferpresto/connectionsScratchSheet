@@ -7,7 +7,7 @@ const CONNECTIONS_JSON_URL =
     "https://www.nytimes.com/games-assets/connections/game-data-by-day.json";
 const CONNECTIONS_DAY_ZERO = new Date("2023/06/12");
 const app = express();
-const IS_DEV = true;
+const IS_DEV = false;
 
 let jsonData = [];
 
@@ -96,6 +96,7 @@ app.get("/connectionsJson", async (req, res) => {
 });
 
 app.get("/resultDay/:gameNum", (req, res) => {
+    console.log(`Received request for past results: gameNum: ${req.params.gameNum}`);
     const dayResult = jsonData.find(
         (obj) => obj.id === Number(req.params.gameNum)
     );

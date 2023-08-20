@@ -5,7 +5,6 @@ export default class ResultsController {
         this.resultRows = document.getElementsByClassName("result-row");
         this.closeButton = document.getElementById("close-results");
         this.setup();
-
     }
 
     /**
@@ -37,7 +36,6 @@ export default class ResultsController {
     }
 
     showResults(jsonResults) {
-        console.log("SHowing results: ", jsonResults);
         if (this.resultRowContainer.classList.contains("hidden")) {
             this.resultRowContainer.classList.remove("hidden");
         }
