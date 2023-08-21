@@ -91,6 +91,7 @@ app.get("/connectionsData", async (req, res) => {
 });
 
 app.get("/connectionsJson", async (req, res) => {
+    console.log("Received request from ", req.header("x-forwarded-for"));
     const data = await getConnectionsJson();
     res.send(data);
 });
