@@ -119,8 +119,10 @@ input {
   justify-content: center;
   align-items: center;
 }
-#main-container .results-container.showing-results {
-  align-items: flex-start;
+@media (max-width: 768px) {
+  #main-container .results-container.showing-results {
+    align-items: flex-start;
+  }
 }
 #main-container .results-container .results-content {
   display: flex;

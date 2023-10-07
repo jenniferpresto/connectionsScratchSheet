@@ -134,7 +134,9 @@ input {
         align-items: center;
 
         &.showing-results {
-            align-items: flex-start;
+            @media (max-width: 768px) {
+                align-items: flex-start;
+            }
         }
 
         .results-content {

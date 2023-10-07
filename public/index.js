@@ -445,7 +445,6 @@ const renderPage = (data) => {
     );
 
     document.addEventListener("touchend", (e) => {
-        // e.preventDefault();
         wordBoard.onPointerLifted();
         if (pressedSpecialElement) {
             if (
