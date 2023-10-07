@@ -41,7 +41,6 @@ const getResultForDay = async (dayNum) => {
     const resultsData = await fetch(`/resultDay/${dayNum}`)
         .then((res) => res.json())
         .then((data) => {
-            console.log(data);
             return data;
         })
         .catch((e) => {
@@ -255,8 +254,10 @@ const renderPage = (data) => {
             case "touchstart":
                 type = "mousedown";
                 pressedGenericElement = first.target;
+                event.preventDefault();
                 break;
             case "touchmove":
+              console.log(event);
                 type = "mousemove";
                 break;
             case "touchend":
@@ -265,6 +266,7 @@ const renderPage = (data) => {
                     isClick = true;
                 }
                 pressedGenericElement = null;
+                event.preventDefault();
                 break;
             default:
                 return;
@@ -287,7 +289,6 @@ const renderPage = (data) => {
             });
             first.target.dispatchEvent(clickEvent);
         }
-        event.preventDefault();
     };
 
     /**
@@ -419,6 +420,7 @@ const renderPage = (data) => {
         "touchmove",
         (e) => {
             if (!e.targetTouches.length) {
+                console.log("No touches");
                 return;
             }
             //  make sure you don't drag too much before you delete all the words
@@ -441,7 +443,8 @@ const renderPage = (data) => {
                 );
                 return;
             }
-            // touchHandler(e);
+            console.log("Touch handler for scrolling");
+            touchHandler(e);
         },
         { passive: false }
     );
