@@ -133,6 +133,10 @@ input {
         justify-content: center;
         align-items: center;
 
+        &.showing-results {
+            align-items: flex-start;
+        }
+
         .results-content {
             display: flex;
             flex-direction: column;
@@ -142,6 +146,7 @@ input {
             background-color: #ffffff;
             opacity: 1;
             width: 75%;
+            max-width: 675px;
             border-radius: 10px;
             box-sizing: border-box;
             padding: 30px;
@@ -214,6 +219,7 @@ input {
 
             #close-results {
                 margin-top: 20px;
+                margin-bottom: 40px; // push whole form slightly above center
                 width: 335px;
                 max-width: 95%;
                 height: 50px;

@@ -23,6 +23,10 @@ export default class ResultsController {
         if (!this.container.classList.contains("hidden")) {
             this.container.classList.add("hidden");
         }
+
+        if (this.container.classList.contains("showing-results")) {
+            this.container.classList.remove("showing-results");
+        }
     }
 
     clearResultsAndShow() {
@@ -36,6 +40,10 @@ export default class ResultsController {
     }
 
     showResults(jsonResults) {
+        if (!this.container.classList.contains("showing-results")) {
+            this.container.classList.add("showing-results");
+        }
+
         if (this.resultRowContainer.classList.contains("hidden")) {
             this.resultRowContainer.classList.remove("hidden");
         }

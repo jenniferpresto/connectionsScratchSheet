@@ -254,7 +254,6 @@ const renderPage = (data) => {
             case "touchstart":
                 type = "mousedown";
                 pressedGenericElement = first.target;
-                event.preventDefault();
                 break;
             case "touchmove":
               console.log(event);
@@ -280,6 +279,7 @@ const renderPage = (data) => {
         });
 
         first.target.dispatchEvent(mouseEvent);
+        console.log("Mouse event dispatched; ", mouseEvent);
         if (isClick) {
             const clickEvent = new MouseEvent("click", {
                 screenX: first.screenX,
