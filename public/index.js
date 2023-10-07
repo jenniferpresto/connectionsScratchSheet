@@ -256,7 +256,6 @@ const renderPage = (data) => {
                 pressedGenericElement = first.target;
                 break;
             case "touchmove":
-              console.log(event);
                 type = "mousemove";
                 break;
             case "touchend":
@@ -265,7 +264,6 @@ const renderPage = (data) => {
                     isClick = true;
                 }
                 pressedGenericElement = null;
-                event.preventDefault();
                 break;
             default:
                 return;
@@ -279,7 +277,6 @@ const renderPage = (data) => {
         });
 
         first.target.dispatchEvent(mouseEvent);
-        console.log("Mouse event dispatched; ", mouseEvent);
         if (isClick) {
             const clickEvent = new MouseEvent("click", {
                 screenX: first.screenX,
@@ -420,7 +417,6 @@ const renderPage = (data) => {
         "touchmove",
         (e) => {
             if (!e.targetTouches.length) {
-                console.log("No touches");
                 return;
             }
             //  make sure you don't drag too much before you delete all the words
@@ -443,14 +439,13 @@ const renderPage = (data) => {
                 );
                 return;
             }
-            console.log("Touch handler for scrolling");
             touchHandler(e);
         },
         { passive: false }
     );
 
     document.addEventListener("touchend", (e) => {
-        e.preventDefault();
+        // e.preventDefault();
         wordBoard.onPointerLifted();
         if (pressedSpecialElement) {
             if (
