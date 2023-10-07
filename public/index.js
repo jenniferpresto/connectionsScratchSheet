@@ -41,7 +41,6 @@ const getResultForDay = async (dayNum) => {
     const resultsData = await fetch(`/resultDay/${dayNum}`)
         .then((res) => res.json())
         .then((data) => {
-            console.log(data);
             return data;
         })
         .catch((e) => {
@@ -64,6 +63,7 @@ const renderPage = (data) => {
     const selectDayForm = document.getElementById("select-day");
     const selectDayInput = document.getElementById("input-day");
     const resultsTitle = document.getElementById("results-title");
+    const resultsModalContainer = document.getElementById("results-modal-container");
 
     //  set the day's number in the results modal
     document.getElementById("today-number").innerHTML = (todayId + 1).toString();
@@ -287,14 +287,25 @@ const renderPage = (data) => {
             });
             first.target.dispatchEvent(clickEvent);
         }
-        event.preventDefault();
     };
 
     /**
      * Listeners
      */
+
     /**
-     * Mouse listeners
+     * Key listeners for document
+     */
+    document.addEventListener("keyup", (e) => {
+        if (e.key === "Escape") {
+            if (results.getIsVisible()) {
+                closeResults();
+            }
+        }
+    });
+
+    /**
+     * Mouse listeners for specific elements
      */
     addWordForm.addEventListener("submit", (e) => {
         e.preventDefault();
@@ -322,6 +333,17 @@ const renderPage = (data) => {
         results.clearResultsAndShow();
     });
 
+    resultsModalContainer.addEventListener("click", (e) => {
+        if (e.target !== resultsModalContainer) {
+            return;
+        }
+        e.preventDefault();
+        results.hideResults();
+    });
+
+    /**
+     * Mouse listeners for document
+     */
     document.addEventListener("mousedown", (e) => {
         if (e.target.id?.startsWith("box")) {
             if (wordBoard.isInDeleteMode) {
@@ -441,13 +463,12 @@ const renderPage = (data) => {
                 );
                 return;
             }
-            // touchHandler(e);
+            touchHandler(e);
         },
         { passive: false }
     );
 
     document.addEventListener("touchend", (e) => {
-        e.preventDefault();
         wordBoard.onPointerLifted();
         if (pressedSpecialElement) {
             if (

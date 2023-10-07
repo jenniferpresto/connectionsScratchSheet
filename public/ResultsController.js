@@ -4,6 +4,7 @@ export default class ResultsController {
         this.resultRowContainer = document.getElementById("results-rows");
         this.resultRows = document.getElementsByClassName("result-row");
         this.closeButton = document.getElementById("close-results");
+        this.isVisible = false;
         this.setup();
     }
 
@@ -19,13 +20,23 @@ export default class ResultsController {
         });
     }
 
+    getIsVisible() {
+        return this.isVisible;
+    }
+
     hideResults() {
+        this.isVisible = false;
         if (!this.container.classList.contains("hidden")) {
             this.container.classList.add("hidden");
+        }
+
+        if (this.container.classList.contains("showing-results")) {
+            this.container.classList.remove("showing-results");
         }
     }
 
     clearResultsAndShow() {
+        this.isVisible = true;
         if (!this.resultRowContainer.classList.contains("hidden")) {
             this.resultRowContainer.classList.add("hidden");
         }
@@ -36,6 +47,11 @@ export default class ResultsController {
     }
 
     showResults(jsonResults) {
+        this.isVisible = true;
+        if (!this.container.classList.contains("showing-results")) {
+            this.container.classList.add("showing-results");
+        }
+
         if (this.resultRowContainer.classList.contains("hidden")) {
             this.resultRowContainer.classList.remove("hidden");
         }
