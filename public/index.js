@@ -63,6 +63,7 @@ const renderPage = (data) => {
     const selectDayForm = document.getElementById("select-day");
     const selectDayInput = document.getElementById("input-day");
     const resultsTitle = document.getElementById("results-title");
+    const resultsModalContainer = document.getElementById("results-modal-container");
 
     //  set the day's number in the results modal
     document.getElementById("today-number").innerHTML = (todayId + 1).toString();
@@ -318,6 +319,14 @@ const renderPage = (data) => {
     getHistoryButton.addEventListener("click", (e) => {
         e.preventDefault();
         results.clearResultsAndShow();
+    });
+
+    resultsModalContainer.addEventListener("click", (e) => {
+        if (e.target !== resultsModalContainer) {
+            return;
+        }
+        e.preventDefault();
+        results.hideResults();
     });
 
     document.addEventListener("mousedown", (e) => {
