@@ -13,8 +13,16 @@ let jsonData = [];
 
 const getConnectionsDay = () => {
     const today = new Date();
+    const intlDateObj = new Intl.DateTimeFormat('en-US', {
+        timeZone: "America/New_York",
+    });
+    const nyDateString = intlDateObj.format(today);
+    const nyDateParts = nyDateString.split("/");
+    const convertedNyDateString = nyDateParts[2] + "-" + nyDateParts[0] + "-" + nyDateParts[1];
+    const nyDateObj = new Date(convertedNyDateString);
+
     const daysSinceDayZero = Math.floor(
-        (today - CONNECTIONS_DAY_ZERO) / (1000 * 60 * 60 * 24)
+        (nyDateObj - CONNECTIONS_DAY_ZERO) / (1000 * 60 * 60 * 24)
     );
     return daysSinceDayZero;
 };
