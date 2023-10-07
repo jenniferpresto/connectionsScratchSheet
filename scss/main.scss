@@ -213,13 +213,28 @@ input {
                     font-size: 1.25rem;
                 }
 
-                input[type="number"] {
-                    width: 70px;
-                    font-size: 1.5rem;
+                .select-day-inputs {
+                    height: 45px;
+                    display: flex;
+                    justify-content: center;
+                    
+                    input {
+                        height: inherit;
+                        box-sizing: border-box;
+                        margin: 0 10px;
+                        width: 70px;
+                        border: solid 2px;
+                    }
+
+                    input[type="number"] {
+                        width: 70px;
+                        font-size: 1.5rem;
+                    }
                 }
             }
 
             #close-results {
+                font-size: 1.25rem;
                 margin-top: 20px;
                 margin-bottom: 40px; // push whole form slightly above center
                 width: 335px;
