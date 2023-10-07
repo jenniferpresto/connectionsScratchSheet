@@ -292,8 +292,20 @@ const renderPage = (data) => {
     /**
      * Listeners
      */
+
     /**
-     * Mouse listeners
+     * Key listeners for document
+     */
+    document.addEventListener("keyup", (e) => {
+        if (e.key === "Escape") {
+            if (results.getIsVisible()) {
+                closeResults();
+            }
+        }
+    });
+
+    /**
+     * Mouse listeners for specific elements
      */
     addWordForm.addEventListener("submit", (e) => {
         e.preventDefault();
@@ -329,6 +341,9 @@ const renderPage = (data) => {
         results.hideResults();
     });
 
+    /**
+     * Mouse listeners for document
+     */
     document.addEventListener("mousedown", (e) => {
         if (e.target.id?.startsWith("box")) {
             if (wordBoard.isInDeleteMode) {
