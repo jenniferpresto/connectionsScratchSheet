@@ -39,14 +39,16 @@ export default class WordController {
     }
 
     setUpInitialPositions(wordWidth, wordHeight, topPos) {
-        for (let i = 0; i < 4; i++) {
-            for (let j = 0; j < 4; j++) {
+        for (let y = 0; y < 4; y++) {
+            for (let x = 0; x < 4; x++) {
                 const pos = new Position(
-                    i * (wordWidth + this.wordSpacing) + this.wordSpacing / 2,
-                    j * (wordHeight + this.wordSpacing) +
+                    x * (wordWidth + this.wordSpacing) + this.wordSpacing / 2,
+                    y * (wordHeight + this.wordSpacing) +
                         this.wordSpacing / 2 +
                         topPos
                 );
+                console.log(`(${x}, ${y})`);
+                console.log(pos);
                 this.initialPositions.push(pos);
             }
         }
