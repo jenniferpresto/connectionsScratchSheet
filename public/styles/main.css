@@ -187,6 +187,7 @@ input {
 }
 #main-container .results-container .results-content form {
   color: #000000;
+  max-width: 500px;
 }
 #main-container .results-container .results-content form #select-day-instructions {
   margin-top: 20px;
