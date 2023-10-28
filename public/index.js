@@ -27,14 +27,14 @@ const renderTestWords = () => {
 };
 
 const getDataFromJson = async () => {
-    // await fetch("/connectionsJson")
-    //     .then((res) => res.json())
-    //     .then((data) => renderPage(data))
-    //     .catch((e) => {
-    //         console.log(e);
-    //         renderPage({ id: -1, words: [] });
-    //     });
-    renderTestWords();
+    await fetch("/connectionsJson")
+        .then((res) => res.json())
+        .then((data) => renderPage(data))
+        .catch((e) => {
+            console.log(e);
+            renderPage({ id: -1, words: [] });
+        });
+    // renderTestWords();
 };
 
 const getResultForDay = async (dayNum) => {
