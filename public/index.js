@@ -38,7 +38,7 @@ const getDataFromJson = async () => {
 };
 
 const getResultForDay = async (dayNum) => {
-    await fetch(`/resultDay/${dayNum}`)
+    return await fetch(`/resultDay/${dayNum}`)
         .then((res) => res.json())
         .then((data) => {
             return data;
@@ -188,8 +188,8 @@ const renderPage = (data) => {
           results.showResults(data);
           resultsTitle.innerHTML = "Results for Connections # " + day.toString();
         })
-        .catch(() => {
-            console.log("Whoops");
+        .catch(err => {
+            console.log("Whoops", err);
         });
     };
 

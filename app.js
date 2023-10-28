@@ -50,10 +50,10 @@ const parseWords = (data, idx) => {
 
 const getConnectionsJson = async () => {
     if (IS_DEV) {
-        console.log("Returning test data");
-        const localData = await fs.readFile("./testData/testJson.json", "utf8")
+        console.log("Loading test data");
+        jsonData = await fs.readFile("./testData/testJson.json", "utf8")
             .then(jsonString => JSON.parse(jsonString));
-        return {id: 35, words: parseWords(localData, 35)};
+        return {id: 35, words: parseWords(jsonData, 35)};
     } else {
         console.log(`Getting json data from ${CONNECTIONS_JSON_URL}`);
         jsonData = await axios
