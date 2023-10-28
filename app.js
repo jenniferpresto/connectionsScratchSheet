@@ -16,11 +16,11 @@ const getConnectionsDay = () => {
     const intlDateObj = new Intl.DateTimeFormat('en-US', {
         timeZone: "America/New_York",
     });
+    const dayZeroFormatted = intlDateObj.format(CONNECTIONS_DAY_ZERO);
     const nyDateString = intlDateObj.format(today);
     const nyDateParts = nyDateString.split("/");
-    const convertedNyDateString = nyDateParts[2] + "-" + nyDateParts[0] + "-" + nyDateParts[1];
+    const convertedNyDateString = nyDateParts[2] + "/" + nyDateParts[0] + "/" + nyDateParts[1];
     const nyDateObj = new Date(convertedNyDateString);
-
     const daysSinceDayZero = Math.floor(
         (nyDateObj - CONNECTIONS_DAY_ZERO) / (1000 * 60 * 60 * 24)
     );
@@ -47,7 +47,6 @@ const parseWords = (data, idx) => {
 
     return shuffledWords;
 };
-
 
 const getConnectionsJson = async () => {
     if (IS_DEV) {

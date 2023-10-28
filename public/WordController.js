@@ -47,8 +47,6 @@ export default class WordController {
                         this.wordSpacing / 2 +
                         topPos
                 );
-                console.log(`(${x}, ${y})`);
-                console.log(pos);
                 this.initialPositions.push(pos);
             }
         }
