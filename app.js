@@ -16,11 +16,11 @@ const getConnectionsDay = () => {
     const intlDateObj = new Intl.DateTimeFormat('en-US', {
         timeZone: "America/New_York",
     });
+    const dayZeroFormatted = intlDateObj.format(CONNECTIONS_DAY_ZERO);
     const nyDateString = intlDateObj.format(today);
     const nyDateParts = nyDateString.split("/");
-    const convertedNyDateString = nyDateParts[2] + "-" + nyDateParts[0] + "-" + nyDateParts[1];
+    const convertedNyDateString = nyDateParts[2] + "/" + nyDateParts[0] + "/" + nyDateParts[1];
     const nyDateObj = new Date(convertedNyDateString);
-
     const daysSinceDayZero = Math.floor(
         (nyDateObj - CONNECTIONS_DAY_ZERO) / (1000 * 60 * 60 * 24)
     );
@@ -48,13 +48,12 @@ const parseWords = (data, idx) => {
     return shuffledWords;
 };
 
-
 const getConnectionsJson = async () => {
     if (IS_DEV) {
-        console.log("Returning test data");
-        const localData = await fs.readFile("./testData/testJson.json", "utf8")
+        console.log("Loading test data");
+        jsonData = await fs.readFile("./testData/testJson.json", "utf8")
             .then(jsonString => JSON.parse(jsonString));
-        return {id: 35, words: parseWords(localData, 35)};
+        return {id: 35, words: parseWords(jsonData, 35)};
     } else {
         console.log(`Getting json data from ${CONNECTIONS_JSON_URL}`);
         jsonData = await axios
@@ -140,7 +139,7 @@ app.get("/resultDay/:gameNum", (req, res) => {
     if (dayResult) {
         res.send(dayResult);
     } else {
-        res.send(testData);
+        res.error(500).send("Unable to find requested day");
     }
 });
 

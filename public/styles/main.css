@@ -45,6 +45,7 @@ input {
   /* width: 225px; */
   position: absolute;
   top: 10px;
+  display: flex;
 }
 #main-container .two-step-button {
   width: 100px;
@@ -113,6 +114,7 @@ input {
 #main-container .results-container {
   display: flex;
   backdrop-filter: blur(10px);
+  background-color: rgba(255, 255, 255, 0.2);
   height: 100%;
   width: 100%;
   position: absolute;
@@ -137,10 +139,12 @@ input {
   border-radius: 10px;
   box-sizing: border-box;
   padding: 30px;
+  box-shadow: 0 3px 12px -1px rgba(0, 0, 0, 0.5);
 }
 @media (max-width: 768px) {
   #main-container .results-container .results-content {
     width: 100%;
+    max-width: 100%;
     min-height: 100%;
     border-radius: 0;
   }
@@ -181,27 +185,28 @@ input {
 #main-container .results-container .results-content #results-rows .result-row#row-3 {
   background-color: rgb(188, 112, 196);
 }
-#main-container .results-container .results-content form {
+#main-container .results-container .results-content form.select-day {
   color: #000000;
+  max-width: 500px;
 }
-#main-container .results-container .results-content form #select-day-instructions {
+#main-container .results-container .results-content form.select-day #select-day-instructions {
   margin-top: 20px;
   margin-bottom: 15px;
   font-size: 1.25rem;
 }
-#main-container .results-container .results-content form .select-day-inputs {
+#main-container .results-container .results-content form.select-day .select-day-inputs {
   height: 45px;
   display: flex;
   justify-content: center;
 }
-#main-container .results-container .results-content form .select-day-inputs input {
+#main-container .results-container .results-content form.select-day .select-day-inputs input {
   height: inherit;
   box-sizing: border-box;
   margin: 0 10px;
   width: 70px;
   border: solid 2px;
 }
-#main-container .results-container .results-content form .select-day-inputs input[type=number] {
+#main-container .results-container .results-content form.select-day .select-day-inputs input[type=number] {
   width: 70px;
   font-size: 1.5rem;
 }

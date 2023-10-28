@@ -38,16 +38,11 @@ const getDataFromJson = async () => {
 };
 
 const getResultForDay = async (dayNum) => {
-    const resultsData = await fetch(`/resultDay/${dayNum}`)
+    return await fetch(`/resultDay/${dayNum}`)
         .then((res) => res.json())
         .then((data) => {
             return data;
         })
-        .catch((e) => {
-            console.log("Error: ", e);
-            return {};
-        });
-    return resultsData;
 };
 
 const renderPage = (data) => {
@@ -188,9 +183,13 @@ const renderPage = (data) => {
         }
 
         selectDayInput.blur();
-        getResultForDay(dayIdx).then(data => {
+        getResultForDay(dayIdx)
+        .then(data => {
           results.showResults(data);
           resultsTitle.innerHTML = "Results for Connections # " + day.toString();
+        })
+        .catch(err => {
+            console.log("Whoops", err);
         });
     };
 

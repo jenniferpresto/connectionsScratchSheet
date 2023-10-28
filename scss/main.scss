@@ -34,6 +34,7 @@ input {
         /* width: 225px; */
         position: absolute;
         top: 10px;
+        display: flex;
     }
 
     .two-step-button {
@@ -127,6 +128,7 @@ input {
     .results-container {
         display: flex;
         backdrop-filter: blur(10px);
+        background-color: rgba(255, 255, 255, 0.2);
         height: 100%;
         width: 100%;
         position: absolute;
@@ -152,9 +154,11 @@ input {
             border-radius: 10px;
             box-sizing: border-box;
             padding: 30px;
+            box-shadow: 0 3px 12px -1px rgba(0, 0, 0, 0.5);
 
             @media (max-width: 768px) {
                 width: 100%;
+                max-width: 100%;
                 min-height: 100%;
                 border-radius: 0;
             }
@@ -204,8 +208,9 @@ input {
                 }
             }
 
-            form {
+            form.select-day {
                 color: #000000;
+                max-width: 500px;
 
                 #select-day-instructions {
                     margin-top: 20px;
