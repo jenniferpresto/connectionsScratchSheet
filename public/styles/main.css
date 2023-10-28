@@ -185,28 +185,28 @@ input {
 #main-container .results-container .results-content #results-rows .result-row#row-3 {
   background-color: rgb(188, 112, 196);
 }
-#main-container .results-container .results-content form {
+#main-container .results-container .results-content form.select-day {
   color: #000000;
   max-width: 500px;
 }
-#main-container .results-container .results-content form #select-day-instructions {
+#main-container .results-container .results-content form.select-day #select-day-instructions {
   margin-top: 20px;
   margin-bottom: 15px;
   font-size: 1.25rem;
 }
-#main-container .results-container .results-content form .select-day-inputs {
+#main-container .results-container .results-content form.select-day .select-day-inputs {
   height: 45px;
   display: flex;
   justify-content: center;
 }
-#main-container .results-container .results-content form .select-day-inputs input {
+#main-container .results-container .results-content form.select-day .select-day-inputs input {
   height: inherit;
   box-sizing: border-box;
   margin: 0 10px;
   width: 70px;
   border: solid 2px;
 }
-#main-container .results-container .results-content form .select-day-inputs input[type=number] {
+#main-container .results-container .results-content form.select-day .select-day-inputs input[type=number] {
   width: 70px;
   font-size: 1.5rem;
 }
