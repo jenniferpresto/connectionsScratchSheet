@@ -45,6 +45,7 @@ input {
   /* width: 225px; */
   position: absolute;
   top: 10px;
+  display: flex;
 }
 #main-container .two-step-button {
   width: 100px;
