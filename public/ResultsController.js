@@ -15,7 +15,6 @@ export default class ResultsController {
         this.hideResults();
         this.closeButton.addEventListener("click", e => {
             e.preventDefault();
-            console.log("Click");
             this.hideResults();
         });
     }
