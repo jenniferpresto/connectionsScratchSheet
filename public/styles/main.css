@@ -40,18 +40,20 @@ input {
 #main-container #instructions {
   padding: 10px;
 }
-#main-container #button-container {
+#main-container .button-container {
   font-size: 0;
   /* width: 225px; */
   position: absolute;
   top: 10px;
+  left: 10px;
   display: flex;
 }
 #main-container .two-step-button {
+  color: #000000;
   width: 100px;
   height: 50px;
   font-size: 1rem;
-  border: solid;
+  border: solid 1px;
   border-radius: 10px;
   cursor: pointer;
 }
@@ -71,7 +73,7 @@ input {
   display: flex;
   justify-content: center;
   align-items: center;
-  border: solid;
+  border: solid 3px;
   border-radius: 10px;
   text-transform: uppercase;
   border-color: #3d3522;
@@ -209,6 +211,9 @@ input {
 #main-container .results-container .results-content form.select-day .select-day-inputs input[type=number] {
   width: 70px;
   font-size: 1.5rem;
+}
+#main-container .results-container .results-content form.select-day .select-day-inputs input[type=number]::-webkit-outer-spin-button, #main-container .results-container .results-content form.select-day .select-day-inputs input[type=number]::-webkit-inner-spin-button {
+  appearance: none;
 }
 #main-container .results-container .results-content #close-results {
   font-size: 1.25rem;

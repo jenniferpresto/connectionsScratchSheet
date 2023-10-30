@@ -28,21 +28,61 @@ const renderTestWords = () => {
 
 const getDataFromJson = async () => {
     await fetch("/connectionsJson")
-        .then((res) => res.json())
-        .then((data) => renderPage(data))
-        .catch((e) => {
-            console.log(e);
+        .then(res => res.json())
+        .then(data => renderPage(data))
+        .catch(err => {
+            console.log(err);
             renderPage({ id: -1, words: [] });
         });
     // renderTestWords();
 };
 
+//  Some references:
+//  https://dmitripavlutin.com/timeout-fetch-request/
+//  https://stackoverflow.com/questions/46946380/fetch-api-request-timeout
+//  https://stackoverflow.com/questions/31061838/how-do-i-cancel-an-http-fetch-request/47250621#47250621
+const fetchWithTimeout = async (resource, options = {}) => {
+    console.log("Fetching with timeout");
+    const { timeout = 8000 } = options;
+    const controller = new AbortController();
+    const id = setTimeout(() => controller.abort(), timeout);
+    const response = await fetch(resource, {
+        ...options,
+        signal: controller.signal
+    })
+    .then(res => {
+        console.log("Then");
+        console.log(res);
+    })
+    .catch(err => {
+        console.log("Catch");
+        console.log(err);
+    })
+    .then(() => {
+        console.log("Always");
+        clearTimeout(id);
+    });
+    console.log("Clearing timeout");
+    clearTimeout(id);
+    console.log("Response: ", response);
+    return response;
+}
+
 const getResultForDay = async (dayNum) => {
-    return await fetch(`/resultDay/${dayNum}`)
+    console.log("Fetching results");
+    // return await fetch("www.google.com:81")
+    //     .then(res => console.log(res))
+    //     .catch(err => console.log(err));
+    return await fetchWithTimeout(`/resultDay/${dayNum}`, { timeout: 2000 })
         .then((res) => res.json())
         .then((data) => {
             return data;
         })
+        .catch(err => {
+            console.log(err);
+            console.log(typeof err);
+            console.log(err.statusText);
+        });
 };
 
 const renderPage = (data) => {
