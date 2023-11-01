@@ -45,22 +45,26 @@ const fetchWithTimeout = async (resource, options = {}) => {
     console.log("Fetching with timeout");
     const { timeout = 8000 } = options;
     const controller = new AbortController();
+    console.log("Timeout is ", timeout);
     const id = setTimeout(() => controller.abort(), timeout);
-    const response = await fetch(resource, {
+    return await fetch(resource, {
         ...options,
         signal: controller.signal
     })
     .then(res => {
         console.log("Then");
-        console.log(res);
+        // res.json();
+        // console.log(res);
+        return res;
     })
     .catch(err => {
         console.log("Catch");
         console.log(err);
     })
-    .then(() => {
+    .then((res) => {
         console.log("Always");
         clearTimeout(id);
+        return res;
     });
     console.log("Clearing timeout");
     clearTimeout(id);
