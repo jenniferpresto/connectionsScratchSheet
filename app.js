@@ -7,7 +7,7 @@ const CONNECTIONS_JSON_URL =
     "https://www.nytimes.com/games-assets/connections/game-data-by-day.json";
 const CONNECTIONS_DAY_ZERO = new Date("2023/06/12");
 const app = express();
-const IS_DEV = false;
+const IS_DEV = true;
 
 let jsonData = [];
 
@@ -16,7 +16,7 @@ const getConnectionsDay = () => {
     const intlDateObj = new Intl.DateTimeFormat('en-US', {
         timeZone: "America/New_York",
     });
-    const dayZeroFormatted = intlDateObj.format(CONNECTIONS_DAY_ZERO);
+    // const dayZeroFormatted = intlDateObj.format(CONNECTIONS_DAY_ZERO);
     const nyDateString = intlDateObj.format(today);
     const nyDateParts = nyDateString.split("/");
     const convertedNyDateString = nyDateParts[2] + "/" + nyDateParts[0] + "/" + nyDateParts[1];
@@ -103,7 +103,7 @@ app.get("/connectionsJson", async (req, res) => {
     res.send(data);
 });
 
-app.get("/resultDay/:gameNum", (req, res) => {
+app.get("/resultDay/:gameNum", async (req, res) => {
     console.log(`Received request for past results: gameNum: ${req.params.gameNum}`);
     const dayResult = jsonData.find(
         (obj) => obj.id === Number(req.params.gameNum)
@@ -136,10 +136,17 @@ app.get("/resultDay/:gameNum", (req, res) => {
         ],
     };
 
-    if (dayResult) {
-        res.send(dayResult);
+    if (IS_DEV) {
+        await setTimeout(() => {
+            console.log("Sending result from the backend");
+            res.send(dayResult);
+        }, 3000);
     } else {
-        res.error(500).send("Unable to find requested day");
+        if (dayResult) {
+            res.send(dayResult);
+        } else {
+            res.error(500).send("Unable to find requested day");
+        }
     }
 });
 

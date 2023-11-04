@@ -53,18 +53,24 @@ const fetchWithTimeout = async (resource, options = {}) => {
     })
     .then(res => {
         console.log("Then");
-        // res.json();
+        return res.json();
         // console.log(res);
-        return res;
+        // return data;
     })
     .catch(err => {
         console.log("Catch");
+        console.log("Name: ", err.name);
+        console.log("Message: ", err.message);
         console.log(err);
+        const errorMessage = {
+            id: err.name,
+        };
+        return errorMessage;
     })
-    .then((res) => {
+    .then(data => {
         console.log("Always");
         clearTimeout(id);
-        return res;
+        return data;
     });
     console.log("Clearing timeout");
     clearTimeout(id);
@@ -78,8 +84,9 @@ const getResultForDay = async (dayNum) => {
     //     .then(res => console.log(res))
     //     .catch(err => console.log(err));
     return await fetchWithTimeout(`/resultDay/${dayNum}`, { timeout: 2000 })
-        .then((res) => res.json())
+        // .then((res) => res.json())
         .then((data) => {
+            console.log("Received data: ", data);
             return data;
         })
         .catch(err => {
