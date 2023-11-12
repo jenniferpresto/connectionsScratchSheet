@@ -21,4 +21,10 @@ export default class LoadingAnimationController {
             wave.style.animationPlayState = "paused";
         });
     }
+
+    setColor(color) {
+        this.waves.forEach(wave => {
+            wave.style.border = `4px solid ${color}`;
+        });
+    }
 }

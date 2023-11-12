@@ -298,10 +298,6 @@ const renderPage = (data) => {
         pressedSpecialElement = "";
     };
 
-    const closeResults = () => {
-        results.hideResults();
-    };
-
     /**
      * General touch handler
      */
@@ -360,9 +356,7 @@ const renderPage = (data) => {
      */
     document.addEventListener("keyup", (e) => {
         if (e.key === "Escape") {
-            if (results.getIsVisible()) {
-                closeResults();
-            }
+            results.hideResults();
         }
     });
 

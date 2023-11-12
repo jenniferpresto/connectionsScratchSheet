@@ -102,6 +102,10 @@ export default class ResultsController {
     }
 
     hideResults() {
+        if (!this.isVisible) {
+            return;
+        }
+        
         this.isVisible = false;
         if (!this.container.classList.contains("hidden")) {
             this.container.classList.add("hidden");
@@ -162,6 +166,7 @@ export default class ResultsController {
 
     showLoading(dayNum) {
         this.resultsTitle.innerHTML = "Loading results for Connections # " + dayNum.toString();
+        this.loadingAnimationController.setColor("red");
         this.loadingAnimationController.show();
     }
 
