@@ -10,6 +10,19 @@ export default class ResultsController {
         this.setup();
     }
 
+    /**
+     * Setup
+     */
+        setup() {
+            this.hideResults();
+            this.closeButton.addEventListener("click", e => {
+                e.preventDefault();
+                this.hideResults();
+            });
+            console.log(this.loadingAnimationController);
+        }
+    
+    
     //  Some references:
     //  https://dmitripavlutin.com/timeout-fetch-request/
     //  https://stackoverflow.com/questions/46946380/fetch-api-request-timeout
@@ -27,8 +40,6 @@ export default class ResultsController {
         .then(res => {
             console.log("Then");
             return res.json();
-            // console.log(res);
-            // return data;
         })
         .catch(err => {
             console.log("Catch");
@@ -41,14 +52,9 @@ export default class ResultsController {
             return errorMessage;
         })
         .then(data => {
-            console.log("Always");
             clearTimeout(id);
             return data;
         });
-        // console.log("Clearing timeout");
-        // clearTimeout(id);
-        // console.log("Response: ", response);
-        // return response;
     }
 
     getResultForDay = async (dayIdx) => {
@@ -85,27 +91,11 @@ export default class ResultsController {
         console.log("Doing it");
     }
 
-    /**
-     * Setup
-     */
-    setup() {
-        this.hideResults();
-        this.closeButton.addEventListener("click", e => {
-            e.preventDefault();
-            this.hideResults();
-        });
-        console.log(this.loadingAnimationController);
-    }
-
-    getIsVisible() {
-        return this.isVisible;
-    }
-
     hideResults() {
         if (!this.isVisible) {
             return;
         }
-        
+
         this.isVisible = false;
         if (!this.container.classList.contains("hidden")) {
             this.container.classList.add("hidden");
