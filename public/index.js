@@ -1,6 +1,7 @@
 import WordController from "./WordController.js";
 import ResultsController from "./ResultsController.js";
 import Position from "./Position.js";
+import LoadingAnimationController from "./LoadingAnimationController.js";
 
 const renderTestWords = () => {
     renderPage({
@@ -36,6 +37,9 @@ const getDataFromJson = async () => {
         });
     // renderTestWords();
 };
+
+const loadingAnimation = new LoadingAnimationController();
+
 
 //  Some references:
 //  https://dmitripavlutin.com/timeout-fetch-request/
@@ -110,6 +114,7 @@ const renderPage = (data) => {
     const selectDayInput = document.getElementById("input-day");
     const resultsTitle = document.getElementById("results-title");
     const resultsModalContainer = document.getElementById("results-modal-container");
+    loadingAnimation.stopAnimation();
 
     //  set the day's number in the results modal
     document.getElementById("today-number").innerHTML = (todayId + 1).toString();
