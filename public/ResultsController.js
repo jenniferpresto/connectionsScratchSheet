@@ -8,7 +8,6 @@ export default class ResultsController {
         this.resultRows = document.getElementsByClassName("result-row");
         this.selectDayForm = document.getElementById("select-day");
         this.closeButton = document.getElementById("close-button");
-        // this.instructions = document.getElementById("select-day-instructions");
         this.isVisible = false;
         this.loadingAnimationController = loadingAnimationController;
         this.setup();
@@ -18,6 +17,8 @@ export default class ResultsController {
      * Setup
      */
     setup() {
+        //  set the day's number in the results modal
+        document.getElementById("today-number").innerHTML = (this.todayIdx + 1).toString();
         this.hideResults();
         this.closeButton.addEventListener("click", e => {
             e.preventDefault();

@@ -55,9 +55,6 @@ const renderPage = (data) => {
     const resultsModalContainer = document.getElementById("results-modal-container");
     loadingAnimation.hide();
 
-    //  set the day's number in the results modal
-    document.getElementById("today-number").innerHTML = (todayId + 1).toString();
-
     let instructionsDisplayingError = false;
     let pressedSpecialElement = "";
     let pressedGenericElement = null;
