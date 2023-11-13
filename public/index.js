@@ -52,7 +52,6 @@ const renderPage = (data) => {
     const getHistoryButton = document.getElementById("get-history");
     const selectDayForm = document.getElementById("select-day");
     const selectDayInput = document.getElementById("input-day");
-    // const resultsTitle = document.getElementById("results-title");
     const resultsModalContainer = document.getElementById("results-modal-container");
     loadingAnimation.hide();
 
