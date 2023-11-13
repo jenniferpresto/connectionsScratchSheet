@@ -157,6 +157,10 @@ input {
     border-radius: 0;
   }
 }
+#main-container .results-container .results-content .loading {
+  color: #000000;
+  font-size: 1.25rem;
+}
 #main-container .results-container .results-content #results-rows {
   width: 100%;
 }
@@ -221,7 +225,7 @@ input {
 #main-container .results-container .results-content form.select-day .select-day-inputs input[type=number]::-webkit-outer-spin-button, #main-container .results-container .results-content form.select-day .select-day-inputs input[type=number]::-webkit-inner-spin-button {
   appearance: none;
 }
-#main-container .results-container .results-content #close-results {
+#main-container .results-container .results-content .close-btn {
   font-size: 1.25rem;
   margin-top: 20px;
   margin-bottom: 40px;

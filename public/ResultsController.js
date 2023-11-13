@@ -1,12 +1,14 @@
 export default class ResultsController {
     constructor(loadingAnimationController, todayIdx) {
         this.todayIdx = todayIdx;
+        this.loadingMessage = document.getElementById("loading-message");
         this.container = document.getElementById("results-modal-container");
-        this.resultRowContainer = document.getElementById("results-rows");
         this.resultsTitle = document.getElementById("results-title");
+        this.resultRowContainer = document.getElementById("results-rows");
         this.resultRows = document.getElementsByClassName("result-row");
-        this.closeButton = document.getElementById("close-results");
-        this.instructions = document.getElementById("select-day-instructions");
+        this.selectDayForm = document.getElementById("select-day");
+        this.closeButton = document.getElementById("close-button");
+        // this.instructions = document.getElementById("select-day-instructions");
         this.isVisible = false;
         this.loadingAnimationController = loadingAnimationController;
         this.setup();
@@ -108,28 +110,22 @@ export default class ResultsController {
 
     clearResultsAndShow() {
         this.isVisible = true;
-        if (!this.resultRowContainer.classList.contains("hidden")) {
-            this.resultRowContainer.classList.add("hidden");
-        }
-
-        if (this.container.classList.contains("hidden")) {
-            this.container.classList.remove("hidden");
-        }
+        this.hideElement(this.resultRowContainer);
+        this.showElement(this.container);
     }
 
     showResults(jsonResults) {
+        this.hideElement(this.loadingMessage);
+        this.showElement(this.selectDayForm);
+        this.showElement(this.closeButton);
+        this.showElement(this.resultRowContainer);
+
         this.isVisible = true;
-        console.log(jsonResults);
+
         if (!this.container.classList.contains("showing-results")) {
             this.container.classList.add("showing-results");
         }
 
-        if (this.resultRowContainer.classList.contains("hidden")) {
-            this.resultRowContainer.classList.remove("hidden");
-        }
-
-        this.instructions.innerHTML = "Enter the number of any past Connections results "
-        + "you&rsquo;d like to see. Today is # " + (this.todayIdx + 1).toString();
         this.resultsTitle.innerHTML = "Results for Connections # " + (jsonResults.id + 1).toString();
         const resultsMap = new Map(Object.entries(jsonResults.groups));
         resultsMap.forEach((groupData, groupName) => {
@@ -158,8 +154,23 @@ export default class ResultsController {
 
     showLoading(dayNum) {
         this.clearResultsAndShow();
-        this.instructions.innerHTML = "Loading results for Connections # " + dayNum.toString();
+        this.showElement(this.loadingMessage);
+        this.hideElement(this.selectDayForm);
+        this.hideElement(this.closeButton);
+        this.loadingMessage.innerHTML = "Loading results for Connections # " + dayNum.toString();
         this.loadingAnimationController.setColor("red");
         this.loadingAnimationController.show();
+    }
+
+    hideElement = elem => {
+        if (!elem.classList.contains("hidden")) {
+            elem.classList.add("hidden");
+        }
+    }
+
+    showElement = elem => {
+        if (elem.classList.contains("hidden")) {
+            elem.classList.remove("hidden");
+        }
     }
 }

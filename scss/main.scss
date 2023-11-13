@@ -177,6 +177,11 @@ input {
                 border-radius: 0;
             }
 
+            .loading {
+                color: #000000;
+                font-size: 1.25rem;
+            }
+
             #results-rows {
                 width: 100%;
 
@@ -256,7 +261,7 @@ input {
                 }
             }
 
-            #close-results {
+            .close-btn {
                 font-size: 1.25rem;
                 margin-top: 20px;
                 margin-bottom: 40px; // push whole form slightly above center
