@@ -1,10 +1,12 @@
 export default class ResultsController {
-    constructor(loadingAnimationController) {
+    constructor(loadingAnimationController, todayIdx) {
+        this.todayIdx = todayIdx;
         this.container = document.getElementById("results-modal-container");
         this.resultRowContainer = document.getElementById("results-rows");
         this.resultsTitle = document.getElementById("results-title");
         this.resultRows = document.getElementsByClassName("result-row");
         this.closeButton = document.getElementById("close-results");
+        this.instructions = document.getElementById("select-day-instructions");
         this.isVisible = false;
         this.loadingAnimationController = loadingAnimationController;
         this.setup();
@@ -13,15 +15,13 @@ export default class ResultsController {
     /**
      * Setup
      */
-        setup() {
+    setup() {
+        this.hideResults();
+        this.closeButton.addEventListener("click", e => {
+            e.preventDefault();
             this.hideResults();
-            this.closeButton.addEventListener("click", e => {
-                e.preventDefault();
-                this.hideResults();
-            });
-            console.log(this.loadingAnimationController);
-        }
-    
+        });
+    }
     
     //  Some references:
     //  https://dmitripavlutin.com/timeout-fetch-request/
@@ -128,6 +128,8 @@ export default class ResultsController {
             this.resultRowContainer.classList.remove("hidden");
         }
 
+        this.instructions.innerHTML = "Enter the number of any past Connections results "
+        + "you&rsquo;d like to see. Today is # " + (this.todayIdx + 1).toString();
         this.resultsTitle.innerHTML = "Results for Connections # " + (jsonResults.id + 1).toString();
         const resultsMap = new Map(Object.entries(jsonResults.groups));
         resultsMap.forEach((groupData, groupName) => {
@@ -155,10 +157,9 @@ export default class ResultsController {
     }
 
     showLoading(dayNum) {
-        this.resultsTitle.innerHTML = "Loading results for Connections # " + dayNum.toString();
+        this.clearResultsAndShow();
+        this.instructions.innerHTML = "Loading results for Connections # " + dayNum.toString();
         this.loadingAnimationController.setColor("red");
         this.loadingAnimationController.show();
     }
-
-
 }

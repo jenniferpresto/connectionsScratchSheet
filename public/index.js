@@ -40,70 +40,6 @@ const getDataFromJson = async () => {
 
 const loadingAnimation = new LoadingAnimationController();
 
-
-// //  Some references:
-// //  https://dmitripavlutin.com/timeout-fetch-request/
-// //  https://stackoverflow.com/questions/46946380/fetch-api-request-timeout
-// //  https://stackoverflow.com/questions/31061838/how-do-i-cancel-an-http-fetch-request/47250621#47250621
-// const fetchWithTimeout = async (resource, options = {}) => {
-//     console.log("Fetching with timeout");
-//     const { timeout = 8000 } = options;
-//     const controller = new AbortController();
-//     console.log("Timeout is ", timeout);
-//     const id = setTimeout(() => controller.abort(), timeout);
-//     return await fetch(resource, {
-//         ...options,
-//         signal: controller.signal
-//     })
-//     .then(res => {
-//         console.log("Then");
-//         return res.json();
-//         // console.log(res);
-//         // return data;
-//     })
-//     .catch(err => {
-//         console.log("Catch");
-//         console.log("Name: ", err.name);
-//         console.log("Message: ", err.message);
-//         console.log(err);
-//         const errorMessage = {
-//             id: err.name,
-//         };
-//         return errorMessage;
-//     })
-//     .then(data => {
-//         console.log("Always");
-//         clearTimeout(id);
-//         return data;
-//     });
-//     console.log("Clearing timeout");
-//     clearTimeout(id);
-//     console.log("Response: ", response);
-//     return response;
-// }
-
-// const getResultForDay = async (dayNum) => {
-//     console.log("Fetching results");
-//     // return await fetch("www.google.com:81")
-//     //     .then(res => console.log(res))
-//     //     .catch(err => console.log(err));
-//     return await fetchWithTimeout(`/resultDay/${dayNum}`, { timeout: 5000 })
-//         // .then((res) => res.json())
-//         .then((data) => {
-//             console.log("Received data: ", data);
-//             return data;
-//         })
-//         .catch(err => {
-//             console.log(err);
-//             console.log(typeof err);
-//             console.log(err.statusText);
-//         })
-//         .then((data) => {
-//             // loadingAnimation.hide();
-//             return data;
-//         });
-// };
-
 const renderPage = (data) => {
     const todayId = data.id;
     const words = data.words;
@@ -131,7 +67,7 @@ const renderPage = (data) => {
     const isTouchScreen = navigator.maxTouchPoints > 0;
     const isHorizontal = screen.width > screen.height;
     const wordBoard = new WordController(words, isTouchScreen, isHorizontal);
-    const results = new ResultsController(loadingAnimation);
+    const results = new ResultsController(loadingAnimation, todayId);
 
     const showInput = () => {
         if (addWordForm.classList.contains("hidden")) {
@@ -245,15 +181,6 @@ const renderPage = (data) => {
 
         selectDayInput.blur();
         results.getPastResults(dayIdx);
-        // results.showLoading(day);
-        // getResultForDay(dayIdx)
-        // .then(data => {
-        //   results.showResults(data);
-        // //   resultsTitle.innerHTML = "Results for Connections # " + day.toString();
-        // })
-        // .catch(err => {
-        //     console.log("Whoops", err);
-        // });
     };
 
     const pressElement = (elementId, x, y) => {
