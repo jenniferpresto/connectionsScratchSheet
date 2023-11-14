@@ -1,8 +1,11 @@
 export default class ResultsController {
-    constructor(loadingAnimationController, todayIdx) {
+    constructor(loadingAnimationController,
+        todayIdx,
+        onHide) {
         this.todayIdx = todayIdx;
         this.loadingMessage = document.getElementById("loading-message");
         this.container = document.getElementById("results-modal-container");
+        this.content = document.getElementById("results-content");
         this.resultsTitle = document.getElementById("results-title");
         this.resultRowContainer = document.getElementById("results-rows");
         this.resultRows = document.getElementsByClassName("result-row");
@@ -10,6 +13,7 @@ export default class ResultsController {
         this.closeButton = document.getElementById("close-button");
         this.isVisible = false;
         this.loadingAnimationController = loadingAnimationController;
+        this.onHide = onHide;
         this.setup();
     }
 
@@ -107,10 +111,15 @@ export default class ResultsController {
         if (this.container.classList.contains("showing-results")) {
             this.container.classList.remove("showing-results");
         }
+
+        if (typeof this.onHide === "function") {
+            this.onHide();
+        }
     }
 
     clearResultsAndShow() {
         this.isVisible = true;
+        this.content.appendChild(this.loadingAnimationController.getContainer());
         this.hideElement(this.resultRowContainer);
         this.showElement(this.container);
     }
@@ -159,7 +168,7 @@ export default class ResultsController {
         this.hideElement(this.selectDayForm);
         this.hideElement(this.closeButton);
         this.loadingMessage.innerHTML = "Loading results for Connections # " + dayNum.toString();
-        this.loadingAnimationController.setColor("red");
+        this.loadingAnimationController.setColor("#000");
         this.loadingAnimationController.show();
     }
 

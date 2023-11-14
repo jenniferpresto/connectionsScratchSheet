@@ -43,6 +43,7 @@ const loadingAnimation = new LoadingAnimationController();
 const renderPage = (data) => {
     const todayId = data.id;
     const words = data.words;
+    const mainContainer = document.getElementById("main-container");
     const instructions = document.getElementById("instructions");
     const addWordForm = document.getElementById("add-word");
     const addWordInput = document.getElementById("new-word");
@@ -63,7 +64,10 @@ const renderPage = (data) => {
     const isTouchScreen = navigator.maxTouchPoints > 0;
     const isHorizontal = screen.width > screen.height;
     const wordBoard = new WordController(words, isTouchScreen, isHorizontal);
-    const results = new ResultsController(loadingAnimation, todayId);
+    const results = new ResultsController(
+        loadingAnimation,
+        todayId,
+        () => mainContainer.appendChild(loadingAnimation.getContainer()));
 
     const showInput = () => {
         if (addWordForm.classList.contains("hidden")) {

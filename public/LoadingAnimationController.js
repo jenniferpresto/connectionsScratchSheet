@@ -4,6 +4,10 @@ export default class LoadingAnimationController {
         this.waves = Array.from(this.animationContainer.children);
     }
 
+    getContainer() {
+        return this.animationContainer;
+    }
+
     show() {
         if (this.animationContainer.classList.contains("hidden")) {
             this.animationContainer.classList.remove("hidden");

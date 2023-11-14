@@ -103,7 +103,7 @@ app.get("/connectionsJson", async (req, res) => {
     if (IS_DEV) {
         await setTimeout(() => {
             res.send(data);
-        }, 10);
+        }, 2000);
     } else {
         res.send(data);
     }

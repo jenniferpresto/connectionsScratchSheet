@@ -44,6 +44,7 @@ input {
   */
 }
 #main-container #instructions {
+  text-align: center;
   padding: 10px;
 }
 #main-container .button-container {
@@ -144,6 +145,7 @@ input {
   opacity: 1;
   width: 75%;
   max-width: 675px;
+  min-height: 375px;
   border-radius: 10px;
   box-sizing: border-box;
   padding: 30px;
@@ -160,6 +162,7 @@ input {
 #main-container .results-container .results-content .loading {
   color: #000000;
   font-size: 1.25rem;
+  margin-bottom: 3rem;
 }
 #main-container .results-container .results-content #results-rows {
   width: 100%;
@@ -238,16 +241,15 @@ input {
   cursor: pointer;
 }
 #main-container .lds-ripple {
-  display: inline-block;
-  position: fixed;
+  position: relative;
   width: 80px;
   height: 80px;
-  top: calc(50% - 40px);
-  left: calc(50% - 40px);
+  margin-left: auto;
+  margin-right: auto;
 }
 #main-container .lds-ripple div {
   position: absolute;
-  border: 4px solid #777;
+  border: 4px solid #fff;
   opacity: 1;
   border-radius: 50%;
   animation: lds-ripple 2s cubic-bezier(0, 0.2, 0.8, 1) infinite;
