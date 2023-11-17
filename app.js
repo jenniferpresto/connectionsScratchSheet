@@ -146,7 +146,8 @@ app.get("/resultDay/:gameNum", async (req, res) => {
     if (IS_DEV) {
         await setTimeout(() => {
             console.log("Sending result from the backend");
-            res.send(dayResult);
+            // res.send(dayResult);
+            res.status(500).send("Error");
         }, 3000);
     } else {
         if (dayResult) {

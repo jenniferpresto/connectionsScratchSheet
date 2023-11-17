@@ -34,66 +34,91 @@ export default class ResultsController {
     //  https://dmitripavlutin.com/timeout-fetch-request/
     //  https://stackoverflow.com/questions/46946380/fetch-api-request-timeout
     //  https://stackoverflow.com/questions/31061838/how-do-i-cancel-an-http-fetch-request/47250621#47250621
-    fetchWithTimeout = async (resource, options = {}) => {
-        console.log("Fetching with timeout");
-        const { timeout = 8000 } = options;
+    // fetchWithTimeout = async (resource, options = {}) => {
+    //     const { timeout = 8000 } = options;
+    //     const controller = new AbortController();
+    //     console.log("Timeout is ", timeout);
+    //     const id = setTimeout(() => controller.abort(), timeout);
+    //     return await fetch(resource, {
+    //         ...options,
+    //         signal: controller.signal
+    //     })
+    //     .then(res => {
+    //         console.log("Then");
+    //         return res.json();
+    //     })
+    //     .catch(err => {
+    //         console.log("Catch");
+    //         console.log("Name: ", err.name);
+    //         console.log("Message: ", err.message);
+    //         console.log(err);
+    //         const errorMessage = {
+    //             id: err.name,
+    //         };
+    //         return errorMessage;
+    //     })
+    //     .then(data => {
+    //         clearTimeout(id);
+    //         return data;
+    //     });
+    // }
+
+    getResultForDay = async (dayIdx) => {
+        console.log("Fetching results");
+        // const { timeout = 8000 } = options;
         const controller = new AbortController();
-        console.log("Timeout is ", timeout);
-        const id = setTimeout(() => controller.abort(), timeout);
-        return await fetch(resource, {
-            ...options,
-            signal: controller.signal
+        const id = setTimeout(() => controller.abort(), 5000);
+        return await fetch(`/resultDay/${dayIdx}`, {
+            // timeout: 5000,
+            signal: controller.signal,
         })
-        .then(res => {
-            console.log("Then");
-            return res.json();
-        })
+        .then(res => res.json())
         .catch(err => {
             console.log("Catch");
             console.log("Name: ", err.name);
             console.log("Message: ", err.message);
             console.log(err);
-            const errorMessage = {
-                id: err.name,
-            };
-            return errorMessage;
+            return ({
+                id: -1,
+                name: err.name,
+            })
         })
         .then(data => {
             clearTimeout(id);
+            this.loadingAnimationController.hide();
             return data;
         });
-    }
-
-    getResultForDay = async (dayIdx) => {
-        console.log("Fetching results");
-        // return await fetch("www.google.com:81")
-        //     .then(res => console.log(res))
-        //     .catch(err => console.log(err));
-        return await this.fetchWithTimeout(`/resultDay/${dayIdx}`, { timeout: 5000 })
-            // .then((res) => res.json())
-            .then((data) => {
-                console.log("Received data: ", data);
-                return data;
-            })
-            .catch(err => {
-                console.log(err);
-                console.log(typeof err);
-                console.log(err.statusText);
-            })
-            .then((data) => {
-                this.loadingAnimationController.hide();
-                return data;
-            });
+            // // .then((res) => res.json())
+            // .then((data) => {
+            //     console.log("Received data: ", data);
+            //     return data;
+            // })
+            // .catch(err => {
+            //     console.log(err);
+            //     console.log(typeof err);
+            //     console.log(err.statusText);
+            // })
+            // .then((data) => {
+            //     this.loadingAnimationController.hide();
+            //     return data;
+            // });
     };
 
     getPastResults = async (dayIdx) => {
         this.showLoading(dayIdx + 1);
         this.getResultForDay(dayIdx)
             .then(data => {
-                this.showResults(data);
+                if (data.id === -1) {
+                    //  error handling
+                    this.showError("Whoops");
+                } else {
+                    this.showResults(data);
+                }
             })
             .catch(err => {
                 console.log("Whoops", err);
+                this.showError("Unknown whoops");
+                //  more error handling
             });
         console.log("Doing it");
     }
@@ -160,6 +185,14 @@ export default class ResultsController {
                 membersDiv.innerHTML = members;
             }
         });
+    }
+
+    showError(errorMsg) {
+        this.clearResultsAndShow();
+        this.showElement(this.loadingMessage);
+        this.loadingMessage.innerHTML = errorMsg;
+        this.showElement(this.selectDayForm);
+        this.showElement(this.closeButton);
     }
 
     showLoading(dayNum) {
