@@ -1,4 +1,5 @@
 export default class LoadingAnimationController {
+    //  reference: https://loading.io/css/
     constructor() {
         this.animationContainer = document.getElementById("ripple-container");
         this.waves = Array.from(this.animationContainer.children);

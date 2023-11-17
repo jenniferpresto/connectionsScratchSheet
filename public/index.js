@@ -3,29 +3,29 @@ import ResultsController from "./ResultsController.js";
 import Position from "./Position.js";
 import LoadingAnimationController from "./LoadingAnimationController.js";
 
-const renderTestWords = () => {
-    renderPage({
-        id: -1,
-        words: [
-            "one",
-            "two",
-            "three",
-            "four",
-            "five",
-            "six",
-            "seven",
-            "eight",
-            "nine",
-            "ten",
-            "eleven",
-            "twelve",
-            "thirteen",
-            "fourteen",
-            "fifteen",
-            "sixteen",
-        ],
-    });
-};
+// const renderTestWords = () => {
+//     renderPage({
+//         id: -1,
+//         words: [
+//             "one",
+//             "two",
+//             "three",
+//             "four",
+//             "five",
+//             "six",
+//             "seven",
+//             "eight",
+//             "nine",
+//             "ten",
+//             "eleven",
+//             "twelve",
+//             "thirteen",
+//             "fourteen",
+//             "fifteen",
+//             "sixteen",
+//         ],
+//     });
+// };
 
 const getDataFromJson = async () => {
     await fetch("/connectionsJson")

@@ -16,7 +16,7 @@ const getConnectionsDay = () => {
     const intlDateObj = new Intl.DateTimeFormat('en-US', {
         timeZone: "America/New_York",
     });
-    // const dayZeroFormatted = intlDateObj.format(CONNECTIONS_DAY_ZERO);
+
     const nyDateString = intlDateObj.format(today);
     const nyDateParts = nyDateString.split("/");
     const convertedNyDateString = nyDateParts[2] + "/" + nyDateParts[0] + "/" + nyDateParts[1];
@@ -53,7 +53,7 @@ const getConnectionsJson = async () => {
         console.log("Loading test data");
         jsonData = await fs.readFile("./testData/testJson.json", "utf8")
             .then(jsonString => JSON.parse(jsonString));
-        return {id: 35, words: parseWords(jsonData, 35)};
+        return {id: 11, words: parseWords(jsonData, 11)};
     } else {
         console.log(`Getting json data from ${CONNECTIONS_JSON_URL}`);
         jsonData = await axios
@@ -79,23 +79,23 @@ app.use(express.static("public"));
 
 app.get("/", async (req, res, next) => {});
 
-//  route to request data, called by frontend
-app.get("/data", async (req, res) => {
-    console.log("Received request from ", req.header("x-forwarded-for"));
-    const link = await getFirstLink();
-    if (link === "") {
-        console.log("Error getting initial link");
-        return res.json([]);
-    }
-    const words = await getWords(link);
-    console.log(`Returning words from ${link}`);
-    res.json(words);
-});
+// //  route to request data, called by frontend
+// app.get("/data", async (req, res) => {
+//     console.log("Received request from ", req.header("x-forwarded-for"));
+//     const link = await getFirstLink();
+//     if (link === "") {
+//         console.log("Error getting initial link");
+//         return res.json([]);
+//     }
+//     const words = await getWords(link);
+//     console.log(`Returning words from ${link}`);
+//     res.json(words);
+// });
 
-app.get("/connectionsData", async (req, res) => {
-    const page = await getConnectionsPage();
-    res.send(page);
-});
+// app.get("/connectionsData", async (req, res) => {
+//     const page = await getConnectionsPage();
+//     res.send(page);
+// });
 
 app.get("/connectionsJson", async (req, res) => {
     console.log("Received request from ", req.header("x-forwarded-for"));
@@ -103,6 +103,7 @@ app.get("/connectionsJson", async (req, res) => {
     if (IS_DEV) {
         await setTimeout(() => {
             res.send(data);
+            // res.status(500).send("Whoops");
         }, 2000);
     } else {
         res.send(data);
@@ -114,33 +115,33 @@ app.get("/resultDay/:gameNum", async (req, res) => {
     const dayResult = jsonData.find(
         (obj) => obj.id === Number(req.params.gameNum)
     );
-    const testData = {
-        id: 7,
-        groups: {
-            "BOARD GAMES": {
-                level: 0,
-                members: ["BACKGAMMON", "CHECKERS", "CHESS", "GO"],
-            },
-            "MATTRESS SIZES": {
-                level: 1,
-                members: ["FULL", "KING", "QUEEN", "TWIN"],
-            },
-            "THINGS THAT ARE RED": {
-                level: 2,
-                members: ["CHERRY", "FIRE TRUCK", "RUBY", "STOP SIGN"],
-            },
-            "THINGS WITH KEYS": {
-                level: 3,
-                members: ["CRYPTOGRAPHY", "FLORIDA", "LOCKSMITH", "PIANO"],
-            },
-        },
-        startingGroups: [
-            ["LOCKSMITH", "FIRE TRUCK", "KING", "PIANO"],
-            ["CHESS", "RUBY", "FLORIDA", "TWIN"],
-            ["CHERRY", "QUEEN", "STOP SIGN", "GO"],
-            ["CHECKERS", "CRYPTOGRAPHY", "FULL", "BACKGAMMON"],
-        ],
-    };
+    // const testData = {
+    //     id: 7,
+    //     groups: {
+    //         "BOARD GAMES": {
+    //             level: 0,
+    //             members: ["BACKGAMMON", "CHECKERS", "CHESS", "GO"],
+    //         },
+    //         "MATTRESS SIZES": {
+    //             level: 1,
+    //             members: ["FULL", "KING", "QUEEN", "TWIN"],
+    //         },
+    //         "THINGS THAT ARE RED": {
+    //             level: 2,
+    //             members: ["CHERRY", "FIRE TRUCK", "RUBY", "STOP SIGN"],
+    //         },
+    //         "THINGS WITH KEYS": {
+    //             level: 3,
+    //             members: ["CRYPTOGRAPHY", "FLORIDA", "LOCKSMITH", "PIANO"],
+    //         },
+    //     },
+    //     startingGroups: [
+    //         ["LOCKSMITH", "FIRE TRUCK", "KING", "PIANO"],
+    //         ["CHESS", "RUBY", "FLORIDA", "TWIN"],
+    //         ["CHERRY", "QUEEN", "STOP SIGN", "GO"],
+    //         ["CHECKERS", "CRYPTOGRAPHY", "FULL", "BACKGAMMON"],
+    //     ],
+    // };
 
     if (IS_DEV) {
         await setTimeout(() => {
@@ -151,7 +152,7 @@ app.get("/resultDay/:gameNum", async (req, res) => {
         if (dayResult) {
             res.send(dayResult);
         } else {
-            res.error(500).send("Unable to find requested day");
+            res.status(500).send("Unable to find requested day");
         }
     }
 });
