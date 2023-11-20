@@ -35,11 +35,9 @@ export default class ResultsController {
     //  https://stackoverflow.com/questions/46946380/fetch-api-request-timeout
     //  https://stackoverflow.com/questions/31061838/how-do-i-cancel-an-http-fetch-request/47250621#47250621
     getResultForDay = async (dayIdx) => {
-        // const { timeout = 8000 } = options;
         const controller = new AbortController();
         const id = setTimeout(() => controller.abort(), 3000);
         return await fetch(`/resultDay/${dayIdx}`, {
-            // timeout: 5000,
             signal: controller.signal,
         })
         .then(res => res.json())
