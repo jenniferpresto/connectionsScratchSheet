@@ -7,7 +7,7 @@ const CONNECTIONS_JSON_URL =
     "https://www.nytimes.com/games-assets/connections/game-data-by-day.json";
 const CONNECTIONS_DAY_ZERO = new Date("2023/06/12");
 const app = express();
-const IS_DEV = true;
+const IS_DEV = false;
 
 let jsonData = [];
 
@@ -79,24 +79,6 @@ app.use(express.static("public"));
 
 app.get("/", async (req, res, next) => {});
 
-// //  route to request data, called by frontend
-// app.get("/data", async (req, res) => {
-//     console.log("Received request from ", req.header("x-forwarded-for"));
-//     const link = await getFirstLink();
-//     if (link === "") {
-//         console.log("Error getting initial link");
-//         return res.json([]);
-//     }
-//     const words = await getWords(link);
-//     console.log(`Returning words from ${link}`);
-//     res.json(words);
-// });
-
-// app.get("/connectionsData", async (req, res) => {
-//     const page = await getConnectionsPage();
-//     res.send(page);
-// });
-
 app.get("/connectionsJson", async (req, res) => {
     console.log("Received request from ", req.header("x-forwarded-for"));
     const data = await getConnectionsJson();
@@ -148,7 +130,7 @@ app.get("/resultDay/:gameNum", async (req, res) => {
             console.log("Sending result from the backend");
             // res.send(dayResult);
             res.status(500).send("Error");
-        }, 3000);
+        }, 5000);
     } else {
         if (dayResult) {
             res.send(dayResult);

@@ -3,7 +3,7 @@ export default class ResultsController {
         todayIdx,
         onHide) {
         this.todayIdx = todayIdx;
-        this.loadingMessage = document.getElementById("loading-message");
+        this.statusMessage = document.getElementById("results-status-message");
         this.container = document.getElementById("results-modal-container");
         this.content = document.getElementById("results-content");
         this.resultsTitle = document.getElementById("results-title");
@@ -34,49 +34,16 @@ export default class ResultsController {
     //  https://dmitripavlutin.com/timeout-fetch-request/
     //  https://stackoverflow.com/questions/46946380/fetch-api-request-timeout
     //  https://stackoverflow.com/questions/31061838/how-do-i-cancel-an-http-fetch-request/47250621#47250621
-    // fetchWithTimeout = async (resource, options = {}) => {
-    //     const { timeout = 8000 } = options;
-    //     const controller = new AbortController();
-    //     console.log("Timeout is ", timeout);
-    //     const id = setTimeout(() => controller.abort(), timeout);
-    //     return await fetch(resource, {
-    //         ...options,
-    //         signal: controller.signal
-    //     })
-    //     .then(res => {
-    //         console.log("Then");
-    //         return res.json();
-    //     })
-    //     .catch(err => {
-    //         console.log("Catch");
-    //         console.log("Name: ", err.name);
-    //         console.log("Message: ", err.message);
-    //         console.log(err);
-    //         const errorMessage = {
-    //             id: err.name,
-    //         };
-    //         return errorMessage;
-    //     })
-    //     .then(data => {
-    //         clearTimeout(id);
-    //         return data;
-    //     });
-    // }
-
     getResultForDay = async (dayIdx) => {
-        console.log("Fetching results");
         // const { timeout = 8000 } = options;
         const controller = new AbortController();
-        const id = setTimeout(() => controller.abort(), 5000);
+        const id = setTimeout(() => controller.abort(), 3000);
         return await fetch(`/resultDay/${dayIdx}`, {
             // timeout: 5000,
             signal: controller.signal,
         })
         .then(res => res.json())
         .catch(err => {
-            console.log("Catch");
-            console.log("Name: ", err.name);
-            console.log("Message: ", err.message);
             console.log(err);
             return ({
                 id: -1,
@@ -88,39 +55,33 @@ export default class ResultsController {
             this.loadingAnimationController.hide();
             return data;
         });
-            // // .then((res) => res.json())
-            // .then((data) => {
-            //     console.log("Received data: ", data);
-            //     return data;
-            // })
-            // .catch(err => {
-            //     console.log(err);
-            //     console.log(typeof err);
-            //     console.log(err.statusText);
-            // })
-            // .then((data) => {
-            //     this.loadingAnimationController.hide();
-            //     return data;
-            // });
     };
 
     getPastResults = async (dayIdx) => {
         this.showLoading(dayIdx + 1);
         this.getResultForDay(dayIdx)
             .then(data => {
+
                 if (data.id === -1) {
-                    //  error handling
-                    this.showError("Whoops");
+                    let errorMsg;
+                    if (data.name === "AbortError") {
+                        errorMsg = "Whoops, the server timed out. " +
+                        "It goes to sleep after 15 minutes of inactivity, " +
+                        "so try refreshing the page to wake it back up.";
+                    } else {
+                        errorMsg = "Whoops, something went wrong. Try refreshing the page.";
+                    }
+                    this.showError(errorMsg);
                 } else {
                     this.showResults(data);
                 }
             })
             .catch(err => {
-                console.log("Whoops", err);
-                this.showError("Unknown whoops");
+                console.log("Unknown error: ", err);
+                this.showError("Whoops, something went wrong. Try refreshing the page. " +
+                "If it keeps happening, feel free to let Jennifer know.");
                 //  more error handling
             });
-        console.log("Doing it");
     }
 
     hideResults() {
@@ -150,7 +111,7 @@ export default class ResultsController {
     }
 
     showResults(jsonResults) {
-        this.hideElement(this.loadingMessage);
+        this.hideElement(this.statusMessage);
         this.showElement(this.selectDayForm);
         this.showElement(this.closeButton);
         this.showElement(this.resultRowContainer);
@@ -189,18 +150,20 @@ export default class ResultsController {
 
     showError(errorMsg) {
         this.clearResultsAndShow();
-        this.showElement(this.loadingMessage);
-        this.loadingMessage.innerHTML = errorMsg;
+        this.setErrorColor();
+        this.showElement(this.statusMessage);
+        this.statusMessage.innerHTML = errorMsg;
         this.showElement(this.selectDayForm);
         this.showElement(this.closeButton);
     }
 
     showLoading(dayNum) {
         this.clearResultsAndShow();
-        this.showElement(this.loadingMessage);
+        this.unsetErrorColor();
+        this.showElement(this.statusMessage);
         this.hideElement(this.selectDayForm);
         this.hideElement(this.closeButton);
-        this.loadingMessage.innerHTML = "Loading results for Connections # " + dayNum.toString();
+        this.statusMessage.innerHTML = "Loading results for Connections # " + dayNum.toString();
         this.loadingAnimationController.setColor("#000");
         this.loadingAnimationController.show();
     }
@@ -214,6 +177,18 @@ export default class ResultsController {
     showElement = elem => {
         if (elem.classList.contains("hidden")) {
             elem.classList.remove("hidden");
+        }
+    }
+
+    setErrorColor() {
+        if (!this.statusMessage.classList.contains("error")) {
+            this.statusMessage.classList.add("error");
+        }
+    }
+
+    unsetErrorColor() {
+        if (this.statusMessage.classList.contains("error")) {
+            this.statusMessage.classList.remove("error");
         }
     }
 }

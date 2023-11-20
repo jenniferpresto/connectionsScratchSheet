@@ -159,7 +159,6 @@ const renderPage = (data) => {
     };
 
     const requestResultsForDay = () => {
-        console.log("Request results");
         if (!selectDayInput.value) {
             return;
         }

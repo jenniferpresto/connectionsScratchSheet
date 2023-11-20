@@ -123,7 +123,8 @@ input {
 #main-container .results-container {
   display: flex;
   backdrop-filter: blur(10px);
-  background-color: rgba(255, 255, 255, 0.2);
+  -webkit-backdrop-filter: blur(10px);
+  background-color: rgba(255, 255, 255, 0.5);
   height: 100%;
   width: 100%;
   position: absolute;
@@ -159,10 +160,14 @@ input {
     border-radius: 0;
   }
 }
-#main-container .results-container .results-content .loading {
+#main-container .results-container .results-content .results-status {
   color: #000000;
   font-size: 1.25rem;
   margin-bottom: 3rem;
+}
+#main-container .results-container .results-content .results-status.error {
+  color: #CC0000;
+  margin-bottom: unset;
 }
 #main-container .results-container .results-content #results-rows {
   width: 100%;
