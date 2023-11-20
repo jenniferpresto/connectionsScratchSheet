@@ -7,7 +7,7 @@ const CONNECTIONS_JSON_URL =
     "https://www.nytimes.com/games-assets/connections/game-data-by-day.json";
 const CONNECTIONS_DAY_ZERO = new Date("2023/06/12");
 const app = express();
-const IS_DEV = false;
+const IS_DEV = true;
 
 let jsonData = [];
 
@@ -130,7 +130,7 @@ app.get("/resultDay/:gameNum", async (req, res) => {
             console.log("Sending result from the backend");
             // res.send(dayResult);
             res.status(500).send("Error");
-        }, 5000);
+        }, 2000);
     } else {
         if (dayResult) {
             res.send(dayResult);

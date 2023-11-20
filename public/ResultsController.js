@@ -67,7 +67,8 @@ export default class ResultsController {
                         "It goes to sleep after 15 minutes of inactivity, " +
                         "so try refreshing the page to wake it back up.";
                     } else {
-                        errorMsg = "Whoops, something went wrong. Try refreshing the page.";
+                        errorMsg = "Uh-oh, there was a server error. Try refreshing the page to fix it. " +
+                        "Or just hit Close to go back to using the scratch sheet."
                     }
                     this.showError(errorMsg);
                 } else {

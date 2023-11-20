@@ -168,6 +168,8 @@ input {
 #main-container .results-container .results-content .results-status.error {
   color: #CC0000;
   margin-bottom: unset;
+  font-size: 1rem;
+  font-weight: 700;
 }
 #main-container .results-container .results-content #results-rows {
   width: 100%;
