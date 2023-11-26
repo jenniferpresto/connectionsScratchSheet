@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html lang="en">
 <html>
     <head>
         <title>Connections Scratch</title>
@@ -7,10 +7,10 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     </head>
     <body>
-        <div id="main-container">
+        <div id="main-container"">
             <div id="instructions">Loading words...</div>
             <div id="word-container"></div>
-            <div id="button-container" class="hidden">
+            <div id="button-container" class="button-container hidden">
                 <button id="delete-all" class="two-step-button">
                     Delete all
                 </button>
@@ -30,7 +30,8 @@
                 <input id="submit-new-word" type="submit" value="Add word" />
             </form>
             <div class="results-container hidden" id="results-modal-container">
-                <div class="results-content">
+                <div id="results-content" class="results-content">
+                    <div id="results-status-message" class="results-status hidden"></div>
                     <div id="results-rows" class="hidden">
                         <div id="results-title"></div>
                         <div class="result-row" id="row-0">
@@ -51,7 +52,7 @@
                         </div>
                     </div>
                     <form id="select-day" class="select-day">
-                        <div id="select-day-instructions">
+                        <div id="select-day-instructions" class="results-instructions">
                             Enter the number of any past Connections results
                             you&rsquo;d like to see. Today is #
                             <span id="today-number"></span>.
@@ -65,8 +66,13 @@
                             />
                         </div>
                     </form>
-                    <button id="close-results">Close</button>
+                    <button id="close-button" class="close-btn">Close</button>
                 </div>
+            </div>
+            <div id="ripple-container" class="lds-ripple">
+                <div></div>
+                <div></div>
+                <div></div>
             </div>
         </div>
         <script type="module" src="index.js"></script>

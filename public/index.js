@@ -1,53 +1,49 @@
 import WordController from "./WordController.js";
 import ResultsController from "./ResultsController.js";
 import Position from "./Position.js";
+import LoadingAnimationController from "./LoadingAnimationController.js";
 
-const renderTestWords = () => {
-    renderPage({
-        id: -1,
-        words: [
-            "one",
-            "two",
-            "three",
-            "four",
-            "five",
-            "six",
-            "seven",
-            "eight",
-            "nine",
-            "ten",
-            "eleven",
-            "twelve",
-            "thirteen",
-            "fourteen",
-            "fifteen",
-            "sixteen",
-        ],
-    });
-};
+// const renderTestWords = () => {
+//     renderPage({
+//         id: -1,
+//         words: [
+//             "one",
+//             "two",
+//             "three",
+//             "four",
+//             "five",
+//             "six",
+//             "seven",
+//             "eight",
+//             "nine",
+//             "ten",
+//             "eleven",
+//             "twelve",
+//             "thirteen",
+//             "fourteen",
+//             "fifteen",
+//             "sixteen",
+//         ],
+//     });
+// };
 
 const getDataFromJson = async () => {
     await fetch("/connectionsJson")
-        .then((res) => res.json())
-        .then((data) => renderPage(data))
-        .catch((e) => {
-            console.log(e);
+        .then(res => res.json())
+        .then(data => renderPage(data))
+        .catch(err => {
+            console.log(err);
             renderPage({ id: -1, words: [] });
         });
     // renderTestWords();
 };
 
-const getResultForDay = async (dayNum) => {
-    return await fetch(`/resultDay/${dayNum}`)
-        .then((res) => res.json())
-        .then((data) => {
-            return data;
-        })
-};
+const loadingAnimation = new LoadingAnimationController();
 
 const renderPage = (data) => {
     const todayId = data.id;
     const words = data.words;
+    const mainContainer = document.getElementById("main-container");
     const instructions = document.getElementById("instructions");
     const addWordForm = document.getElementById("add-word");
     const addWordInput = document.getElementById("new-word");
@@ -57,11 +53,8 @@ const renderPage = (data) => {
     const getHistoryButton = document.getElementById("get-history");
     const selectDayForm = document.getElementById("select-day");
     const selectDayInput = document.getElementById("input-day");
-    const resultsTitle = document.getElementById("results-title");
     const resultsModalContainer = document.getElementById("results-modal-container");
-
-    //  set the day's number in the results modal
-    document.getElementById("today-number").innerHTML = (todayId + 1).toString();
+    loadingAnimation.hide();
 
     let instructionsDisplayingError = false;
     let pressedSpecialElement = "";
@@ -71,7 +64,10 @@ const renderPage = (data) => {
     const isTouchScreen = navigator.maxTouchPoints > 0;
     const isHorizontal = screen.width > screen.height;
     const wordBoard = new WordController(words, isTouchScreen, isHorizontal);
-    const results = new ResultsController();
+    const results = new ResultsController(
+        loadingAnimation,
+        todayId,
+        () => mainContainer.appendChild(loadingAnimation.getContainer()));
 
     const showInput = () => {
         if (addWordForm.classList.contains("hidden")) {
@@ -162,6 +158,7 @@ const renderPage = (data) => {
         }
     };
 
+    //  TODO: Move to ResultsController
     const requestResultsForDay = () => {
         if (!selectDayInput.value) {
             return;
@@ -178,19 +175,12 @@ const renderPage = (data) => {
         selectDayInput.value = "";
         const dayIdx = day - 1;
         if (dayIdx >= todayId || dayIdx < 0) {
-          //  TODO: show error message for out-of-range number
+            results.showError(`Please choose a number between 1 and ${todayId}`);
           return;
         }
 
         selectDayInput.blur();
-        getResultForDay(dayIdx)
-        .then(data => {
-          results.showResults(data);
-          resultsTitle.innerHTML = "Results for Connections # " + day.toString();
-        })
-        .catch(err => {
-            console.log("Whoops", err);
-        });
+        results.getPastResults(dayIdx);
     };
 
     const pressElement = (elementId, x, y) => {
@@ -233,10 +223,6 @@ const renderPage = (data) => {
             wordBoard.unpressWordById(pressedSpecialElement);
         }
         pressedSpecialElement = "";
-    };
-
-    const closeResults = () => {
-        results.hideResults();
     };
 
     /**
@@ -297,9 +283,7 @@ const renderPage = (data) => {
      */
     document.addEventListener("keyup", (e) => {
         if (e.key === "Escape") {
-            if (results.getIsVisible()) {
-                closeResults();
-            }
+            results.hideResults();
         }
     });
 
