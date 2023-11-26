@@ -36,7 +36,7 @@ export default class ResultsController {
     //  https://stackoverflow.com/questions/31061838/how-do-i-cancel-an-http-fetch-request/47250621#47250621
     getResultForDay = async (dayIdx) => {
         const controller = new AbortController();
-        const id = setTimeout(() => controller.abort(), 3000);
+        const id = setTimeout(() => controller.abort(), 5000);
         return await fetch(`/resultDay/${dayIdx}`, {
             signal: controller.signal,
         })
@@ -59,15 +59,18 @@ export default class ResultsController {
         this.showLoading(dayIdx + 1);
         this.getResultForDay(dayIdx)
             .then(data => {
-
                 if (data.id === -1) {
                     let errorMsg;
                     if (data.name === "AbortError") {
                         errorMsg = "Whoops, the server timed out. " +
                         "It goes to sleep after 15 minutes of inactivity, " +
                         "so try refreshing the page to wake it back up.";
+                    } else if (data.name === "SyntaxError") {
+                        errorMsg = "Looks like there was an error parsing data. " +
+                        "Try refreshing the page. If it keeps happening, " +
+                        "feel free to let Jennifer know.";
                     } else {
-                        errorMsg = "Uh-oh, there was a server error. Try refreshing the page to fix it. " +
+                        errorMsg = "There was a server error. Try refreshing the page to fix it. " +
                         "Or just hit Close to go back to using the scratch sheet."
                     }
                     this.showError(errorMsg);
@@ -77,9 +80,8 @@ export default class ResultsController {
             })
             .catch(err => {
                 console.log("Unknown error: ", err);
-                this.showError("Whoops, something went wrong. Try refreshing the page. " +
+                this.showError("Something went wrong. Try refreshing the page. " +
                 "If it keeps happening, feel free to let Jennifer know.");
-                //  more error handling
             });
     }
 

@@ -7,7 +7,7 @@ const CONNECTIONS_JSON_URL =
     "https://www.nytimes.com/games-assets/connections/game-data-by-day.json";
 const CONNECTIONS_DAY_ZERO = new Date("2023/06/12");
 const app = express();
-const IS_DEV = true;
+const IS_DEV = false;
 
 let jsonData = [];
 

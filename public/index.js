@@ -158,6 +158,7 @@ const renderPage = (data) => {
         }
     };
 
+    //  TODO: Move to ResultsController
     const requestResultsForDay = () => {
         if (!selectDayInput.value) {
             return;
@@ -174,7 +175,7 @@ const renderPage = (data) => {
         selectDayInput.value = "";
         const dayIdx = day - 1;
         if (dayIdx >= todayId || dayIdx < 0) {
-          //  TODO: show error message for out-of-range number
+            results.showError(`Please choose a number between 1 and ${todayId}`);
           return;
         }
 
