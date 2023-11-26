@@ -36,7 +36,7 @@ export default class ResultsController {
     //  https://stackoverflow.com/questions/31061838/how-do-i-cancel-an-http-fetch-request/47250621#47250621
     getResultForDay = async (dayIdx) => {
         const controller = new AbortController();
-        const id = setTimeout(() => controller.abort(), 5000);
+        const id = setTimeout(() => controller.abort(), 15000);
         return await fetch(`/resultDay/${dayIdx}`, {
             signal: controller.signal,
         })
