@@ -42,13 +42,14 @@ export default class ResultsController {
         })
         .then(res => res.json())
         .catch(err => {
-            console.log(err);
+            // console.log("Catch: ", err);
             return ({
                 id: -1,
                 name: err.name,
             })
         })
         .then(data => {
+            console.log("Data: ", data);
             clearTimeout(id);
             this.loadingAnimationController.hide();
             return data;

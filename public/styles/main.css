@@ -225,8 +225,10 @@ input {
   height: inherit;
   box-sizing: border-box;
   margin: 0 10px;
-  width: 70px;
+  min-width: 70px;
   border: solid 2px;
+  background-color: buttonface;
+  color: black;
 }
 #main-container .results-container .results-content form.select-day .select-day-inputs input[type=number] {
   width: 70px;
