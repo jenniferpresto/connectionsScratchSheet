@@ -42,7 +42,6 @@ export default class ResultsController {
         })
         .then(res => res.json())
         .catch(err => {
-            console.log(err);
             return ({
                 id: -1,
                 name: err.name,

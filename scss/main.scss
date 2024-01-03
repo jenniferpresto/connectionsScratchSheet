@@ -257,8 +257,10 @@ input {
                         height: inherit;
                         box-sizing: border-box;
                         margin: 0 10px;
-                        width: 70px;
+                        min-width: 70px;
                         border: solid 2px;
+                        background-color: buttonface;
+                        color: black;
                     }
 
                     input[type="number"] {

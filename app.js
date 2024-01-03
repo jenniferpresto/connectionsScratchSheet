@@ -5,6 +5,12 @@ import fs from "fs.promises";
 const PORT = process.env.port || 5500;
 const CONNECTIONS_JSON_URL =
     "https://www.nytimes.com/games-assets/connections/game-data-by-day.json";
+
+//  New URL, e.g.:
+//  https://www.nytimes.com/svc/connections/v1/2023-12-31.json
+
+const CONNECTIONS_JSON_URL_BASE = "https://www.nytimes.com/svc/connections/v1/";
+
 const CONNECTIONS_DAY_ZERO = new Date("2023/06/12");
 const app = express();
 const IS_DEV = false;
@@ -27,6 +33,29 @@ const getConnectionsDay = () => {
     return daysSinceDayZero;
 };
 
+const getNewYorkDateString = () => {
+    const today = new Date();
+    const intlDateObj = new Intl.DateTimeFormat('en-US', {
+        timeZone: "America/New_York",
+    });
+
+    const nyDateString = intlDateObj.format(today);
+    const nyDateParts = nyDateString.split("/");
+    const year = nyDateParts[2];
+    const month = nyDateParts[0].length === 1
+        ? "0" + nyDateParts[0]
+        : nyDateParts[0];
+    const day = nyDateParts[1].length === 1
+        ? "0" + nyDateParts[1]
+        : nyDateParts[1];
+    
+    return year + "-" + month + "-" + day;
+}
+
+const getConnectionsUrl = (dateStr) => {
+    return CONNECTIONS_JSON_URL_BASE + dateStr + ".json";
+}
+
 const parseWords = (data, idx) => {
     if (!Array.isArray(data[idx]?.startingGroups)) {
         return [];
@@ -48,6 +77,40 @@ const parseWords = (data, idx) => {
     return shuffledWords;
 };
 
+const parseWordsNewFormat = (data) => {
+    if (!Array.isArray(data.startingGroups)) {
+        return [];
+    }
+    const words = [];
+    data.startingGroups.forEach(row => {
+        if(Array.isArray(row)) {
+            row.forEach(word => words.push(word));
+        }
+    })
+    return words;
+}
+
+const getConnectionsJsonNewFormat = async dateUrl => {
+    const jsonData = await axios
+        .request({
+            timeout: 5000,
+            method: "GET",
+            url: dateUrl,
+        })
+        .then(res => {
+            console.log("Returning data: ", res.data);
+            return res.data;
+        })
+        .catch(e => {
+            console.log("Error fetching JSON data: ", e);
+            return {id: -1, words: []};
+        })
+    return {
+        id: jsonData.id,
+        words: parseWordsNewFormat(jsonData),
+    }
+}
+
 const getConnectionsJson = async () => {
     if (IS_DEV) {
         console.log("Loading test data");
@@ -55,7 +118,7 @@ const getConnectionsJson = async () => {
             .then(jsonString => JSON.parse(jsonString));
         return {id: 11, words: parseWords(jsonData, 11)};
     } else {
-        console.log(`Getting json data from ${CONNECTIONS_JSON_URL}`);
+        // console.log(`Getting json data from ${CONNECTIONS_JSON_URL}`);
         jsonData = await axios
             .request({
                 timeout: 5000,
@@ -81,12 +144,15 @@ app.get("/", async (req, res, next) => {});
 
 app.get("/connectionsJson", async (req, res) => {
     console.log("Received request from ", req.header("x-forwarded-for"));
-    const data = await getConnectionsJson();
+    const todayStr = getNewYorkDateString();
+    const todayUrl = getConnectionsUrl(todayStr);
+    const data = await getConnectionsJsonNewFormat(todayUrl);
+    // const data = await getConnectionsJson();
     if (IS_DEV) {
         await setTimeout(() => {
             res.send(data);
             // res.status(500).send("Whoops");
-        }, 2000);
+        }, 500);
     } else {
         res.send(data);
     }
@@ -97,40 +163,16 @@ app.get("/resultDay/:gameNum", async (req, res) => {
     const dayResult = jsonData.find(
         (obj) => obj.id === Number(req.params.gameNum)
     );
-    // const testData = {
-    //     id: 7,
-    //     groups: {
-    //         "BOARD GAMES": {
-    //             level: 0,
-    //             members: ["BACKGAMMON", "CHECKERS", "CHESS", "GO"],
-    //         },
-    //         "MATTRESS SIZES": {
-    //             level: 1,
-    //             members: ["FULL", "KING", "QUEEN", "TWIN"],
-    //         },
-    //         "THINGS THAT ARE RED": {
-    //             level: 2,
-    //             members: ["CHERRY", "FIRE TRUCK", "RUBY", "STOP SIGN"],
-    //         },
-    //         "THINGS WITH KEYS": {
-    //             level: 3,
-    //             members: ["CRYPTOGRAPHY", "FLORIDA", "LOCKSMITH", "PIANO"],
-    //         },
-    //     },
-    //     startingGroups: [
-    //         ["LOCKSMITH", "FIRE TRUCK", "KING", "PIANO"],
-    //         ["CHESS", "RUBY", "FLORIDA", "TWIN"],
-    //         ["CHERRY", "QUEEN", "STOP SIGN", "GO"],
-    //         ["CHECKERS", "CRYPTOGRAPHY", "FULL", "BACKGAMMON"],
-    //     ],
-    // };
 
     if (IS_DEV) {
+        console.log("NY Date: " + getNewYorkDateString());
         await setTimeout(() => {
             console.log("Sending result from the backend");
-            // res.send(dayResult);
-            res.status(500).send("Error");
-        }, 2000);
+            console.log(dayResult);
+            res.send(dayResult);
+            
+            // res.status(500).send("Error");
+        }, 1000);
     } else {
         if (dayResult) {
             res.send(dayResult);
