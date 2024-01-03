@@ -13,7 +13,7 @@ const CONNECTIONS_JSON_URL_BASE = "https://www.nytimes.com/svc/connections/v1/";
 
 const CONNECTIONS_DAY_ZERO = new Date("2023/06/12");
 const app = express();
-const IS_DEV = true;
+const IS_DEV = false;
 
 let jsonData = [];
 
@@ -40,7 +40,6 @@ const getNewYorkDateString = () => {
     });
 
     const nyDateString = intlDateObj.format(today);
-    console.log("Date string: ", nyDateString);
     const nyDateParts = nyDateString.split("/");
     const year = nyDateParts[2];
     const month = nyDateParts[0].length === 1
@@ -78,9 +77,21 @@ const parseWords = (data, idx) => {
     return shuffledWords;
 };
 
-const getConnectionsJsonForDate = async dateUrl => {
-    if (IS_DEV) {
-        jsonData = await axios
+const parseWordsNewFormat = (data) => {
+    if (!Array.isArray(data.startingGroups)) {
+        return [];
+    }
+    const words = [];
+    data.startingGroups.forEach(row => {
+        if(Array.isArray(row)) {
+            row.forEach(word => words.push(word));
+        }
+    })
+    return words;
+}
+
+const getConnectionsJsonNewFormat = async dateUrl => {
+    const jsonData = await axios
         .request({
             timeout: 5000,
             method: "GET",
@@ -94,10 +105,10 @@ const getConnectionsJsonForDate = async dateUrl => {
             console.log("Error fetching JSON data: ", e);
             return {id: -1, words: []};
         })
-    } else {
-        return null;
+    return {
+        id: jsonData.id,
+        words: parseWordsNewFormat(jsonData),
     }
-    return jsonData;
 }
 
 const getConnectionsJson = async () => {
@@ -135,13 +146,9 @@ app.get("/connectionsJson", async (req, res) => {
     console.log("Received request from ", req.header("x-forwarded-for"));
     const todayStr = getNewYorkDateString();
     const todayUrl = getConnectionsUrl(todayStr);
-    console.log("today url: " + todayUrl);
-    const data = await getConnectionsJsonForDate(todayUrl);
-    console.log("Finished");
-    console.log(data);
+    const data = await getConnectionsJsonNewFormat(todayUrl);
     // const data = await getConnectionsJson();
     if (IS_DEV) {
-        
         await setTimeout(() => {
             res.send(data);
             // res.status(500).send("Whoops");
