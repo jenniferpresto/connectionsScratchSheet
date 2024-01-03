@@ -98,7 +98,6 @@ const getConnectionsJsonNewFormat = async dateUrl => {
             url: dateUrl,
         })
         .then(res => {
-            console.log("Returning data: ", res.data);
             return res.data;
         })
         .catch(e => {
