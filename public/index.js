@@ -331,7 +331,9 @@ const renderPage = (data) => {
         //  up and immediately disappearing on certain iPhones
         //  Similar to discussion here:
         //  https://github.com/select2/select2/issues/3493
-        if (isTouchScreen && !e.target.id) {
+        if (isTouchScreen &&
+            (!e.target.id ||
+                (results.isVisible && e.target.id === "results-content"))) {
             e.preventDefault();
             return;
         }
@@ -368,7 +370,9 @@ const renderPage = (data) => {
         e.preventDefault();
         //  Same hack described above
         //  Prevents apple keyboard from popping up and disappearing
-        if (isTouchScreen && !e.target.id) {
+        if (isTouchScreen &&
+            (!e.target.id ||
+                (results.isVisible && e.target.id === "results-content"))) {
             return;
         }
         if (wordBoard.isInDeleteMode) {
