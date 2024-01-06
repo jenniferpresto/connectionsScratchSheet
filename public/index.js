@@ -167,7 +167,6 @@ const renderPage = (data) => {
         let day = 0;
         try  { day = Number(selectDayInput.value);
         } catch (e) {
-          console.log("Must enter number", e);
           selectDayInput.value = "";
           return;
         }
@@ -201,10 +200,10 @@ const renderPage = (data) => {
     };
 
     const unpressElement = () => {
-        let deleteButton;
         if (!pressedSpecialElement) {
             return;
         }
+        let deleteButton;
         if (
             pressedSpecialElement.includes("delete") ||
             pressedSpecialElement.includes("history")
@@ -317,10 +316,10 @@ const renderPage = (data) => {
     });
 
     resultsModalContainer.addEventListener("click", (e) => {
+        e.preventDefault();
         if (e.target !== resultsModalContainer) {
             return;
         }
-        e.preventDefault();
         results.hideResults();
     });
 
@@ -328,6 +327,14 @@ const renderPage = (data) => {
      * Mouse listeners for document
      */
     document.addEventListener("mousedown", (e) => {
+        //  This is a hack to prevent the apple keyboard from popping
+        //  up and immediately disappearing on certain iPhones
+        //  Similar to discussion here:
+        //  https://github.com/select2/select2/issues/3493
+        if (isTouchScreen && !e.target.id) {
+            e.preventDefault();
+            return;
+        }
         if (e.target.id?.startsWith("box")) {
             if (wordBoard.isInDeleteMode) {
                 pressElement(e.target.id, e.clientX, e.clientY);
@@ -359,6 +366,11 @@ const renderPage = (data) => {
 
     document.addEventListener("mouseup", (e) => {
         e.preventDefault();
+        //  Same hack described above
+        //  Prevents apple keyboard from popping up and disappearing
+        if (isTouchScreen && !e.target.id) {
+            return;
+        }
         if (wordBoard.isInDeleteMode) {
             if (pressedSpecialElement) {
                 wordBoard.removeWordById(pressedSpecialElement);
