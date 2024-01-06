@@ -123,6 +123,7 @@ input {
             border-radius: 10px;
             border: solid;
             border-color: #3d3522;
+            text-transform: uppercase;
         }
 
         &#add-word {
@@ -132,6 +133,8 @@ input {
         }
 
         #submit-new-word {
+            background-color: rgb(233, 233, 234);
+            color: #000000;
             height: 2.5rem;
             cursor: pointer;
         }
