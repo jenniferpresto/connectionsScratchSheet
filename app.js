@@ -13,10 +13,14 @@ const CONNECTIONS_JSON_URL_BASE = "https://www.nytimes.com/svc/connections/v1/";
 
 const CONNECTIONS_DAY_ZERO = new Date("2023/06/12");
 const app = express();
-const IS_DEV = false;
+const IS_DEV = true;
 
 let jsonData = [];
 
+/**
+ * @deprecated The NY Times changed its data format; this method is
+ * no longer used
+ */
 const getConnectionsDay = () => {
     const today = new Date();
     const intlDateObj = new Intl.DateTimeFormat('en-US', {
@@ -33,13 +37,9 @@ const getConnectionsDay = () => {
     return daysSinceDayZero;
 };
 
-const getDayForConnectionsNumber = gameNum => {
-    console.log("REquested game num: ", gameNum);
+const getDateForConnectionsNumber = gameNum => {
     const millisToAdd = gameNum * 24 * 60 * 60 * 1000;
     const gameDate = new Date(CONNECTIONS_DAY_ZERO.getTime() + millisToAdd);
-    console.log("Day zero: ", CONNECTIONS_DAY_ZERO);
-    console.log("Day zero time: ", CONNECTIONS_DAY_ZERO.getTime());
-    console.log("Date of game: ", gameDate);
     return gameDate;
 }
 
@@ -61,39 +61,34 @@ const getDateStringFromDate = (dateObj, timeZone) => {
     return year + "-" + month + "-" + day;
 }
 
-const getUrlForGameDate = gameDate => {
-    const dateStr = getDateStringFromDate(gameDate, "UTC");
-    return getConnectionsUrl(dateStr);
-}
-
-const getNewYorkDateString = () => {
+const getNewYorkDateStringForToday = () => {
     const today = new Date();
-    const intlDateObj = new Intl.DateTimeFormat('en-US', {
-        timeZone: "America/New_York",
-    });
+    return getDateStringFromDate(today, "America/New_York");
+    // const intlDateObj = new Intl.DateTimeFormat('en-US', {
+    //     timeZone: "America/New_York",
+    // });
 
-    const nyDateString = intlDateObj.format(today);
-    const nyDateParts = nyDateString.split("/");
-    const year = nyDateParts[2];
-    const month = nyDateParts[0].length === 1
-        ? "0" + nyDateParts[0]
-        : nyDateParts[0];
-    const day = nyDateParts[1].length === 1
-        ? "0" + nyDateParts[1]
-        : nyDateParts[1];
+    // const nyDateString = intlDateObj.format(today);
+    // const nyDateParts = nyDateString.split("/");
+    // const year = nyDateParts[2];
+    // const month = nyDateParts[0].length === 1
+    //     ? "0" + nyDateParts[0]
+    //     : nyDateParts[0];
+    // const day = nyDateParts[1].length === 1
+    //     ? "0" + nyDateParts[1]
+    //     : nyDateParts[1];
     
-    return year + "-" + month + "-" + day;
+    // return year + "-" + month + "-" + day;
 }
 
-const getConnectionsUrl = (dateStr) => {
+const getConnectionsUrl = dateStr => {
     return CONNECTIONS_JSON_URL_BASE + dateStr + ".json";
 }
 
 const getUrlForGameNumber = gameNum => {
-    const gameDate = getDayForConnectionsNumber(gameNum);
+    const gameDate = getDateForConnectionsNumber(gameNum);
     const dateStr = getDateStringFromDate(gameDate, "UTC");
-    const gameUrl = getConnectionsUrl(dateStr);
-    return gameUrl;
+    return getConnectionsUrl(dateStr);
 }
 
 const parseWords = (data, idx) => {
@@ -189,16 +184,21 @@ app.get("/", async (req, res, next) => {});
 
 app.get("/connectionsJson", async (req, res) => {
     console.log("Received request from ", req.header("x-forwarded-for"));
-    const todayStr = getNewYorkDateString();
+    const todayStr = getNewYorkDateStringForToday();
     const todayUrl = getConnectionsUrl(todayStr);
-    const data = await getConnectionsJsonNewFormat(todayUrl, false);
-    // const data = await getConnectionsJson();
     if (IS_DEV) {
+        const testData = await fs.readFile("./testData/testJsonSingleDay.json", "utf8")
+            .then(jsonString => JSON.parse(jsonString));
+        console.log("Sending test data: ", testData);
         await setTimeout(() => {
-            res.send(data);
-            // res.status(500).send("Whoops");
+            res.send({
+                id: testData.id,
+                words: parseWordsNewFormat(testData),
+            });
+            // res.status(500).send("Whoops"); <-- keep for error testing
         }, 500);
     } else {
+        const data = await getConnectionsJsonNewFormat(todayUrl, false);
         res.send(data);
     }
 });
@@ -211,6 +211,7 @@ app.get("/resultDay/:gameNum", async (req, res) => {
     console.log("New url: ", gameUrl);
 
     if (IS_DEV) {
+        const testData = 
         await setTimeout(() => {
             console.log("Sending result from the backend");
             console.log("Just showing URL without calling", gameUrl);
