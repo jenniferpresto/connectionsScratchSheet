@@ -1,8 +1,8 @@
 export default class ResultsController {
     constructor(loadingAnimationController,
-        todayIdx,
+        todayGameNum,
         onHide) {
-        this.todayIdx = todayIdx;
+        this.todayGameNum = todayGameNum;
         this.statusMessage = document.getElementById("results-status-message");
         this.container = document.getElementById("results-modal-container");
         this.content = document.getElementById("results-content");
@@ -22,7 +22,7 @@ export default class ResultsController {
      */
     setup() {
         //  set the day's number in the results modal
-        document.getElementById("today-number").innerHTML = (this.todayIdx + 1).toString();
+        document.getElementById("today-number").innerHTML = (this.todayGameNum).toString();
         this.hideResults();
         this.closeButton.addEventListener("click", e => {
             e.preventDefault();
@@ -34,10 +34,10 @@ export default class ResultsController {
     //  https://dmitripavlutin.com/timeout-fetch-request/
     //  https://stackoverflow.com/questions/46946380/fetch-api-request-timeout
     //  https://stackoverflow.com/questions/31061838/how-do-i-cancel-an-http-fetch-request/47250621#47250621
-    getResultForDay = async (dayIdx) => {
+    getResultForDay = async requestedGameNum => {
         const controller = new AbortController();
         const id = setTimeout(() => controller.abort(), 15000);
-        return await fetch(`/resultDay/${dayIdx}`, {
+        return await fetch(`/resultDay/${requestedGameNum}`, {
             signal: controller.signal,
         })
         .then(res => res.json())
@@ -54,9 +54,9 @@ export default class ResultsController {
         });
     };
 
-    getPastResults = async (dayIdx) => {
-        this.showLoading(dayIdx + 1);
-        this.getResultForDay(dayIdx)
+    getPastResults = async requestedGameNum => {
+        this.showLoading(requestedGameNum);
+        this.getResultForDay(requestedGameNum)
             .then(data => {
                 if (data.id === -1) {
                     let errorMsg;
@@ -123,7 +123,7 @@ export default class ResultsController {
             this.container.classList.add("showing-results");
         }
 
-        this.resultsTitle.innerHTML = "Results for Connections # " + (jsonResults.id + 1).toString();
+        this.resultsTitle.innerHTML = "Results for Connections # " + jsonResults.gameNum;
         const resultsMap = new Map(Object.entries(jsonResults.groups));
         resultsMap.forEach((groupData, groupName) => {
             const level = groupData.level;

@@ -45,7 +45,7 @@ const getDataFromJson = async () => {
 const loadingAnimation = new LoadingAnimationController();
 
 const renderPage = (data) => {
-    const todayId = data.id;
+    const todayGameNum = parseInt(data.gameNum);
     const words = data.words;
     const mainContainer = document.getElementById("main-container");
     const instructions = document.getElementById("instructions");
@@ -70,7 +70,7 @@ const renderPage = (data) => {
     const wordBoard = new WordController(words, isTouchScreen, isHorizontal);
     const results = new ResultsController(
         loadingAnimation,
-        todayId,
+        todayGameNum,
         () => mainContainer.appendChild(loadingAnimation.getContainer()));
 
     const showInput = () => {
@@ -168,22 +168,22 @@ const renderPage = (data) => {
             return;
         }
 
-        let day = 0;
-        try  { day = Number(selectDayInput.value);
+        let requestedGameNum = 0;
+        try  { 
+            requestedGameNum = Number(selectDayInput.value);
         } catch (e) {
           selectDayInput.value = "";
           return;
         }
 
         selectDayInput.value = "";
-        const dayIdx = day - 1;
-        if (dayIdx >= todayId || dayIdx < 0) {
-            results.showError(`Please choose a number between 1 and ${todayId}`);
+        if (requestedGameNum >= todayGameNum || todayGameNum < 0) {
+            results.showError(`Please choose a number between 1 and ${todayGameNum-1}`);
           return;
         }
 
         selectDayInput.blur();
-        results.getPastResults(dayIdx);
+        results.getPastResults(requestedGameNum);
     };
 
     const pressElement = (elementId, x, y) => {
