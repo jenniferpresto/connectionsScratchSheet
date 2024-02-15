@@ -13,7 +13,7 @@ const CONNECTIONS_JSON_URL_BASE = "https://www.nytimes.com/svc/connections/v1/";
 
 const CONNECTIONS_DAY_ZERO = new Date("2023/06/12");
 const app = express();
-const IS_DEV = true;
+const IS_DEV = false;
 
 let jsonData = [];
 
@@ -194,7 +194,10 @@ app.get("/connectionsJson", async (req, res) => {
         }, 500);
     } else {
         const data = await getConnectionsJsonNewFormat(todayUrl, false);
-        res.send(data);
+        res.send({
+            ...data,
+            gameNum: todayNum,
+        });
     }
 });
 
