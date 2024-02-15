@@ -34,6 +34,7 @@ const getConnectionsDay = () => {
 };
 
 const getDayForConnectionsNumber = gameNum => {
+    console.log("REquested game num: ", gameNum);
     const millisToAdd = gameNum * 24 * 60 * 60 * 1000;
     const gameDate = new Date(CONNECTIONS_DAY_ZERO.getTime() + millisToAdd);
     console.log("Day zero: ", CONNECTIONS_DAY_ZERO);

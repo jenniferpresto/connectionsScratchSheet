@@ -3,39 +3,43 @@ import ResultsController from "./ResultsController.js";
 import Position from "./Position.js";
 import LoadingAnimationController from "./LoadingAnimationController.js";
 
-// const renderTestWords = () => {
-//     renderPage({
-//         id: -1,
-//         words: [
-//             "one",
-//             "two",
-//             "three",
-//             "four",
-//             "five",
-//             "six",
-//             "seven",
-//             "eight",
-//             "nine",
-//             "ten",
-//             "eleven",
-//             "twelve",
-//             "thirteen",
-//             "fourteen",
-//             "fifteen",
-//             "sixteen",
-//         ],
-//     });
-// };
+const IS_DEV = false;
+const renderTestWords = () => {
+    renderPage({
+        id: 255,
+        words: [
+            "one",
+            "two",
+            "three",
+            "four",
+            "five",
+            "six",
+            "seven",
+            "eight",
+            "nine",
+            "ten",
+            "eleven",
+            "twelve",
+            "thirteen",
+            "fourteen",
+            "fifteen",
+            "sixteen",
+        ],
+    });
+};
 
 const getDataFromJson = async () => {
-    await fetch("/connectionsJson")
+    if (IS_DEV) {
+        renderTestWords();
+    } else {
+        await fetch("/connectionsJson")
         .then(res => res.json())
         .then(data => renderPage(data))
         .catch(err => {
             console.log(err);
             renderPage({ id: -1, words: [] });
         });
-    // renderTestWords();
+    }
 };
 
 const loadingAnimation = new LoadingAnimationController();
@@ -294,7 +298,7 @@ const renderPage = (data) => {
         addNewWordFromInput();
     });
 
-    selectDayForm.addEventListener("submit", (e) => {
+    selectDayForm.addEventListener("click", (e) => {
         e.preventDefault();
         requestResultsForDay();
     });
