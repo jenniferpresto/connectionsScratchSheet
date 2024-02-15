@@ -111,7 +111,6 @@ export default class ResultsController {
     }
 
     showResults(jsonResults) {
-        console.log("SHowing results: ", jsonResults);
         this.hideElement(this.statusMessage);
         this.showElement(this.selectDayForm);
         this.showElement(this.closeButton);

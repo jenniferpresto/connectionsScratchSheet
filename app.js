@@ -84,6 +84,9 @@ const getUrlForGameNumber = gameNum => {
     return getConnectionsUrl(dateStr);
 }
 
+/**
+ * @deprecated Old format
+ */
 const parseWords = (data, idx) => {
     if (!Array.isArray(data[idx]?.startingGroups)) {
         return [];
@@ -118,7 +121,7 @@ const parseWordsNewFormat = (data) => {
     return words;
 }
 
-const getConnectionsJsonNewFormat = async (dateUrl, fullData) => {
+const getConnectionsJsonNewFormat = async (dateUrl, shouldIncludeFullData) => {
     const jsonData = await axios
         .request({
             timeout: 5000,
@@ -132,7 +135,7 @@ const getConnectionsJsonNewFormat = async (dateUrl, fullData) => {
             console.log("Error fetching JSON data: ", e);
             return {id: -1, words: []};
         })
-    if (fullData) {
+    if (shouldIncludeFullData) {
         return jsonData;
     }
     return {
@@ -180,7 +183,6 @@ app.get("/connectionsJson", async (req, res) => {
     const todayStr = getNewYorkDateStringForToday();
     const todayNum = getConnectionsNumberForToday();
     const todayUrl = getConnectionsUrl(todayStr);
-    console.log("Today's game num is ", todayNum);
     if (IS_DEV) {
         const testData = await fs.readFile("./testData/testJsonSingleDay.json", "utf8")
             .then(jsonString => JSON.parse(jsonString));
@@ -209,13 +211,12 @@ app.get("/resultDay/:gameNum", async (req, res) => {
     console.log("New url: ", gameUrl);
 
     if (IS_DEV) {
+        console.log("Loading test data");
         const testData = await fs.readFile("./testData/testJsonSingleDay.json", "utf8")
             .then(jsonString => JSON.parse(jsonString));
 
         await setTimeout(() => {
-            console.log("Sending result from the backend");
             console.log("Just showing URL without calling", gameUrl);
-            console.log(testData);
             res.send({...testData, gameNum: gameNum});
             // res.status(500).send("Error");
         }, 1000);

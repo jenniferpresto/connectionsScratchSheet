@@ -45,6 +45,7 @@ const getDataFromJson = async () => {
 const loadingAnimation = new LoadingAnimationController();
 
 const renderPage = (data) => {
+    console.log(data);
     const todayGameNum = parseInt(data.gameNum);
     const words = data.words;
     const mainContainer = document.getElementById("main-container");
