@@ -164,7 +164,6 @@ const renderPage = (data) => {
 
     //  TODO: Move to ResultsController
     const requestResultsForDay = () => {
-        console.log("select day input value: ", selectDayInput.value);
         if (!selectDayInput.value) {
             return;
         }
@@ -232,8 +231,7 @@ const renderPage = (data) => {
     /**
      * General touch handler
      */
-    const touchHandler = (event) => {
-        console.log("Touch handler");
+    const touchHandler = event => {
         let touches = event.changedTouches;
         if (!touches || !touches.length) {
             return;
@@ -267,7 +265,6 @@ const renderPage = (data) => {
             clientY: first.clientY,
         });
 
-        console.log("Dispatching event: ", first.target);
         first.target.dispatchEvent(mouseEvent);
         if (isClick) {
             const clickEvent = new MouseEvent("click", {
@@ -276,7 +273,6 @@ const renderPage = (data) => {
                 clientX: first.clientX,
                 clientY: first.clientY,
             });
-            console.log("Dispatching event again, is Click", clickEvent);
             first.target.dispatchEvent(clickEvent);
         }
     };
@@ -303,9 +299,7 @@ const renderPage = (data) => {
     });
 
     selectDayButton.addEventListener("click", (e) => {
-        console.log("click");
         e.preventDefault();
-        console.log("Requesting results");
         requestResultsForDay();
     });
 
@@ -519,7 +513,6 @@ const renderPage = (data) => {
         } else if (wordBoard.isInDeleteMode) {
             unsetPreDelete();
         } else {
-            console.log("Using touch handler");
             touchHandler(e);
         }
     });
