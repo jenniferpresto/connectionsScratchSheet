@@ -241,7 +241,7 @@ input {
                 }
             }
 
-            form.select-day {
+            .select-day {
                 color: #000000;
                 max-width: 500px;
 
@@ -255,31 +255,32 @@ input {
                     height: 45px;
                     display: flex;
                     justify-content: center;
-                    
-                    input {
-                        height: inherit;
-                        box-sizing: border-box;
-                        margin: 0 10px;
-                        min-width: 70px;
-                        border: solid 2px;
-                        background-color: buttonface;
-                        color: black;
-                    }
+                    border-radius: 10px;
+                    font-size: 1.5rem;
+                    box-sizing: border-box;
+                    min-width: 70px;
 
-                    input[type="number"] {
-                        width: 70px;
-                        font-size: 1.5rem;
+                    input {
+                        width: 90px;
+                        margin: 0 10px;
                         &::-webkit-outer-spin-button,
                         &::-webkit-inner-spin-button {
                             appearance: none;
-                        }
+                       }
                     }
+
+                    button {
+                        padding-top: 5px;
+                        margin: 0 10px;
+                        background-color: buttonface;
+                    }
+                    
                 }
             }
 
             .close-btn {
                 font-size: 1.25rem;
-                margin-top: 20px;
+                margin-top: 25px;
                 margin-bottom: 40px; // push whole form slightly above center
                 width: 335px;
                 max-width: 95%;

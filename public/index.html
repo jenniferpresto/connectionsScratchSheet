@@ -51,18 +51,25 @@
                             <div class="members" id="members-3"></div>
                         </div>
                     </div>
-                    <form id="select-day" class="select-day">
+                    <div id="select-day-container" class="select-day">
                         <div id="select-day-instructions" class="results-instructions">
                             Enter the number of any past Connections results
-                            you&rsquo;d like to see. Today is #
-                            <span id="today-number"></span>.
+                            you&rsquo;d like to see. Today is # <span id="today-number"></span>.
                         </div>
-                        <div class="select-day-inputs" id="select-day-input-container">
-                            <input id="input-day" type="number" />
-                            <button id="select-day">Get day</button>
+                        <div class="select-day-inputs">
+                            <input id="input-day" type="number" class="select-day-inputs"/>
+                            <button
+                                id="select-day-button"
+                                class="select-day-inputs"
+                                type="submit"
+                            >Get day</button>
                         </div>
-                    </form>
+                    </div>
                     <button id="close-button" class="close-btn">Close</button>
+                    <!-- <form id="test-form">
+                        <input type="number" />
+                        <input form="test-form" type="submit" value="test submit" />
+                    </form> -->
                 </div>
             </div>
             <div id="ripple-container" class="lds-ripple">

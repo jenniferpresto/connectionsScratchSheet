@@ -205,10 +205,8 @@ app.get("/connectionsJson", async (req, res) => {
 
 app.get("/resultDay/:gameNum", async (req, res) => {
     const gameNum = parseInt(req.params.gameNum);
-    console.log(`Received request for past results: gameNum: ${gameNum}`);
-
     const gameUrl = getUrlForGameNumber(gameNum);
-    console.log("New url: ", gameUrl);
+    console.log(`Received request for past results: gameNum: ${gameNum}, url: ${gameUrl}`);
 
     if (IS_DEV) {
         console.log("Loading test data");
@@ -216,7 +214,6 @@ app.get("/resultDay/:gameNum", async (req, res) => {
             .then(jsonString => JSON.parse(jsonString));
 
         await setTimeout(() => {
-            console.log("Just showing URL without calling", gameUrl);
             res.send({...testData, gameNum: gameNum});
             // res.status(500).send("Error");
         }, 1000);

@@ -9,7 +9,7 @@ export default class ResultsController {
         this.resultsTitle = document.getElementById("results-title");
         this.resultRowContainer = document.getElementById("results-rows");
         this.resultRows = document.getElementsByClassName("result-row");
-        this.selectDayForm = document.getElementById("select-day");
+        this.selectDayContainer = document.getElementById("select-day-container");
         this.closeButton = document.getElementById("close-button");
         this.isVisible = false;
         this.loadingAnimationController = loadingAnimationController;
@@ -112,7 +112,7 @@ export default class ResultsController {
 
     showResults(jsonResults) {
         this.hideElement(this.statusMessage);
-        this.showElement(this.selectDayForm);
+        this.showElement(this.selectDayContainer);
         this.showElement(this.closeButton);
         this.showElement(this.resultRowContainer);
 
@@ -153,7 +153,7 @@ export default class ResultsController {
         this.setErrorColor();
         this.showElement(this.statusMessage);
         this.statusMessage.innerHTML = errorMsg;
-        this.showElement(this.selectDayForm);
+        this.showElement(this.selectDayContainer);
         this.showElement(this.closeButton);
     }
 
@@ -161,7 +161,7 @@ export default class ResultsController {
         this.clearResultsAndShow();
         this.unsetErrorColor();
         this.showElement(this.statusMessage);
-        this.hideElement(this.selectDayForm);
+        this.hideElement(this.selectDayContainer);
         this.hideElement(this.closeButton);
         this.statusMessage.innerHTML = "Loading results for Connections # " + dayNum.toString();
         this.loadingAnimationController.setColor("#000");

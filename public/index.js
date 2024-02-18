@@ -45,7 +45,6 @@ const getDataFromJson = async () => {
 const loadingAnimation = new LoadingAnimationController();
 
 const renderPage = (data) => {
-    console.log(data);
     const todayGameNum = parseInt(data.gameNum);
     const words = data.words;
     const mainContainer = document.getElementById("main-container");
@@ -56,7 +55,7 @@ const renderPage = (data) => {
     const deleteOneButton = document.getElementById("delete-one");
     const deleteAllButton = document.getElementById("delete-all");
     const getHistoryButton = document.getElementById("get-history");
-    const selectDayForm = document.getElementById("select-day");
+    const selectDayButton = document.getElementById("select-day-button");
     const selectDayInput = document.getElementById("input-day");
     const resultsModalContainer = document.getElementById("results-modal-container");
     loadingAnimation.hide();
@@ -232,7 +231,7 @@ const renderPage = (data) => {
     /**
      * General touch handler
      */
-    const touchHandler = (event) => {
+    const touchHandler = event => {
         let touches = event.changedTouches;
         if (!touches || !touches.length) {
             return;
@@ -299,7 +298,7 @@ const renderPage = (data) => {
         addNewWordFromInput();
     });
 
-    selectDayForm.addEventListener("click", (e) => {
+    selectDayButton.addEventListener("click", (e) => {
         e.preventDefault();
         requestResultsForDay();
     });
