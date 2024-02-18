@@ -164,6 +164,7 @@ const renderPage = (data) => {
 
     //  TODO: Move to ResultsController
     const requestResultsForDay = () => {
+        console.log("select day input value: ", selectDayInput.value);
         if (!selectDayInput.value) {
             return;
         }
@@ -301,9 +302,10 @@ const renderPage = (data) => {
         addNewWordFromInput();
     });
 
-    selectDayButton.addEventListener("submit", (e) => {
-        console.log("Submit");
+    selectDayButton.addEventListener("click", (e) => {
+        console.log("click");
         e.preventDefault();
+        console.log("Requesting results");
         requestResultsForDay();
     });
 
