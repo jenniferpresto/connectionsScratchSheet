@@ -3,7 +3,7 @@ import ResultsController from "./ResultsController.js";
 import Position from "./Position.js";
 import LoadingAnimationController from "./LoadingAnimationController.js";
 
-const IS_DEV = true;
+const IS_DEV = false;
 const renderTestWords = () => {
     renderPage({
         id: 255,
