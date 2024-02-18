@@ -74,6 +74,7 @@ export default class ResultsController {
                     }
                     this.showError(errorMsg);
                 } else {
+                    console.log("In else to show results");
                     this.showResults(data);
                 }
             })

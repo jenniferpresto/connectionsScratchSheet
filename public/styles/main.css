@@ -210,39 +210,39 @@ input {
 #main-container .results-container .results-content #results-rows .result-row#row-3 {
   background-color: rgb(188, 112, 196);
 }
-#main-container .results-container .results-content form.select-day {
+#main-container .results-container .results-content .select-day {
   color: #000000;
   max-width: 500px;
 }
-#main-container .results-container .results-content form.select-day .results-instructions {
+#main-container .results-container .results-content .select-day .results-instructions {
   margin-top: 20px;
   margin-bottom: 15px;
   font-size: 1.25rem;
 }
-#main-container .results-container .results-content form.select-day .select-day-inputs {
+#main-container .results-container .results-content .select-day .select-day-inputs {
   height: 45px;
   display: flex;
   justify-content: center;
-}
-#main-container .results-container .results-content form.select-day .select-day-inputs input {
-  height: inherit;
-  box-sizing: border-box;
-  margin: 0 10px;
-  min-width: 70px;
-  border: solid 2px;
-  background-color: buttonface;
-  color: black;
-}
-#main-container .results-container .results-content form.select-day .select-day-inputs input[type=number] {
-  width: 70px;
+  border-radius: 10px;
   font-size: 1.5rem;
+  box-sizing: border-box;
+  min-width: 70px;
 }
-#main-container .results-container .results-content form.select-day .select-day-inputs input[type=number]::-webkit-outer-spin-button, #main-container .results-container .results-content form.select-day .select-day-inputs input[type=number]::-webkit-inner-spin-button {
+#main-container .results-container .results-content .select-day .select-day-inputs input {
+  width: 90px;
+  margin: 0 10px;
+}
+#main-container .results-container .results-content .select-day .select-day-inputs input::-webkit-outer-spin-button, #main-container .results-container .results-content .select-day .select-day-inputs input::-webkit-inner-spin-button {
   appearance: none;
+}
+#main-container .results-container .results-content .select-day .select-day-inputs button {
+  padding-top: 5px;
+  margin: 0 10px;
+  background-color: buttonface;
 }
 #main-container .results-container .results-content .close-btn {
   font-size: 1.25rem;
-  margin-top: 20px;
+  margin-top: 25px;
   margin-bottom: 40px;
   width: 335px;
   max-width: 95%;

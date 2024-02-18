@@ -3,7 +3,7 @@ import ResultsController from "./ResultsController.js";
 import Position from "./Position.js";
 import LoadingAnimationController from "./LoadingAnimationController.js";
 
-const IS_DEV = false;
+const IS_DEV = true;
 const renderTestWords = () => {
     renderPage({
         id: 255,
@@ -45,7 +45,6 @@ const getDataFromJson = async () => {
 const loadingAnimation = new LoadingAnimationController();
 
 const renderPage = (data) => {
-    console.log(data);
     const todayGameNum = parseInt(data.gameNum);
     const words = data.words;
     const mainContainer = document.getElementById("main-container");
@@ -56,7 +55,7 @@ const renderPage = (data) => {
     const deleteOneButton = document.getElementById("delete-one");
     const deleteAllButton = document.getElementById("delete-all");
     const getHistoryButton = document.getElementById("get-history");
-    const selectDayForm = document.getElementById("select-day");
+    const selectDayButton = document.getElementById("select-day-button");
     const selectDayInput = document.getElementById("input-day");
     const resultsModalContainer = document.getElementById("results-modal-container");
     loadingAnimation.hide();
@@ -233,6 +232,7 @@ const renderPage = (data) => {
      * General touch handler
      */
     const touchHandler = (event) => {
+        console.log("Touch handler");
         let touches = event.changedTouches;
         if (!touches || !touches.length) {
             return;
@@ -266,6 +266,7 @@ const renderPage = (data) => {
             clientY: first.clientY,
         });
 
+        console.log("Dispatching event: ", first.target);
         first.target.dispatchEvent(mouseEvent);
         if (isClick) {
             const clickEvent = new MouseEvent("click", {
@@ -274,6 +275,7 @@ const renderPage = (data) => {
                 clientX: first.clientX,
                 clientY: first.clientY,
             });
+            console.log("Dispatching event again, is Click", clickEvent);
             first.target.dispatchEvent(clickEvent);
         }
     };
@@ -299,7 +301,8 @@ const renderPage = (data) => {
         addNewWordFromInput();
     });
 
-    selectDayForm.addEventListener("click", (e) => {
+    selectDayButton.addEventListener("submit", (e) => {
+        console.log("Submit");
         e.preventDefault();
         requestResultsForDay();
     });
@@ -514,6 +517,7 @@ const renderPage = (data) => {
         } else if (wordBoard.isInDeleteMode) {
             unsetPreDelete();
         } else {
+            console.log("Using touch handler");
             touchHandler(e);
         }
     });
