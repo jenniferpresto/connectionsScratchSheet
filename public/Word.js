@@ -1,11 +1,12 @@
 import Position from "./Position.js";
 
 export default class Word {
-    constructor(_board, _wordtText, _id) {
+    constructor(_board, _wordtText, _id, _width, _height) {
         this.board = _board;
         this.isActive = false;
         this.wordText = _wordtText;
         this.id = _id;
+        this.dimensions = new Position(_width, _height);
         this.div = document.createElement("div");
         this.position = new Position(0, 0);
         this.offset = new Position(0, 0);
@@ -24,10 +25,26 @@ export default class Word {
     }
 
     setPositionFromTouch(touchX, touchY) {
-        this.position.x = touchX - this.offset.x;
-        this.position.y = touchY - this.offset.y;
-        this.div.style.left = (touchX - this.offset.x) + "px";
-        this.div.style.top = (touchY - this.offset.y) + "px";
+        let posX = touchX - this.offset.x;
+        let posY = touchY - this.offset.y;
+
+        //  constrain to the screen
+        if (posX < 0) {
+            posX = 0;
+        } else if (posX + this.dimensions.x > window.innerWidth) {
+            posX = window.innerWidth - this.dimensions.x;
+        }
+
+        if (posY < 0) {
+            posY = 0;
+        } else if (posY + this.dimensions.y > window.innerHeight) {
+            posY = window.innerHeight - this.dimensions.y;
+        }
+
+        this.position.x = posX;
+        this.position.y = posY;
+        this.div.style.left = posX + "px";
+        this.div.style.top = posY + "px";
     }
 
     activate(touchX, touchY) {
