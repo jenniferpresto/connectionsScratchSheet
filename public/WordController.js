@@ -22,14 +22,18 @@ export default class WordController {
         let wordAreaWidth;
         if (isTouchScreen) {
             wordAreaWidth = isHorizontal
-                ? screen.width * 0.6
-                : screen.width - 40;
+                // ? screen.width * 0.6
+                // : screen.width - 40;
+                ? window.innerWidth * 0.6
+                : window.innerWidth - 40;
         } else {
             wordAreaWidth = window.innerWidth - 40;
         }
         this.wordWidth = Math.min(wordAreaWidth / 4, 150);
         this.wordHeight = Math.max(this.wordWidth * 0.4, 42);
-        this.wordSpacing = this.wordWidth < 150 ? 10 : 20;
+        this.wordSpacing = window.innerWidth < 680 ? 10 : 20;
+        // this.wordSpacing = this.wordWidth < 150 ? 10 : 20;
+        console.log("Word spacing", this.wordSpacing);
         const topPos = isTouchScreen && isHorizontal ? 0 : 75;
 
         this.setUpInitialPositions(this.wordWidth, this.wordHeight, topPos);
