@@ -10,6 +10,7 @@
 @mixin animation($animation, $duration, $method, $times) {
     animation: $animation $duration $method $times;
 }
+
 /**
 * General
 */
@@ -55,6 +56,10 @@ input {
             width: calc(100% - 10px);
             margin: 5px;
             column-gap: 3px;
+        }
+
+        button:disabled {
+            color: lightgray;
         }
     }
 

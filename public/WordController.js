@@ -1,6 +1,8 @@
 import Position from "./Position.js";
 import Word from "./Word.js";
 
+const TOP_POS = 75;
+
 export default class WordController {
     constructor(wordStrings, isTouchScreen, isHorizontal) {
         this.initialPositions = [];
@@ -13,6 +15,7 @@ export default class WordController {
         this.wordSpacing = 0;
         this.isInDeleteMode = false;
         this.setup(wordStrings, isTouchScreen, isHorizontal);
+        this.onWordMoved = () => {}
     }
 
     /**
@@ -38,11 +41,15 @@ export default class WordController {
                     x * (dimensions.wordWidth + dimensions.wordSpacing) + dimensions.wordSpacing / 2,
                     y * (dimensions.wordHeight + dimensions.wordSpacing) +
                         dimensions.wordSpacing / 2 +
-                        75
+                        TOP_POS
                 );
                 this.initialPositions.push(pos);
             }
         }
+    }
+
+    setOnWordMoved(onMoved) {
+        this.onWordMoved = onMoved;
     }
 
     /**
@@ -83,9 +90,24 @@ export default class WordController {
      */
     calculateWordDimensions() {
         const areaWidth = window.innerWidth - 40;
-        const width = Math.min(areaWidth / 4, 150);
-        const height = Math.max(width * 0.4, 42);
-        const spacing = window.innerWidth < 680 ? 10 : 20;
+        let width = Math.min(areaWidth / 4, 150);
+        let height = Math.max(width * 0.4, 42);
+        let spacing = window.innerWidth < 680 ? 10 : 20;
+
+        //  short screens; e.g., phone turned sideways
+        const totalHeight = (height  * 4) + (spacing * 3.5) + TOP_POS;
+        if (totalHeight > window.innerHeight) {
+            //  first try a 10px spacing
+            spacing = 10;
+            const newTotalHeight = (height  * 4) + (spacing * 3.5) + TOP_POS;
+            //  if that's not enough, shrink the words
+            if (newTotalHeight > window.innerHeight) {
+                const newHeight = (window.innerHeight - TOP_POS - 35) / 4;
+                height = Math.max(newHeight, 42);
+                width = height * 2.5;
+            }
+        }
+    
         return {
             wordWidth: width,
             wordHeight: height,
@@ -230,6 +252,7 @@ export default class WordController {
             return;
         }
         this.activeWord.setPositionFromTouch(x, y);
+        this.onWordMoved();
     }
 
     onPointerLifted() {

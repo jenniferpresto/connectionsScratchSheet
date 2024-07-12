@@ -56,14 +56,17 @@ const renderPage = (data) => {
     //  two-step buttons at top
     const deleteOneButton = document.getElementById("delete-one");
     const deleteAllButton = document.getElementById("delete-all");
-    const resetSizeButton = document.getElementById("reset-size");
+    // const resetSizeButton = document.getElementById("reset-size");
     const resetGridButton = document.getElementById("reset-grid");
     const getHistoryButton = document.getElementById("get-history");
+
+    //  disable resetGridButton until something has moved
+    resetGridButton.disabled = true;
 
     const twoStepButtonMap = new Map();
     twoStepButtonMap.set("delete-one", deleteOneButton);
     twoStepButtonMap.set("delete-all", deleteAllButton);
-    twoStepButtonMap.set("reset-size", resetSizeButton);
+    // twoStepButtonMap.set("reset-size", resetSizeButton);
     twoStepButtonMap.set("reset-grid", resetGridButton);
     twoStepButtonMap.set("get-history", getHistoryButton);
 
@@ -83,6 +86,13 @@ const renderPage = (data) => {
     //  TODO: Revisit horizontal positioning
     const isHorizontal = false;
     const wordBoard = new WordController(words, isTouchScreen, isHorizontal);
+
+    const enableGridButton = () => {
+        resetGridButton.disabled = false;
+    }
+
+    wordBoard.setOnWordMoved(enableGridButton);
+
     const results = new ResultsController(
         loadingAnimation,
         todayGameNum,
@@ -262,6 +272,10 @@ const renderPage = (data) => {
     /**
      * Listeners
      */
+    window.addEventListener("resize", () => {
+        wordBoard.resetWordSize();
+        enableGridButton();
+    });
 
     /**
      * Key listeners for document
@@ -296,14 +310,15 @@ const renderPage = (data) => {
         setPreDelete();
     });
 
-    resetSizeButton.addEventListener("click", e => {
-        e.preventDefault();
-        wordBoard.resetWordSize();
-    });
+    // resetSizeButton.addEventListener("click", e => {
+    //     e.preventDefault();
+    //     wordBoard.resetWordSize();
+    // });
 
     resetGridButton.addEventListener("click", e => {
         e.preventDefault();
         wordBoard.resetGrid();
+        resetGridButton.disabled = true;
     });
 
     getHistoryButton.addEventListener("click", (e) => {
@@ -498,6 +513,7 @@ const renderPage = (data) => {
                     pressedSpecialElement === "reset-grid"
                 ) {
                     wordBoard.resetGrid();
+                    resetGridButton.disabled = true;
                 } else if (
                     e.target.id === "reset-size" &&
                     pressedSpecialElement === "reset-size"
