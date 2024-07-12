@@ -19,35 +19,40 @@ export default class WordController {
      * Setup
      */
     setup(wordStrings, isTouchScreen, isHorizontal) {
-        let wordAreaWidth;
-        if (isTouchScreen) {
-            wordAreaWidth = isHorizontal
-                // ? screen.width * 0.6
-                // : screen.width - 40;
-                ? window.innerWidth * 0.6
-                : window.innerWidth - 40;
-        } else {
-            wordAreaWidth = window.innerWidth - 40;
-        }
-        this.wordWidth = Math.min(wordAreaWidth / 4, 150);
-        this.wordHeight = Math.max(this.wordWidth * 0.4, 42);
-        this.wordSpacing = window.innerWidth < 680 ? 10 : 20;
-        const topPos = isTouchScreen && isHorizontal ? 0 : 75;
+        // this.wordAreaWidth = window.innerWidth < 680
+        //     ? window.innerWidth - 20
+        //     : window.innerWidth - 40;
+        // let wordAreaWidth = window.innerWidth - 40;
+        // if (isTouchScreen) {
+        //     wordAreaWidth = isHorizontal
+        //         ? window.innerWidth * 0.6
+        //         : window.innerWidth - 40;
+        // } else {
+        //     this.wordAreaWidth = window.innerWidth - 40;
+        // // }
+        // this.wordWidth = Math.min(this.wordAreaWidth / 4, 150);
+        // this.wordHeight = Math.max(this.wordWidth * 0.4, 42);
+        // this.wordSpacing = window.innerWidth < 680 ? 10 : 20;
+        // const topPos = isTouchScreen && isHorizontal ? 0 : 75;
+        const dimensions = this.calculateWordDimensions();
+        this.wordWidth = dimensions.wordWidth;
+        this.wordHeight = dimensions.wordHeight;
+        this.wordSpacing = dimensions.wordSpacing;
 
-        this.setUpInitialPositions(this.wordWidth, this.wordHeight, topPos);
+        this.setUpInitialPositions(this.wordWidth, this.wordHeight);
         for (const [idx, wordString] of wordStrings.entries()) {
             this.addWord(wordString);
         }
     }
 
-    setUpInitialPositions(wordWidth, wordHeight, topPos) {
+    setUpInitialPositions(wordWidth, wordHeight) {
         for (let y = 0; y < 4; y++) {
             for (let x = 0; x < 4; x++) {
                 const pos = new Position(
                     x * (wordWidth + this.wordSpacing) + this.wordSpacing / 2,
                     y * (wordHeight + this.wordSpacing) +
                         this.wordSpacing / 2 +
-                        topPos
+                        75
                 );
                 this.initialPositions.push(pos);
             }
@@ -55,8 +60,54 @@ export default class WordController {
     }
 
     /**
+     * Resetting
+     */
+    resetWordSize() {
+        const newDimensions = this.calculateWordDimensions();
+        const widthDiff = this.wordWidth - newDimensions.wordWidth;
+        const heightDiff = this.wordHeight - newDimensions.wordHeight;
+        console.log("Width diff: " + widthDiff + ", height diff: " + heightDiff);
+        this.wordWidth = newDimensions.wordWidth;
+        this.wordHeight = newDimensions.wordHeight;
+        this.wordSpacing = newDimensions.wordSpacing;
+
+        this.existingWords.forEach(word => {
+            console.log("Before: ", word);
+            this.setWordAttributes(word);
+            const x = word.position.x + widthDiff / 2;
+            const y = word.position.y + heightDiff / 2;
+            word.setPositionFromTouch(x, y);
+            console.log("AFter: ", word);
+        });
+    }
+
+    resetGrid() {
+
+    }
+
+
+    /**
      * General operation
      */
+    calculateWordDimensions() {
+        const areaWidth = window.innerWidth - 40;
+        const width = Math.min(areaWidth / 4, 150);
+        const height = Math.max(width * 0.4, 42);
+        const spacing = window.innerWidth < 680 ? 10 : 20;
+        return {
+            wordWidth: width,
+            wordHeight: height,
+            wordSpacing: spacing,
+        };
+    }
+
+    setWordAttributes(word) {
+        word.div.style.width = this.wordWidth + "px";
+        word.div.style.height = this.wordHeight + "px";
+        word.dimensions.x = this.wordWidth;
+        word.dimensions.y = this.wordHeight;
+    }
+
     addWord(wordText) {
         if (this.existingWords.size >= 16) {
             return;
@@ -71,11 +122,11 @@ export default class WordController {
                 this.initialPositions[idx].x,
                 this.initialPositions[idx].y
             );
-            newWord.div.style.width = this.wordWidth + "px";
-            newWord.div.style.height = this.wordHeight + "px";
-            if (this.wordWidth < 150) {
-                newWord.div.style.fontSize = "1.0rem";
-            }
+            // newWord.div.style.width = this.wordWidth + "px";
+            // newWord.div.style.height = this.wordHeight + "px";
+            // if (this.wordWidth < 150) {
+            //     newWord.div.style.fontSize = "1.0rem";
+            // }
             this.existingWords.set("box" + idx, newWord);
         }
         //  recycle a previously deleted word
@@ -84,6 +135,7 @@ export default class WordController {
             newWord.setText(wordText);
             this.existingWords.set(newWord.id, newWord);
         }
+        this.setWordAttributes(newWord);
         this.container.appendChild(newWord.div);
         this.adjustTextWidth(newWord.div);
     }

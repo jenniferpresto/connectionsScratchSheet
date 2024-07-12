@@ -52,8 +52,8 @@ input {
         top: 0;
         left: 0;
         @media (max-width: 680px) {
-            width: calc(100% - 6px);
-            margin: 3px;
+            width: calc(100% - 10px);
+            margin: 5px;
             column-gap: 3px;
         }
     }
