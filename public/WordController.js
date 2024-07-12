@@ -72,8 +72,9 @@ export default class WordController {
             const wordIdx = Number(word.id.substr(3));
             if (isNaN(wordIdx) || wordIdx > this.initialPositions.length - 1) {
                 console.log("Something has gone horribly wrong reseting the grid");
+            } else {
+                word.setPositionFromTouch(this.initialPositions[wordIdx].x, this.initialPositions[wordIdx].y);
             }
-            word.setPositionFromTouch(this.initialPositions[wordIdx].x, this.initialPositions[wordIdx].y);
         });
     }
 

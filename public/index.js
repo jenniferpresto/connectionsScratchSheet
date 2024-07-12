@@ -71,7 +71,6 @@ const renderPage = (data) => {
     const selectDayInput = document.getElementById("input-day");
     const resultsModalContainer = document.getElementById("results-modal-container");
 
-
     loadingAnimation.hide();
 
     let instructionsDisplayingError = false;
