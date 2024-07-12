@@ -52,12 +52,25 @@ const renderPage = (data) => {
     const addWordForm = document.getElementById("add-word");
     const addWordInput = document.getElementById("new-word");
     const buttonContainer = document.getElementById("button-container");
+
+    //  two-step buttons at top
     const deleteOneButton = document.getElementById("delete-one");
     const deleteAllButton = document.getElementById("delete-all");
+    const resetSizeButton = document.getElementById("reset-size");
+    const resetGridButton = document.getElementById("reset-grid");
     const getHistoryButton = document.getElementById("get-history");
+
+    const twoStepButtonMap = new Map();
+    twoStepButtonMap.set("delete-one", deleteOneButton);
+    twoStepButtonMap.set("delete-all", deleteAllButton);
+    twoStepButtonMap.set("reset-size", resetSizeButton);
+    twoStepButtonMap.set("reset-grid", resetGridButton);
+    twoStepButtonMap.set("get-history", getHistoryButton);
+
     const selectDayButton = document.getElementById("select-day-button");
     const selectDayInput = document.getElementById("input-day");
     const resultsModalContainer = document.getElementById("results-modal-container");
+
     loadingAnimation.hide();
 
     let instructionsDisplayingError = false;
@@ -66,7 +79,9 @@ const renderPage = (data) => {
     let touchStartPos = new Position();
 
     const isTouchScreen = navigator.maxTouchPoints > 0;
-    const isHorizontal = screen.width > screen.height;
+    // const isHorizontal = window.innerWidth > window.innerHeight;
+    //  TODO: Revisit horizontal positioning
+    const isHorizontal = false;
     const wordBoard = new WordController(words, isTouchScreen, isHorizontal);
     const results = new ResultsController(
         loadingAnimation,
@@ -120,25 +135,6 @@ const renderPage = (data) => {
     //  position elements based on screen
     const edgeDist = wordBoard.wordSpacing / 2 + "px";
     addWordForm.style.left = edgeDist;
-    if (isTouchScreen) {
-        buttonContainer.style.top = edgeDist;
-        if (isHorizontal) {
-            buttonContainer.style.right = edgeDist;
-            buttonContainer.style.width = "110px";
-            buttonContainer.style.textAlign = "right";
-            deleteOneButton.style.marginLeft = 0;
-            deleteOneButton.style.marginTop = edgeDist;
-            instructions.style.float = "right";
-            instructions.style.textAlign = "right";
-            instructions.style.width = "200px";
-            instructions.style.fontSize = "1.0rem";
-        } else {
-            buttonContainer.style.left = edgeDist;
-        }
-    } else {
-        buttonContainer.style.left = edgeDist;
-    }
-
     addWordInput.value = "";
 
     const addNewWordFromInput = () => {
@@ -190,12 +186,8 @@ const renderPage = (data) => {
         pressedSpecialElement = elementId;
         touchStartPos.x = x;
         touchStartPos.y = y;
-        if (elementId.includes("all")) {
-            deleteAllButton.classList.add("pressed");
-        } else if (elementId.includes("one")) {
-            deleteOneButton.classList.add("pressed");
-        } else if (elementId.includes("history")) {
-            getHistoryButton.classList.add("pressed");
+        if (twoStepButtonMap.has(elementId)) {
+            twoStepButtonMap.get(elementId).classList.add("pressed");
         } else if (elementId.includes("box")) {
             wordBoard.pressWordForDeletionById(elementId);
         } else {
@@ -207,20 +199,10 @@ const renderPage = (data) => {
         if (!pressedSpecialElement) {
             return;
         }
-        let deleteButton;
-        if (
-            pressedSpecialElement.includes("delete") ||
-            pressedSpecialElement.includes("history")
-        ) {
-            if (pressedSpecialElement.includes("all")) {
-                deleteButton = deleteAllButton;
-            } else if (pressedSpecialElement.includes("one")) {
-                deleteButton = deleteOneButton;
-            } else if (pressedSpecialElement.includes("history")) {
-                deleteButton = getHistoryButton;
-            }
-            if (deleteButton.classList.contains("pressed")) {
-                deleteButton.classList.remove("pressed");
+        if (twoStepButtonMap.has(pressedSpecialElement)) {
+            const activeButton = twoStepButtonMap.get(pressedSpecialElement);
+            if (activeButton.classList.contains("pressed")) {
+                activeButton.classList.remove("pressed");
             }
         } else if (pressedSpecialElement.includes("box")) {
             wordBoard.unpressWordById(pressedSpecialElement);
@@ -312,6 +294,16 @@ const renderPage = (data) => {
     deleteOneButton.addEventListener("click", (e) => {
         e.preventDefault();
         setPreDelete();
+    });
+
+    resetSizeButton.addEventListener("click", e => {
+        e.preventDefault();
+        wordBoard.resetWordSize();
+    });
+
+    resetGridButton.addEventListener("click", e => {
+        e.preventDefault();
+        wordBoard.resetGrid();
     });
 
     getHistoryButton.addEventListener("click", (e) => {
@@ -474,10 +466,8 @@ const renderPage = (data) => {
     document.addEventListener("touchend", (e) => {
         wordBoard.onPointerLifted();
         if (pressedSpecialElement) {
-            if (
-                pressedSpecialElement.includes("delete") ||
-                pressedSpecialElement.includes("history")
-            ) {
+            //  TODO: This is painful
+            if (twoStepButtonMap.has(pressedSpecialElement)) {
                 if (
                     e.target.id === "delete-all" &&
                     pressedSpecialElement === "delete-all"
@@ -503,6 +493,16 @@ const renderPage = (data) => {
                         return;
                     }
                     results.clearResultsAndShow();
+                } else if (
+                    e.target.id === "reset-grid" &&
+                    pressedSpecialElement === "reset-grid"
+                ) {
+                    wordBoard.resetGrid();
+                } else if (
+                    e.target.id === "reset-size" &&
+                    pressedSpecialElement === "reset-size"
+                ) {
+                    wordBoard.resetWordSize();
                 }
             } else {
                 wordBoard.removeWordById(pressedSpecialElement);

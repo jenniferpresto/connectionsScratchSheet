@@ -59,5 +59,7 @@ export default class Word {
         this.div.classList.remove("moving");
         this.div.classList.add("static");
         this.isActive = false;
+        this.offset.x = 0;
+        this.offset.y = 0;
     }
 }
