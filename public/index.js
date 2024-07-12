@@ -88,9 +88,7 @@ const renderPage = (data) => {
     const wordBoard = new WordController(words, isTouchScreen, isHorizontal);
 
     const enableGridButton = () => {
-        if(resetGridButton.disabled) {
-            resetGridButton.disabled = false;
-        }
+        resetGridButton.disabled = false;
     }
 
     wordBoard.setOnWordMoved(enableGridButton);
