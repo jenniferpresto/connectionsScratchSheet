@@ -19,19 +19,19 @@ export default class WordController {
      * Setup
      */
     setup(wordStrings, isTouchScreen, isHorizontal) {
-        const dimensions = this.calculateWordDimensions();
-        this.wordWidth = dimensions.wordWidth;
-        this.wordHeight = dimensions.wordHeight;
-        this.wordSpacing = dimensions.wordSpacing;
-
-        this.setUpInitialWordPositions(this.wordWidth, this.wordHeight);
+        this.setUpInitialWordPositions(true);
         for (const [idx, wordString] of wordStrings.entries()) {
             this.addWord(wordString);
         }
     }
 
-    setUpInitialWordPositions() {
+    setUpInitialWordPositions(shouldSaveDimensions) {
         const dimensions = this.calculateWordDimensions();
+        if (shouldSaveDimensions) {
+            this.wordWidth = dimensions.wordWidth;
+            this.wordHeight = dimensions.wordHeight;
+            this.wordSpacing = dimensions.wordSpacing;
+        }
         for (let y = 0; y < 4; y++) {
             for (let x = 0; x < 4; x++) {
                 const pos = new Position(
@@ -49,7 +49,7 @@ export default class WordController {
      * Resetting
      */
     resetWordSize() {
-        const newDimensions = this.calculateWordDimensions();
+        const newDimensions = this.calculateWordDimensions(false);
         const widthDiff = this.wordWidth - newDimensions.wordWidth;
         const heightDiff = this.wordHeight - newDimensions.wordHeight;
         this.wordWidth = newDimensions.wordWidth;
@@ -67,7 +67,7 @@ export default class WordController {
 
     resetGrid() {
         this.initialPositions = [];
-        this.setUpInitialWordPositions();
+        this.setUpInitialWordPositions(false);
         this.existingWords.forEach(word => {
             const wordIdx = Number(word.id.substr(3));
             if (isNaN(wordIdx) || wordIdx > this.initialPositions.length - 1) {
