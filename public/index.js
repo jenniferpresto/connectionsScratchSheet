@@ -489,6 +489,7 @@ const renderPage = (data) => {
     document.addEventListener("touchend", (e) => {
         wordBoard.onPointerLifted();
         if (pressedSpecialElement) {
+            //  TODO: This is painful
             if (twoStepButtonMap.has(pressedSpecialElement)) {
                 if (
                     e.target.id === "delete-all" &&
