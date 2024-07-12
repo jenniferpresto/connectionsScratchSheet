@@ -136,28 +136,6 @@ const renderPage = (data) => {
     //  position elements based on screen
     const edgeDist = wordBoard.wordSpacing / 2 + "px";
     addWordForm.style.left = edgeDist;
-    // buttonContainer.style.top = edgeDist;
-    // buttonContainer.style.marginLeft = edgeDist;
-    // buttonContainer.style.marginRight = edgeDist;
-    // if (isTouchScreen) {
-    //     buttonContainer.style.top = edgeDist;
-    //     if (isHorizontal) {
-    //         buttonContainer.style.right = edgeDist;
-    //         buttonContainer.style.width = "110px";
-    //         buttonContainer.style.textAlign = "right";
-    //         deleteOneButton.style.marginLeft = 0;
-    //         deleteOneButton.style.marginTop = edgeDist;
-    //         instructions.style.float = "right";
-    //         instructions.style.textAlign = "right";
-    //         instructions.style.width = "200px";
-    //         instructions.style.fontSize = "1.0rem";
-    //     } else {
-    //         // buttonContainer.style.left = edgeDist;
-    //     }
-    // } else {
-    //     // buttonContainer.style.left = edgeDist;
-    // }
-
     addWordInput.value = "";
 
     const addNewWordFromInput = () => {
