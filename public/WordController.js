@@ -1,6 +1,8 @@
 import Position from "./Position.js";
 import Word from "./Word.js";
 
+const TOP_POS = 75;
+
 export default class WordController {
     constructor(wordStrings, isTouchScreen, isHorizontal) {
         this.initialPositions = [];
@@ -38,7 +40,7 @@ export default class WordController {
                     x * (dimensions.wordWidth + dimensions.wordSpacing) + dimensions.wordSpacing / 2,
                     y * (dimensions.wordHeight + dimensions.wordSpacing) +
                         dimensions.wordSpacing / 2 +
-                        75
+                        TOP_POS
                 );
                 this.initialPositions.push(pos);
             }
@@ -82,10 +84,25 @@ export default class WordController {
      * General operation
      */
     calculateWordDimensions() {
+        console.log("Calculating dimensions");
         const areaWidth = window.innerWidth - 40;
         const width = Math.min(areaWidth / 4, 150);
         const height = Math.max(width * 0.4, 42);
-        const spacing = window.innerWidth < 680 ? 10 : 20;
+        let spacing = window.innerWidth < 680 ? 10 : 20;
+
+        //  short screens; e.g., phone turned sideways
+        const totalHeight = (height  * 4) + (spacing * 3.5) + TOP_POS;
+        if (totalHeight > window.innerHeight) {
+            console.log("Screen is too short for words");
+            //  first try a 10px spacing
+            spacing = 10;
+            if (totalHeight - 35 > window.innerHeight) {
+                console.log("Still too short");
+            } else {
+                console.log("Fixed it with tighter spacing");
+            }
+        }
+    
         return {
             wordWidth: width,
             wordHeight: height,
