@@ -15,6 +15,7 @@ export default class WordController {
         this.wordSpacing = 0;
         this.isInDeleteMode = false;
         this.setup(wordStrings, isTouchScreen, isHorizontal);
+        this.onWordMoved = () => {}
     }
 
     /**
@@ -45,6 +46,10 @@ export default class WordController {
                 this.initialPositions.push(pos);
             }
         }
+    }
+
+    setOnWordMoved(onMoved) {
+        this.onWordMoved = onMoved;
     }
 
     /**
@@ -84,7 +89,6 @@ export default class WordController {
      * General operation
      */
     calculateWordDimensions() {
-        console.log("Calculating dimensions");
         const areaWidth = window.innerWidth - 40;
         let width = Math.min(areaWidth / 4, 150);
         let height = Math.max(width * 0.4, 42);
@@ -95,10 +99,10 @@ export default class WordController {
         if (totalHeight > window.innerHeight) {
             //  first try a 10px spacing
             spacing = 10;
+            const newTotalHeight = (height  * 4) + (spacing * 3.5) + TOP_POS;
             //  if that's not enough, shrink the words
-            if (totalHeight - 35 > window.innerHeight) {
+            if (newTotalHeight > window.innerHeight) {
                 const newHeight = (window.innerHeight - TOP_POS - 35) / 4;
-                console.log("Still too short, new height should be: ", newHeight);
                 height = Math.max(newHeight, 42);
                 width = height * 2.5;
             }
@@ -248,6 +252,7 @@ export default class WordController {
             return;
         }
         this.activeWord.setPositionFromTouch(x, y);
+        this.onWordMoved();
     }
 
     onPointerLifted() {
