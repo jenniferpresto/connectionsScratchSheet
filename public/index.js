@@ -262,6 +262,9 @@ const renderPage = (data) => {
     /**
      * Listeners
      */
+    window.addEventListener("resize", () => {
+        wordBoard.resetWordSize();
+    });
 
     /**
      * Key listeners for document
