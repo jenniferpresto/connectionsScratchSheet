@@ -56,12 +56,13 @@ const renderPage = (data) => {
     //  two-step buttons at top
     const deleteOneButton = document.getElementById("delete-one");
     const deleteAllButton = document.getElementById("delete-all");
-    // const resetSizeButton = document.getElementById("reset-size");
     const resetGridButton = document.getElementById("reset-grid");
     const getHistoryButton = document.getElementById("get-history");
 
     //  disable resetGridButton until something has moved
     resetGridButton.disabled = true;
+    //  TEMP: disable getHistory button until adjusted for v2 data
+    getHistoryButton.disabled = true;
 
     const twoStepButtonMap = new Map();
     twoStepButtonMap.set("delete-one", deleteOneButton);

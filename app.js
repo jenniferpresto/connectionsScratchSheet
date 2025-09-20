@@ -3,39 +3,15 @@ import express from "express";
 import fs from "fs.promises";
 
 const PORT = process.env.port || 5500;
-const CONNECTIONS_JSON_URL =
-    "https://www.nytimes.com/games-assets/connections/game-data-by-day.json";
 
 //  New URL, e.g.:
-//  https://www.nytimes.com/svc/connections/v1/2023-12-31.json
+//  https://www.nytimes.com/svc/connections/v2/2025-09-20.json
 
-const CONNECTIONS_JSON_URL_BASE = "https://www.nytimes.com/svc/connections/v1/";
+const CONNECTIONS_JSON_URL_BASE = "https://www.nytimes.com/svc/connections/v2/";
 
 const CONNECTIONS_DAY_ZERO = new Date("2023/06/12");
 const app = express();
 const IS_DEV = false;
-
-let jsonData = [];
-
-/**
- * @deprecated The NY Times changed its data format; this method is
- * no longer used
- */
-const getConnectionsDay = () => {
-    const today = new Date();
-    const intlDateObj = new Intl.DateTimeFormat('en-US', {
-        timeZone: "America/New_York",
-    });
-
-    const nyDateString = intlDateObj.format(today);
-    const nyDateParts = nyDateString.split("/");
-    const convertedNyDateString = nyDateParts[2] + "/" + nyDateParts[0] + "/" + nyDateParts[1];
-    const nyDateObj = new Date(convertedNyDateString);
-    const daysSinceDayZero = Math.floor(
-        (nyDateObj - CONNECTIONS_DAY_ZERO) / (1000 * 60 * 60 * 24)
-    );
-    return daysSinceDayZero;
-};
 
 const getDateForConnectionsNumber = gameNum => {
     const millisToAdd = gameNum * 24 * 60 * 60 * 1000;
@@ -84,44 +60,24 @@ const getUrlForGameNumber = gameNum => {
     return getConnectionsUrl(dateStr);
 }
 
-/**
- * @deprecated Old format
- */
-const parseWords = (data, idx) => {
-    if (!Array.isArray(data[idx]?.startingGroups)) {
+const parseWords = (data) => {
+    if (!Array.isArray(data.categories)
+        || data.categories.length == 0
+        || !Array.isArray(data.categories[0].cards)
+        || data.categories[0].cards.length == 0
+        || data.categories[0].cards[0].content == null
+        || data.categories[0].cards[0].position == null) {
+        // console.log("Unexpected data format", data);
         return [];
     }
-    const words = [];
-    data[idx].startingGroups.forEach((row) => {
-        if (Array.isArray(row)) {
-            row.forEach((word) => words.push(word));
-        }
-    });
 
-    //  These SHOULD be pre-scrambled, but go ahead and
-    //  scramble them again for good measure
-    const shuffledWords = words
-        .map((val) => ({ val, sort: Math.random() }))
-        .sort((a, b) => a.sort - b.sort)
-        .map(({ val }) => val);
-
-    return shuffledWords;
-};
-
-const parseWordsNewFormat = (data) => {
-    if (!Array.isArray(data.startingGroups)) {
-        return [];
-    }
-    const words = [];
-    data.startingGroups.forEach(row => {
-        if(Array.isArray(row)) {
-            row.forEach(word => words.push(word));
-        }
-    })
-    return words;
+    return data.categories
+        .flatMap(c => c.cards)
+        .sort((a, b) => a.position - b.position)
+        .map(c => c.content);
 }
 
-const getConnectionsJsonNewFormat = async (dateUrl, shouldIncludeFullData) => {
+const getConnectionsJson = async (dateUrl, shouldIncludeFullData) => {
     const jsonData = await axios
         .request({
             timeout: 5000,
@@ -140,38 +96,9 @@ const getConnectionsJsonNewFormat = async (dateUrl, shouldIncludeFullData) => {
     }
     return {
         id: jsonData.id,
-        words: parseWordsNewFormat(jsonData),
+        words: parseWords(jsonData),
     }
 }
-
-/**
- * @deprecated The NY Times changed its data format; this URL is
- * no longer being updated
- */
-const getConnectionsJson = async () => {
-    if (IS_DEV) {
-        console.log("Loading test data");
-        jsonData = await fs.readFile("./testData/testJson.json", "utf8")
-            .then(jsonString => JSON.parse(jsonString));
-        return {id: 11, words: parseWords(jsonData, 11)};
-    } else {
-        jsonData = await axios
-            .request({
-                timeout: 5000,
-                method: "GET",
-                url: CONNECTIONS_JSON_URL,
-            })
-            .then((res) => {
-                return res.data;
-            })
-            .catch((e) => {
-                console.log("Error fetching JSON data: ", e);
-                return {id: -1, words: []};
-            });
-        const day = getConnectionsDay();
-        return {id: day, words: parseWords(jsonData, day)}
-    }
-  };
 
 //  middleware to serve up specific path with static files
 app.use(express.static("public"));
@@ -184,18 +111,18 @@ app.get("/connectionsJson", async (req, res) => {
     const todayNum = getConnectionsNumberForToday();
     const todayUrl = getConnectionsUrl(todayStr);
     if (IS_DEV) {
-        const testData = await fs.readFile("./testData/testJsonSingleDay.json", "utf8")
+        const testData = await fs.readFile("./testData/testJson2025-09-19.json", "utf8")
             .then(jsonString => JSON.parse(jsonString));
         await setTimeout(() => {
             res.send({
                 id: testData.id,
-                words: parseWordsNewFormat(testData),
+                words: parseWords(testData),
                 gameNum: todayNum,
             });
             // res.status(500).send("Whoops"); <-- keep for error testing
         }, 500);
     } else {
-        const data = await getConnectionsJsonNewFormat(todayUrl, false);
+        const data = await getConnectionsJson(todayUrl, false);
         res.send({
             ...data,
             gameNum: todayNum,
@@ -218,7 +145,7 @@ app.get("/resultDay/:gameNum", async (req, res) => {
             // res.status(500).send("Error");
         }, 1000);
     } else {
-        const data = await getConnectionsJsonNewFormat(gameUrl, true);
+        const data = await getConnectionsJson(gameUrl, true);
         if (data) {
             res.send({...data, gameNum: gameNum});
         } else {
