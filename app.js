@@ -11,7 +11,7 @@ const CONNECTIONS_JSON_URL_BASE = "https://www.nytimes.com/svc/connections/v2/";
 
 const CONNECTIONS_DAY_ZERO = new Date("2023/06/12");
 const app = express();
-const IS_DEV = false;
+const IS_DEV = true;
 
 const getDateForConnectionsNumber = gameNum => {
     const millisToAdd = gameNum * 24 * 60 * 60 * 1000;
@@ -107,10 +107,20 @@ app.get("/", async (req, res, next) => {});
 
 app.get("/connectionsJson", async (req, res) => {
     console.log("Received request from ", req.header("x-forwarded-for"));
-    const todayStr = getNewYorkDateStringForToday();
+    let todayStr = getNewYorkDateStringForToday();
+    todayStr = "2025-10-31";
     const todayNum = getConnectionsNumberForToday();
     const todayUrl = getConnectionsUrl(todayStr);
-    if (IS_DEV) {
+    if (todayStr == "2025-10-31") {
+        console.log("Halloween!");
+        const halloweenData = await fs.readFile("./testData/halloween.json", "utf8")
+            .then(jsonString => JSON.parse(jsonString));
+        res.send({
+            id: halloweenData.id,
+            words: parseWords(halloweenData),
+            gameNum: 872
+        });
+    } else if (IS_DEV) {
         const testData = await fs.readFile("./testData/testJson2025-09-19.json", "utf8")
             .then(jsonString => JSON.parse(jsonString));
         await setTimeout(() => {
