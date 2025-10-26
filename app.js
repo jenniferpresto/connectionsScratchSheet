@@ -107,8 +107,7 @@ app.get("/", async (req, res, next) => {});
 
 app.get("/connectionsJson", async (req, res) => {
     console.log("Received request from ", req.header("x-forwarded-for"));
-    let todayStr = getNewYorkDateStringForToday();
-    todayStr = "2025-10-31";
+    const todayStr = getNewYorkDateStringForToday();
     const todayNum = getConnectionsNumberForToday();
     const todayUrl = getConnectionsUrl(todayStr);
     if (todayStr == "2025-10-31") {
