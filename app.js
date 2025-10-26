@@ -11,7 +11,7 @@ const CONNECTIONS_JSON_URL_BASE = "https://www.nytimes.com/svc/connections/v2/";
 
 const CONNECTIONS_DAY_ZERO = new Date("2023/06/12");
 const app = express();
-const IS_DEV = true;
+const IS_DEV = false;
 
 const getDateForConnectionsNumber = gameNum => {
     const millisToAdd = gameNum * 24 * 60 * 60 * 1000;
@@ -107,8 +107,7 @@ app.get("/", async (req, res, next) => {});
 
 app.get("/connectionsJson", async (req, res) => {
     console.log("Received request from ", req.header("x-forwarded-for"));
-    let todayStr = getNewYorkDateStringForToday();
-    todayStr = "2025-10-31";
+    const todayStr = getNewYorkDateStringForToday();
     const todayNum = getConnectionsNumberForToday();
     const todayUrl = getConnectionsUrl(todayStr);
     if (todayStr == "2025-10-31") {
