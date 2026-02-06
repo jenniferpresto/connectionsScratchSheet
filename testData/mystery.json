@@ -1,0 +1,44 @@
+{
+    "status": "OK",
+    "id": 972,
+    "print_date": "2025-10-31",
+    "editor": "None",
+    "categories": [
+        {
+            "title": "MYSTERY",
+            "cards": [
+                { "content": "&#127798", "position": 1 },
+                { "content": "&#127802", "position": 2 },
+                { "content": "&#127803", "position": 3 },
+                { "content": "&#127804", "position": 4 }
+            ]
+        },
+        {
+            "title": "MYSTERY",
+            "cards": [
+                { "content": "&#127796", "position": 4 },
+                { "content": "&#127797", "position": 5 },
+                { "content": "&#127799;", "position": 6 },
+                { "content": "&#127801;", "position": 7 }
+            ]
+        },
+        {
+            "title": "MYSTERY",
+            "cards": [
+                { "content": "&#127793", "position": 8 },
+                { "content": "&#127794", "position": 9 },
+                { "content": "&#127795", "position": 10 },
+                { "content": "&#127807", "position": 11 }
+            ]
+        },
+        {
+            "title": "MYSTERY",
+            "cards": [
+                { "content": "&#127809", "position": 12 },
+                { "content": "&#128144", "position": 13 },
+                { "content": "&#127812", "position": 14 },
+                { "content": "&#127806", "position": 15 }
+            ]
+        }
+    ]
+}

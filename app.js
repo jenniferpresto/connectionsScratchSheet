@@ -119,6 +119,15 @@ app.get("/connectionsJson", async (req, res) => {
             words: parseWords(halloweenData),
             gameNum: 872
         });
+    } else if(todayStr == "2026-02-07") {
+        console.log("Mystery! Day ", todayNum);
+        const mysteryData = await fs.readFile("./testData/mystery.json", "utf8")
+            .then(jsonString => JSON.parse(jsonString));
+        res.send({
+            id: mysteryData.id,
+            words: parseWords(mysteryData),
+            gameNum: 972
+        });
     } else if (IS_DEV) {
         const testData = await fs.readFile("./testData/testJson2025-09-19.json", "utf8")
             .then(jsonString => JSON.parse(jsonString));
