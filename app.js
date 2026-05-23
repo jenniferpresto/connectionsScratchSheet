@@ -11,7 +11,7 @@ const CONNECTIONS_JSON_URL_BASE = "https://www.nytimes.com/svc/connections/v2/";
 
 const CONNECTIONS_DAY_ZERO = new Date("2023/06/12");
 const app = express();
-const IS_DEV = false;
+const IS_DEV = true;
 
 const getDateForConnectionsNumber = gameNum => {
     const millisToAdd = gameNum * 24 * 60 * 60 * 1000;
@@ -65,16 +65,28 @@ const parseWords = (data) => {
         || data.categories.length == 0
         || !Array.isArray(data.categories[0].cards)
         || data.categories[0].cards.length == 0
-        || data.categories[0].cards[0].content == null
         || data.categories[0].cards[0].position == null) {
-        // console.log("Unexpected data format", data);
-        return [];
+            return [];
+        }
+
     }
 
-    return data.categories
-        .flatMap(c => c.cards)
-        .sort((a, b) => a.position - b.position)
-        .map(c => c.content);
+    //  words
+    if (data.categories[0].cards[0].content != null) {
+        return data.categories
+            .flatMap(c => c.cards)
+            .sort((a, b) => a.position - b.position)
+            .map(c => c.content);
+    }
+
+    if (data.categories[0].cards[0].image_url != null) {
+        return data.categories
+            .flatMap(c => c.cards)
+            .sort((a, b) => a.position - b.position)
+            .map(c => c.image_url);
+    }
+    return [];
+    
 }
 
 const getConnectionsJson = async (dateUrl, shouldIncludeFullData) => {
@@ -110,26 +122,28 @@ app.get("/connectionsJson", async (req, res) => {
     const todayStr = getNewYorkDateStringForToday();
     const todayNum = getConnectionsNumberForToday();
     const todayUrl = getConnectionsUrl(todayStr);
-    if (todayStr == "2025-10-31") {
-        console.log("Halloween!");
-        const halloweenData = await fs.readFile("./testData/halloween.json", "utf8")
-            .then(jsonString => JSON.parse(jsonString));
-        res.send({
-            id: halloweenData.id,
-            words: parseWords(halloweenData),
-            gameNum: 872
-        });
-    } else if(todayStr == "2026-02-07") {
-        console.log("Mystery! Day ", todayNum);
-        const mysteryData = await fs.readFile("./testData/mystery.json", "utf8")
-            .then(jsonString => JSON.parse(jsonString));
-        res.send({
-            id: mysteryData.id,
-            words: parseWords(mysteryData),
-            gameNum: 972
-        });
-    } else if (IS_DEV) {
-        const testData = await fs.readFile("./testData/testJson2025-09-19.json", "utf8")
+    // if (todayStr == "2025-10-31") {
+    //     console.log("Halloween!");
+    //     const halloweenData = await fs.readFile("./testData/halloween.json", "utf8")
+    //         .then(jsonString => JSON.parse(jsonString));
+    //     res.send({
+    //         id: halloweenData.id,
+    //         words: parseWords(halloweenData),
+    //         gameNum: 872
+    //     });
+    // } else if(todayStr == "2026-02-07") {
+    //     console.log("Mystery! Day ", todayNum);
+    //     const mysteryData = await fs.readFile("./testData/mystery.json", "utf8")
+    //         .then(jsonString => JSON.parse(jsonString));
+    //     res.send({
+    //         id: mysteryData.id,
+    //         words: parseWords(mysteryData),
+    //         gameNum: 972
+    //     });
+    // } else 
+    if (IS_DEV) {
+        console.log("IS DEV!");
+        const testData = await fs.readFile("./testData/testJson2026-02-07.json", "utf8")
             .then(jsonString => JSON.parse(jsonString));
         await setTimeout(() => {
             res.send({

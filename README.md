@@ -16,6 +16,12 @@ To run at `http://localhost:5500`:
 npm start
 ```
 
+or 
+
+```bash
+npm run dev
+```
+
 ## Using local data
 
 In `app.js`:
@@ -25,3 +31,7 @@ In `app.js`:
 Current data format (as of 2025-09-20):
 
 `testData/testJson2025-09-20.json`
+
+For images:
+
+`testPics2026-02-07.json`
