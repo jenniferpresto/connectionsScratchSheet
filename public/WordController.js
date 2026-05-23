@@ -24,7 +24,6 @@ export default class WordController {
      */
     setup(wordStrings, isTouchScreen, isHorizontal) {
         this.setUpInitialWordPositions();
-        console.log("Wordstrings: ", wordStrings);
         for (const [idx, wordString] of wordStrings.entries()) {
             this.addWord(wordString);
         }
@@ -157,7 +156,16 @@ export default class WordController {
 
     removeAllWords() {
         this.activeWord = null;
-        this.isImages = false; // allow people to erase and add
+        
+        //  if we're starting from an images board, just start over
+        if (this.isImages) {
+            this.isImages = false;
+            this.existingWords.clear();
+            this.deletedWords.length = 0;
+            this.container.replaceChildren();
+            return;
+        }
+
         this.existingWords.forEach(word => {
             word.div.remove();
             this.deletedWords.push(word);
