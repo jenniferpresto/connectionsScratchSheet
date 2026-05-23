@@ -11,7 +11,7 @@ const CONNECTIONS_JSON_URL_BASE = "https://www.nytimes.com/svc/connections/v2/";
 
 const CONNECTIONS_DAY_ZERO = new Date("2023/06/12");
 const app = express();
-const IS_DEV = true;
+const IS_DEV = false;
 
 const getDateForConnectionsNumber = gameNum => {
     const millisToAdd = gameNum * 24 * 60 * 60 * 1000;
@@ -148,7 +148,7 @@ app.get("/connectionsJson", async (req, res) => {
     // } else 
     if (IS_DEV) {
         console.log("IS DEV!");
-        const testData = await fs.readFile("./testData/testJson2025-09-19.json", "utf8")
+        const testData = await fs.readFile("./testData/testJson2026-02-07.json", "utf8")
             .then(jsonString => JSON.parse(jsonString));
         await setTimeout(() => {
             res.send({
