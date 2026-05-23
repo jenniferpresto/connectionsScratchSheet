@@ -35,3 +35,13 @@ Current data format (as of 2025-09-20):
 For images:
 
 `testPics2026-02-07.json`
+
+## Dev notes
+
+### Image tiles
+
+This app was updated to handle images on May 23, 2026.
+
+The updates require that *all* elements be either images or words; the app can't mix them. If you start with an images board and you want to add new words, the entire board is wiped, and the isImages flag is flipped to false. People can then add new text words.
+
+"Delete One" is not fixed for an images board, so if you delete one word on an images board and try to add a new word, you'll get the same image tile back that you just deleted.
