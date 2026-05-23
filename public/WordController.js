@@ -4,7 +4,7 @@ import Word from "./Word.js";
 const TOP_POS = 75;
 
 export default class WordController {
-    constructor(wordStrings, isTouchScreen, isHorizontal) {
+    constructor(wordData, isTouchScreen, isHorizontal) {
         this.initialPositions = [];
         this.existingWords = new Map();
         this.deletedWords = [];
@@ -14,7 +14,8 @@ export default class WordController {
         this.wordHeight = 0;
         this.wordSpacing = 0;
         this.isInDeleteMode = false;
-        this.setup(wordStrings, isTouchScreen, isHorizontal);
+        this.isImages = wordData.hasImages;
+        this.setup(wordData.items, isTouchScreen, isHorizontal);
         this.onWordMoved = () => {}
     }
 
@@ -22,19 +23,17 @@ export default class WordController {
      * Setup
      */
     setup(wordStrings, isTouchScreen, isHorizontal) {
-        this.setUpInitialWordPositions(true);
+        this.setUpInitialWordPositions();
         for (const [idx, wordString] of wordStrings.entries()) {
             this.addWord(wordString);
         }
     }
 
-    setUpInitialWordPositions(shouldSaveDimensions) {
+    setUpInitialWordPositions() {
         const dimensions = this.calculateWordDimensions();
-        if (shouldSaveDimensions) {
-            this.wordWidth = dimensions.wordWidth;
-            this.wordHeight = dimensions.wordHeight;
-            this.wordSpacing = dimensions.wordSpacing;
-        }
+        this.wordWidth = dimensions.wordWidth;
+        this.wordHeight = dimensions.wordHeight;
+        this.wordSpacing = dimensions.wordSpacing;
         for (let y = 0; y < 4; y++) {
             for (let x = 0; x < 4; x++) {
                 const pos = new Position(
@@ -65,7 +64,7 @@ export default class WordController {
 
         this.existingWords.forEach(word => {
             this.setWordAttributes(word);
-            this.adjustTextWidth(word.div);
+            this.adjustWordSizing(word.div);
             const x = word.position.x + widthDiff / 2;
             const y = word.position.y + heightDiff / 2;
             word.setPositionFromTouch(x, y);
@@ -78,7 +77,7 @@ export default class WordController {
         this.existingWords.forEach(word => {
             const wordIdx = Number(word.id.substr(3));
             if (isNaN(wordIdx) || wordIdx > this.initialPositions.length - 1) {
-                console.log("Something has gone horribly wrong reseting the grid");
+                console.log("Something has gone horribly wrong resetting the grid");
             } else {
                 word.setPositionFromTouch(this.initialPositions[wordIdx].x, this.initialPositions[wordIdx].y);
             }
@@ -131,7 +130,13 @@ export default class WordController {
         //  create a brand new word
         if (!this.deletedWords.length) {
             const idx = this.existingWords.size;
-            newWord = new Word(this, wordText, "box" + idx, this.wordWidth, this.wordHeight);
+            newWord = new Word(
+                this,
+                wordText,
+                "box" + idx,
+                this.wordWidth,
+                this.wordHeight,
+                this.isImages);
             newWord.setPositionFromTouch(
                 this.initialPositions[idx].x,
                 this.initialPositions[idx].y
@@ -146,16 +151,31 @@ export default class WordController {
         }
         this.container.appendChild(newWord.div);
         this.setWordAttributes(newWord);
-        this.adjustTextWidth(newWord.div);
+        this.adjustWordSizing(newWord.div);
     }
 
     removeAllWords() {
         this.activeWord = null;
+
+        //  if we're starting from an images board, just start over
+        if (this.isImages) {
+            this.isImages = false;
+            this.existingWords.clear();
+            this.deletedWords.length = 0;
+            this.container.replaceChildren();
+            return;
+        }
+
         this.existingWords.forEach(word => {
             word.div.remove();
             this.deletedWords.push(word);
         });
         this.existingWords.clear();
+    }
+
+    adjustWordSizing(div) {
+        this.adjustTextWidth(div);
+        this.adjustImageSize(div);
     }
 
     adjustTextWidth(div) {
@@ -173,6 +193,13 @@ export default class WordController {
             if (div.childNodes[0].clientWidth <= maxWordSize) {
                 break;
             }
+        }
+    }
+
+    adjustImageSize(div) {
+        const img = div.querySelector('img');
+        if (img) {
+            img.height = this.wordHeight;
         }
     }
 

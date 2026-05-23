@@ -1,25 +1,37 @@
 import Position from "./Position.js";
 
 export default class Word {
-    constructor(_board, _wordtText, _id, _width, _height) {
+    constructor(_board, _text, _id, _width, _height, _isImage) {
         this.board = _board;
         this.isActive = false;
-        this.wordText = _wordtText;
+        this.isImage = _isImage;
+        this.wordText = _isImage ? "" : _text;
+        this.imageUrl = _isImage ? _text : "";
         this.id = _id;
         this.dimensions = new Position(_width, _height);
         this.div = document.createElement("div");
         this.position = new Position(0, 0);
         this.offset = new Position(0, 0);
 
-        this.span = document.createElement("span");
-        this.span.innerHTML = this.wordText;
+        if (_isImage) {
+            const img = document.createElement("img");
+            img.src = this.imageUrl;
+            img.height = _height;
+            this.div.appendChild(img);
+        } else {
+            this.span = document.createElement("span");
+            this.span.innerHTML = this.wordText;
+            this.div.appendChild(this.span);
+        }
         this.div.classList.add("box");
         this.div.classList.add("static");
         this.div.setAttribute("id", this.id);
-        this.div.appendChild(this.span);
     }
 
     setText(text) {
+        if (this.isImage) {
+            return;
+        }
         this.wordText = text;
         this.span.innerHTML = text;
     }
