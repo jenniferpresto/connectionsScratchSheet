@@ -4,7 +4,7 @@ import Word from "./Word.js";
 const TOP_POS = 75;
 
 export default class WordController {
-    constructor(wordStrings, isTouchScreen, isHorizontal) {
+    constructor(wordData, isTouchScreen, isHorizontal) {
         this.initialPositions = [];
         this.existingWords = new Map();
         this.deletedWords = [];
@@ -14,7 +14,8 @@ export default class WordController {
         this.wordHeight = 0;
         this.wordSpacing = 0;
         this.isInDeleteMode = false;
-        this.setup(wordStrings, isTouchScreen, isHorizontal);
+        this.isImages = wordData.hasImages;
+        this.setup(wordData.items, isTouchScreen, isHorizontal);
         this.onWordMoved = () => {}
     }
 

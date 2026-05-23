@@ -61,32 +61,37 @@ const getUrlForGameNumber = gameNum => {
 }
 
 const parseWords = (data) => {
-    if (!Array.isArray(data.categories)
-        || data.categories.length == 0
-        || !Array.isArray(data.categories[0].cards)
-        || data.categories[0].cards.length == 0
-        || data.categories[0].cards[0].position == null) {
-            return [];
-        }
+    const cards = data?.categories
+        ?.flatMap(c => c.cards ?? [])
+        ?.sort((a, b) => a.position ?? Infinity - b.position ?? Infinity);
 
+    if (!cards?.length || cards[0].position == null) {
+        return {
+            items: [],
+            hasImages: false
+        };
     }
 
     //  words
-    if (data.categories[0].cards[0].content != null) {
-        return data.categories
-            .flatMap(c => c.cards)
-            .sort((a, b) => a.position - b.position)
-            .map(c => c.content);
+    if (cards[0].content != null) {
+        return {
+            items: cards.map(c => c.content),
+            hasImages: false
+        };
     }
 
-    if (data.categories[0].cards[0].image_url != null) {
-        return data.categories
-            .flatMap(c => c.cards)
-            .sort((a, b) => a.position - b.position)
-            .map(c => c.image_url);
+    //  pictures
+    if (cards[0].image_url != null) {
+        return {
+            items: cards.map(c => c.image_url),
+            hasImages: true
+        }
     }
-    return [];
-    
+
+    return {
+        items: [],
+        hasImages: false
+    }
 }
 
 const getConnectionsJson = async (dateUrl, shouldIncludeFullData) => {
