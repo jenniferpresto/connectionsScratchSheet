@@ -77,7 +77,7 @@ export default class WordController {
         this.existingWords.forEach(word => {
             const wordIdx = Number(word.id.substr(3));
             if (isNaN(wordIdx) || wordIdx > this.initialPositions.length - 1) {
-                console.log("Something has gone horribly wrong reseting the grid");
+                console.log("Something has gone horribly wrong resetting the grid");
             } else {
                 word.setPositionFromTouch(this.initialPositions[wordIdx].x, this.initialPositions[wordIdx].y);
             }
@@ -156,7 +156,7 @@ export default class WordController {
 
     removeAllWords() {
         this.activeWord = null;
-        
+
         //  if we're starting from an images board, just start over
         if (this.isImages) {
             this.isImages = false;
