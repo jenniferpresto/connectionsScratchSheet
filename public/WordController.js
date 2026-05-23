@@ -23,19 +23,18 @@ export default class WordController {
      * Setup
      */
     setup(wordStrings, isTouchScreen, isHorizontal) {
-        this.setUpInitialWordPositions(true);
+        this.setUpInitialWordPositions();
+        console.log("Wordstrings: ", wordStrings);
         for (const [idx, wordString] of wordStrings.entries()) {
             this.addWord(wordString);
         }
     }
 
-    setUpInitialWordPositions(shouldSaveDimensions) {
+    setUpInitialWordPositions() {
         const dimensions = this.calculateWordDimensions();
-        if (shouldSaveDimensions) {
-            this.wordWidth = dimensions.wordWidth;
-            this.wordHeight = dimensions.wordHeight;
-            this.wordSpacing = dimensions.wordSpacing;
-        }
+        this.wordWidth = dimensions.wordWidth;
+        this.wordHeight = dimensions.wordHeight;
+        this.wordSpacing = dimensions.wordSpacing;
         for (let y = 0; y < 4; y++) {
             for (let x = 0; x < 4; x++) {
                 const pos = new Position(
@@ -132,7 +131,13 @@ export default class WordController {
         //  create a brand new word
         if (!this.deletedWords.length) {
             const idx = this.existingWords.size;
-            newWord = new Word(this, wordText, "box" + idx, this.wordWidth, this.wordHeight);
+            newWord = new Word(
+                this,
+                wordText,
+                "box" + idx,
+                this.wordWidth,
+                this.wordHeight,
+                this.isImages);
             newWord.setPositionFromTouch(
                 this.initialPositions[idx].x,
                 this.initialPositions[idx].y
@@ -147,11 +152,14 @@ export default class WordController {
         }
         this.container.appendChild(newWord.div);
         this.setWordAttributes(newWord);
-        this.adjustTextWidth(newWord.div);
+        if (!this.isImages) {
+            this.adjustTextWidth(newWord.div);
+        }
     }
 
     removeAllWords() {
         this.activeWord = null;
+        this.isImages = false; // allow people to erase and add
         this.existingWords.forEach(word => {
             word.div.remove();
             this.deletedWords.push(word);

@@ -46,7 +46,7 @@ const loadingAnimation = new LoadingAnimationController();
 
 const renderPage = (data) => {
     const todayGameNum = parseInt(data.gameNum);
-    const words = data.words;
+    const wordData = data.words;
     const mainContainer = document.getElementById("main-container");
     const instructions = document.getElementById("instructions");
     const addWordForm = document.getElementById("add-word");
@@ -86,7 +86,7 @@ const renderPage = (data) => {
     // const isHorizontal = window.innerWidth > window.innerHeight;
     //  TODO: Revisit horizontal positioning
     const isHorizontal = false;
-    const wordBoard = new WordController(words, isTouchScreen, isHorizontal);
+    const wordBoard = new WordController(wordData, isTouchScreen, isHorizontal);
 
     const enableGridButton = () => {
         resetGridButton.disabled = false;
