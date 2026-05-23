@@ -65,7 +65,7 @@ export default class WordController {
 
         this.existingWords.forEach(word => {
             this.setWordAttributes(word);
-            this.adjustTextWidth(word.div);
+            this.adjustWordSizing(word.div);
             const x = word.position.x + widthDiff / 2;
             const y = word.position.y + heightDiff / 2;
             word.setPositionFromTouch(x, y);
@@ -152,7 +152,7 @@ export default class WordController {
         }
         this.container.appendChild(newWord.div);
         this.setWordAttributes(newWord);
-        this.adjustTextWidth(newWord.div);
+        this.adjustWordSizing(newWord.div);
     }
 
     removeAllWords() {
@@ -165,17 +165,16 @@ export default class WordController {
         this.existingWords.clear();
     }
 
+    adjustWordSizing(div) {
+        this.adjustTextWidth(div);
+        this.adjustImageSize(div);
+    }
+
     adjustTextWidth(div) {
         div.style.fontSize = this.wordWidth < 150 ? "1.0rem" : "1.5rem";
         const sizes = ["1.0rem", "0.825rem", "0.75rem", "0.625rem", "0.5rem"];
         //  allow for inner border
         const maxWordSize = this.wordWidth - 6;
-        const img = div.querySelector('img');
-        console.log('img');
-        if (img) {
-            console.log("New heigh: ", this.wordHeight);
-            img.height = this.wordHeight;
-        }
         if (div.childNodes[0].clientWidth <= maxWordSize) {
             return;
         }
@@ -187,7 +186,13 @@ export default class WordController {
                 break;
             }
         }
+    }
 
+    adjustImageSize(div) {
+        const img = div.querySelector('img');
+        if (img) {
+            img.height = this.wordHeight;
+        }
     }
 
     setPreDelete() {
