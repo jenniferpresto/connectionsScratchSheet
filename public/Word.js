@@ -15,6 +15,10 @@ export default class Word {
 
         if (_isImage) {
             this.div.classList.add("image");
+            const img = document.createElement("img");
+            img.src = this.imageUrl;
+            img.height = _height;
+            this.div.appendChild(img);
         } else {
             this.span = document.createElement("span");
             this.span.innerHTML = this.wordText;
@@ -23,7 +27,6 @@ export default class Word {
         this.div.classList.add("box");
         this.div.classList.add("static");
         this.div.setAttribute("id", this.id);
-
     }
 
     setText(text) {

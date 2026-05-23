@@ -30,6 +30,13 @@ input {
     appearance: textfield;
 }
 
+img {
+    border: solid red;
+    pointer-events: none;
+    -webkit-user-drag: none; /* Prevents dragging on mobile/desktop */
+    user-select: none;       /* Prevents selecting the image */
+}
+
 #main-container {
     height: 100%;
     font-family: arial;
@@ -68,7 +75,7 @@ input {
         width: 25%;
         height: 50px;
         font-size: 1rem;
-        border: solid 1px ;
+        border: solid 1px;
         border-radius: 10px;
         cursor: pointer;
 
