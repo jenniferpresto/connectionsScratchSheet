@@ -65,7 +65,7 @@ const parseWords = (data) => {
         ?.flatMap(c => c.cards ?? [])
         ?.sort((a, b) => (a.position ?? Infinity) - (b.position ?? Infinity));
 
-    if (!cards?.length || cards[0].position == null) {
+    if (!cards?.length || cards.some(c => c.position == null)) {
         return {
             items: [],
             hasImages: false
