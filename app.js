@@ -63,9 +63,9 @@ const getUrlForGameNumber = gameNum => {
 const parseWords = (data) => {
     const cards = data?.categories
         ?.flatMap(c => c.cards ?? [])
-        ?.sort((a, b) => a.position ?? Infinity - b.position ?? Infinity);
+        ?.sort((a, b) => (a.position ?? Infinity) - (b.position ?? Infinity));
 
-    if (!cards?.length || cards[0].position == null) {
+    if (!cards?.length || cards.some(c => c.position == null)) {
         return {
             items: [],
             hasImages: false
@@ -148,7 +148,7 @@ app.get("/connectionsJson", async (req, res) => {
     // } else 
     if (IS_DEV) {
         console.log("IS DEV!");
-        const testData = await fs.readFile("./testData/testJson2026-02-07.json", "utf8")
+        const testData = await fs.readFile("./testData/testJson2026-05-24.json", "utf8")
             .then(jsonString => JSON.parse(jsonString));
         await setTimeout(() => {
             res.send({
